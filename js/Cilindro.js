@@ -2,13 +2,28 @@ var CG =  CG || {};
 
 CG.Cilindro = class{
 
+    /**
+     * 
+     * @param {*} gl Programa de Webgl
+     * @param {Array} color Color del cilindro (RGBA)
+     * @param {Number} diameter Diametro del cilindro
+     * @param {Number} height Altura del cilindro
+     * @param {Number} nfaces Numero de caras en el cilindro
+     * @param {Number} nsegments Numero de subdivisiones a lo largo de la altura
+     * @param {Matrix4} initial_transform Transformacion inicial
+     */
     constructor(gl, color, diameter, height, nfaces, nsegments, initial_transform)
     {
         this.g_radius  = (diameter || 1)/2;
         this.g_height = (height || 1)/2;
+        //Establecer como minimo 3 caras
         this.nlados = (nfaces || 10);
+        this.nlados = (this.nlados < 3)? 3 : this.nlados;
+        //Establecer como segmentos minimo 0
         this.nsegments = (nsegments || 0);
+        this.nsegments = (this.nsegments < 0)? 0 : this.nsegments;
         this.nsegments += 2;
+
         this.initial_transform = initial_transform || new CG.Matrix4();
 
         this.positionBuffer = gl.createBuffer();
@@ -40,8 +55,8 @@ CG.Cilindro = class{
         gl.uniformMatrix4fv(PVM_matrixLocation, false, projectionViewModelMatrix.toArray());
   
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-        gl.drawElements(gl.LINE_STRIP, this.num_elements, gl.UNSIGNED_SHORT, 0);
-        //gl.drawElements(gl.TRIANGLES, this.num_elements, gl.UNSIGNED_SHORT, 0);
+        //gl.drawElements(gl.LINE_STRIP, this.num_elements, gl.UNSIGNED_SHORT, 0);
+        gl.drawElements(gl.TRIANGLES, this.num_elements, gl.UNSIGNED_SHORT, 0);
       }
 
     calcularVertices()
@@ -78,18 +93,26 @@ CG.Cilindro = class{
     {
         this.faces = [];
         //Centro de la base
-        let centroC = this.nlados * this.nsegments + 1;
-        let centroB = this.nlados * this.nsegments + 2;
-        // Obtener circulo base
+        let centroB = (this.nlados * this.nsegments);
+        let centroC = (this.nlados * this.nsegments )+ 1;
         
-        /*
+        // Obtener circulo base
+        var tope = (this.nlados * (this.nsegments - 1));     
         for(var i = 0; i < this.nlados; i++)
         {
             let index = i % this.nlados;
             let index2  = (index + 1) % this.nlados;
-            this.faces.push(centroC, index, index2);
+            this.faces.push(centroB, index, index2);
         }
-        */
+
+         // Obtener circulo tope        
+         for(var i = 0; i < this.nlados; i++)
+         {
+             let index = i % this.nlados;
+             let index2  = ((index + 1) % this.nlados);
+             this.faces.push(centroC, index + tope, index2 + tope);
+         }
+
         //Lados del cilindro
         for(var j = 0; j < this.nsegments - 1; j++)
         {

@@ -37,7 +37,7 @@ window.addEventListener("load", function(evt) {
     new CG.Cilindro(
       gl, 
       [1, 0, 0, 1], 
-      2, 10, 16, 16, 
+      2, 2, 7, 0, 
       CG.Matrix4.translate(new CG.Vector3(-5, 0, -5))
     ),
     
