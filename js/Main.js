@@ -28,6 +28,13 @@ window.addEventListener("load", function(evt) {
 
   // se crean y posicionan los modelos geométricos, uno de cada tipo
   let geometry = [
+    new CG.PrismaRectangular(
+      gl, 
+      [1, 0.2, 0.3, 1], 
+      2, 3, 4, 
+      CG.Matrix4.translate(new CG.Vector3(-5, 0, 5))
+    ),
+    /**
     new CG.Cilindro(
       gl, 
       [1, 0, 0, 1], 
@@ -63,12 +70,6 @@ window.addEventListener("load", function(evt) {
       2, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, 0))
     ),
-    new CG.PrismaRectangular(
-      gl, 
-      [1, 0.2, 0.3, 1], 
-      2, 3, 4, 
-      CG.Matrix4.translate(new CG.Vector3(-5, 0, 5))
-    ),
     new CG.Tetraedro(
       gl, 
       [0.5, 0.5, 0.5, 1], 
@@ -80,7 +81,7 @@ window.addEventListener("load", function(evt) {
       [0.25, 0.25, 0.25, 1], 
       4, 1, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, 5))
-    ),
+    ),*/
   ];
 
   // se define la posición de la cámara (o el observador o el ojo)
@@ -116,7 +117,6 @@ window.addEventListener("load", function(evt) {
     // como todos los objetos que vamos a dibujar usan el mismo par de shader podemos usar esta función fuera del siguiente for
     // pero si cada objeto geométrico tiene su propio estilo podemos cambiar el programa dentro del for dependiendo del modelo
     gl.useProgram(program);
-
     // se itera sobre cada objeto geométrico definido
     for (let i=0; i<geometry.length; i++) {
       // se dibuja la geometría
@@ -131,7 +131,7 @@ window.addEventListener("load", function(evt) {
   }
 
   // se dibujan los objetos
-  draw()
+  draw();
 
 });
 
