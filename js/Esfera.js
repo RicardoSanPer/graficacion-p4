@@ -5,10 +5,9 @@ CG.Esfera = class{
     /**
      * 
      * @param {*} gl Programa de Webgl
-     * @param {Array} color Color del cilindro (RGBA)
-     * @param {Number} diameter Diametro del cilindro
-     * @param {Number} height Altura del cilindro
-     * @param {Number} nfaces Numero de caras en el cilindro
+     * @param {Array} color Color de la esfera (RGBA)
+     * @param {Number} height radio de la esfera
+     * @param {Number} nfaces Numero de segmentos horizontales de la esfera
      * @param {Number} nsegments Numero de subdivisiones a lo largo de la altura
      * @param {Matrix4} initial_transform Transformacion inicial
      */
@@ -18,9 +17,9 @@ CG.Esfera = class{
         //Establecer como minimo 3 caras
         this.nlados = (nfaces || 10);
         this.nlados = (this.nlados < 3)? 3 : this.nlados;
-        //Establecer como segmentos minimo 0
-        this.nsegments = (nsegments || 0);
-        this.nsegments = (this.nsegments < 0)? 0 : this.nsegments;
+        //Establecer como segmentos minimo 1
+        this.nsegments = (nsegments || 1);
+        this.nsegments = (this.nsegments < 1)? 1 : this.nsegments;
         this.nsegments += 2;
 
         this.initial_transform = initial_transform || new CG.Matrix4();
@@ -66,7 +65,7 @@ CG.Esfera = class{
         for(var j = 0; j < this.nsegments; j++)
         {    
             var factor = (j/(this.nsegments-1));
-            //Obtener la altura de cada segmento del cilindro
+            //Obtener la altura de cada segmento de la esfera
             var desiredH = (this.g_radius * 2);
             var h =  desiredH *  (j/(this.nsegments-1));
             for(var i = 0; i < this.nlados; i++)
@@ -88,7 +87,7 @@ CG.Esfera = class{
         this.faces = [];
         
 
-        //Lados del cilindro
+        //Esfera
         for(var j = 0; j < this.nsegments - 1; j++)
         {
             var h = (j * this.nlados);

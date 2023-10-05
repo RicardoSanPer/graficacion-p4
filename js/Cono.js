@@ -9,8 +9,8 @@ CG.Cono = class{
     /**
      * 
      * @param {*} gl Programa de Webgl
-     * @param {Array} color Color del cilindro (RGBA)
-     * @param {Number} diameter Diametro del cilindro
+     * @param {Array} color Color del cono (RGBA)
+     * @param {Number} diameter Diametro del cono
      * @param {Number} height Altura del cono
      * @param {Number} nfaces Numero de caras en el cono
      * @param {Number} nsegments Numero de subdivisiones a lo largo de la altura
@@ -111,7 +111,7 @@ CG.Cono = class{
             this.faces.push(centroB, index, index2);
         }
          
-        //Lados del cilindro
+        //Lados del cono
         for(var j = 0; j < this.nsegments - 1; j++)
         {
             var h = (j * this.nlados);
