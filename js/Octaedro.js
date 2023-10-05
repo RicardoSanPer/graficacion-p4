@@ -5,10 +5,8 @@ CG.Octaedro = class{
     /**
      * 
      * @param {*} gl Programa de Webgl
-     * @param {Array} color Color de la esfera (RGBA)
-     * @param {Number} height radio de la esfera
-     * @param {Number} nfaces Numero de segmentos horizontales de la esfera
-     * @param {Number} nsegments Numero de subdivisiones a lo largo de la altura
+     * @param {Array} color Color del octaedro (RGBA)
+     * @param {Number} length radio del octaedro
      * @param {Matrix4} initial_transform Transformacion inicial
      */
     constructor(gl, color, length ,initial_transform)
@@ -58,7 +56,7 @@ CG.Octaedro = class{
             0, 0, this.g_length,
             -this.g_length, 0, 0,
             0, 0, -this.g_length,
-            0, -this.g_length, 0,
+            0, this.g_length, 0,
         ];
     }
 
