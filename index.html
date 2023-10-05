@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Page Title</title>
+
+  <script src="Vector3.js"></script>
+  <script src="Vector4.js"></script>
+  <script src="Matrix3.js"></script>
+  <script src="Matrix4.js"></script>
+  <script src="Cilindro.js"></script>
+  <script src="Cono.js"></script>
+  <script src="Dodecaedro.js"></script>
+  <script src="Esfera.js"></script>
+  <script src="Icosaedro.js"></script>
+  <script src="Octaedro.js"></script>
+  <script src="PrismaRectangular.js"></script>
+  <script src="Tetraedro.js"></script>
+  <script src="Toro.js"></script>
+  <script src="Main.js"></script>
+</head>
+
+<body>
+  <canvas id="the_canvas" width="800" height="600" style="border: 1px dotted gray;"></canvas>
+
+  <script id="2d-vertex-shader" type="vertex-shader">
+  attribute vec4 a_position;
+
+  uniform mat4 u_PVM_matrix;
+  
+  void main() {
+    gl_Position = u_PVM_matrix * a_position;
+  }
+  </script>
+
+  <script id="2d-fragment-shader" type="fragment-shader">
+  precision mediump float;
+
+  uniform vec4 u_color;
+
+  void main() {
+    gl_FragColor = u_color;
+  }
+  </script>
+
+</body>
+
+</html>
