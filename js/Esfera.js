@@ -6,7 +6,7 @@ CG.Esfera = class{
      * 
      * @param {*} gl Programa de Webgl
      * @param {Array} color Color de la esfera (RGBA)
-     * @param {Number} height radio de la esfera
+     * @param {Number} radius radio de la esfera
      * @param {Number} nfaces Numero de segmentos horizontales de la esfera
      * @param {Number} nsegments Numero de subdivisiones a lo largo de la altura
      * @param {Matrix4} initial_transform Transformacion inicial
@@ -53,8 +53,8 @@ CG.Esfera = class{
         gl.uniformMatrix4fv(PVM_matrixLocation, false, projectionViewModelMatrix.toArray());
   
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-        //gl.drawElements(gl.LINE_STRIP, this.num_elements, gl.UNSIGNED_SHORT, 0);
-        gl.drawElements(gl.TRIANGLES, this.num_elements, gl.UNSIGNED_SHORT, 0);
+        gl.drawElements(gl.LINE_STRIP, this.num_elements, gl.UNSIGNED_SHORT, 0);
+        //gl.drawElements(gl.TRIANGLES, this.num_elements, gl.UNSIGNED_SHORT, 0);
       }
 
     /**Computa la posicion de los vertices */
@@ -66,17 +66,18 @@ CG.Esfera = class{
         {    
             var factor = (j/(this.nsegments-1));
             //Obtener la altura de cada segmento de la esfera
-            var desiredH = (this.g_radius * 2);
-            var h =  desiredH *  (j/(this.nsegments-1));
+            var y = Math.cos(factor * Math.PI);
+            
+            var h =  this.g_radius *  y;
             for(var i = 0; i < this.nlados; i++)
             {
                 let theta = (i/this.nlados) *(Math.PI * 2);
-                let x = Math.cos(theta) * this.g_radius * Math.sin(Math.PI * factor);
-                let y = Math.sin(theta) * this.g_radius * Math.sin(Math.PI * factor);
+                let x = Math.cos(theta) * this.g_radius * (Math.sin(Math.PI * factor));
+                let z = Math.sin(theta) * this.g_radius * Math.sin(Math.PI * factor);
 
                 this.vertices.push(x);
-                this.vertices.push(-this.g_radius + h);
-                this.vertices.push(y);
+                this.vertices.push(h);
+                this.vertices.push(z);
             }
         }
     }
