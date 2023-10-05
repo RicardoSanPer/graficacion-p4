@@ -41,13 +41,14 @@ window.addEventListener("load", function(evt) {
       CG.Matrix4.translate(new CG.Vector3(-5, 0, -5))
     ),
     
-    /**
     new CG.Cono(
       gl, 
       [0, 1, 0, 1], 
       2, 2, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(0, 0, -5))
     ),
+    
+    /**
     new CG.Dodecaedro(
       gl, 
       [0, 0, 1, 1], 
