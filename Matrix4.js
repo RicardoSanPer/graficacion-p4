@@ -288,7 +288,7 @@ CG.Matrix4 = class
 
         return new CG.Matrix4(right.x, right.y, right.z, -tx,
                                 tempUp.x, tempUp.y, tempUp.z, -ty,
-                                -forward.x, -forward.y, -forward.z, tz,
+                                forward.x, forward.y, forward.z, -tz,
                                 0,0,0,1);
     }
 
@@ -419,7 +419,7 @@ CG.Matrix4 = class
         return new CG.Matrix4(c/aspect, 0,0,0,
                                0, c, 0, 0,
                                0, 0, c22, c23,
-                               0,0,1,0);
+                               0,0,-1,0);
     }
     /**
      * Obtiene la determinante de la matriz
@@ -429,18 +429,18 @@ CG.Matrix4 = class
     {
         let c00 = new CG.Matrix3(this.a11, this.a12, this.a13,
                                 this.a21, this.a22, this.a23,
-                                this.a31, this.a32, this.a33,).determinant();
+                                this.a31, this.a32, this.a33).determinant();
         let c01 = new CG.Matrix3(this.a10, this.a12, this.a13,
                                 this.a20, this.a22, this.a23,
-                                this.a30, this.a32, this.a33,).determinant();
+                                this.a30, this.a32, this.a33).determinant();
         let c02 = new CG.Matrix3(this.a10, this.a11, this.a13,
                                 this.a20, this.a21, this.a23,
-                                this.a30, this.a31, this.a33,).determinant();
+                                this.a30, this.a31, this.a33).determinant();
         let c03 = new CG.Matrix3(this.a10, this.a11, this.a12,
                                 this.a20, this.a21, this.a22,
-                                this.a30, this.a31, this.a32,).determinant();
+                                this.a30, this.a31, this.a32).determinant();
 
-        return this.a00 * c00 - this.a01 * c01 + this.a02 * c02 - this.a03 * c03;
+        return this.a00 * c00 - (this.a01 * c01) + this.a02 * c02 - (this.a03 * c03);
     }
 
     /**
@@ -493,7 +493,7 @@ CG.Matrix4 = class
         return new CG.Matrix4(this.a00, this.a10, this.a20, this.a30,
                               this.a01, this.a11, this.a21, this.a31,
                               this.a02, this.a12, this.a22, this.a32,
-                              this.a03, this.a13, this.a23, this.a33,);
+                              this.a03, this.a13, this.a23, this.a33);
     }
 
     /**
@@ -573,6 +573,18 @@ CG.Matrix4 = class
             m1.a10 - m2.a10, m1.a11 - m2.a11, m1.a12 - m2.a12, m1.a13 - m2.a13,
             m1.a20 - m2.a20, m1.a21 - m2.a21, m1.a22 - m2.a22, m1.a23 - m2.a23,
             m1.a30 - m2.a30, m1.a31 - m2.a31, m1.a32 - m2.a32, m1.a33 - m2.a33
-        )
+        );
+    }
+
+    /**
+     * Regresa la matriz como un array
+     * @returns array con los elementos de la matriz
+     */
+    toArray()
+    {
+        return [this.a00, this.a10, this.a20, this.a30,
+            this.a01, this.a11, this.a21, this.a31,
+            this.a02, this.a12, this.a22, this.a32,
+            this.a03, this.a13, this.a23, this.a33];
     }
 }
