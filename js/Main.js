@@ -61,17 +61,17 @@ window.addEventListener("load", function(evt) {
       CG.Matrix4.translate(new CG.Vector3(5, 0, 0))
     ),
     
+    new CG.Icosaedro(gl, 
+      [1, 0 , 1, 1], 
+      2, 
+      CG.Matrix4.translate(new CG.Vector3(0, 0, 0))
+    ),
     /**
     new CG.Dodecaedro(
       gl, 
       [0, 0, 1, 1], 
       2, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, -5))
-    ),
-    new CG.Icosaedro(gl, 
-      [1, 0 , 1, 1], 
-      2, 
-      CG.Matrix4.translate(new CG.Vector3(0, 0, 0))
     ),
     new CG.Tetraedro(
       gl, 
@@ -88,7 +88,7 @@ window.addEventListener("load", function(evt) {
   ];
 
   // se define la posición de la cámara (o el observador o el ojo)
-  let camera = new CG.Vector3(0, 11, 7);
+  let camera = new CG.Vector3(0, 0, 7);
   // se define la posición del centro de interés, hacia donde observa la cámara
   let coi = new CG.Vector3(0, 0, 0);
   // se crea una matriz de cámara (o vista)
