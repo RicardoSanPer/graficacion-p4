@@ -71,9 +71,8 @@ CG.Cono = class{
         this.vertices = [];
 
         //El cono esencialmente se crea igual que un cilindro, excepto que se
-        //considera con un "segmento" menos para que el vertice de la punta llene
-        // ese rol
-        for(var j = 0; j < this.nsegments-1; j++)
+        // la punta es el ultimo segmento con escala 0
+        for(var j = 0; j < this.nsegments; j++)
         {    
             //Obtener la altura de cada segmento del cilindro
             var desiredH = (this.g_height * 2);
@@ -95,10 +94,6 @@ CG.Cono = class{
         this.vertices.push(0);
         this.vertices.push(-this.g_height);
         this.vertices.push(0);
-
-        this.vertices.push(0);
-        this.vertices.push(this.g_height);
-        this.vertices.push(0);
     }
 
     /**Computa las caras */
@@ -106,29 +101,18 @@ CG.Cono = class{
     {
         this.faces = [];
         //Centro de la base
-        let centroB = (this.nlados * (this.nsegments-1));
-        let centroC = (this.nlados * (this.nsegments -1))+ 1;
+        let centroB = (this.nlados * (this.nsegments));
         
-        // Obtener circulo base
-        var tope = (this.nlados * (this.nsegments - 2));     
+        // Obtener circulo base    
         for(var i = 0; i < this.nlados; i++)
         {
             let index = i % this.nlados;
             let index2  = (index + 1) % this.nlados;
             this.faces.push(centroB, index, index2);
         }
-
-        
-         // Obtener circulo tope        
-         for(var i = 0; i < this.nlados; i++)
-         {
-             let index = i % this.nlados;
-             let index2  = ((index + 1) % this.nlados);
-             this.faces.push(centroC, index + tope, index2 + tope);
-         }
          
         //Lados del cilindro
-        for(var j = 0; j < this.nsegments - 2; j++)
+        for(var j = 0; j < this.nsegments - 1; j++)
         {
             var h = (j * this.nlados);
             for(var i = 0; i < this.nlados; i++)

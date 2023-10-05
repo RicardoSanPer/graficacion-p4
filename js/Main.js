@@ -44,8 +44,14 @@ window.addEventListener("load", function(evt) {
     new CG.Cono(
       gl, 
       [0, 1, 0, 1], 
-      2, 2, 16, 16, 
+      2, 2, 5, 0, 
       CG.Matrix4.translate(new CG.Vector3(0, 0, -5))
+    ),
+    new CG.Esfera(
+      gl, 
+      [0, 1, 1, 1], 
+      2, 16, 16, 
+      CG.Matrix4.translate(new CG.Vector3(-5, 0, 0))
     ),
     
     /**
@@ -54,12 +60,6 @@ window.addEventListener("load", function(evt) {
       [0, 0, 1, 1], 
       2, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, -5))
-    ),
-    new CG.Esfera(
-      gl, 
-      [0, 1, 1, 1], 
-      2, 16, 16, 
-      CG.Matrix4.translate(new CG.Vector3(-5, 0, 0))
     ),
     new CG.Icosaedro(gl, 
       [1, 0 , 1, 1], 
