@@ -44,7 +44,7 @@ window.addEventListener("load", function(evt) {
     new CG.Cono(
       gl, 
       [0, 1, 0, 1], 
-      3, 6, 4,  1, 
+      2, 2, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(0, 0, -5))
     ),
     
