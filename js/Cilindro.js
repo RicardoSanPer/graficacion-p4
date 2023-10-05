@@ -59,6 +59,7 @@ CG.Cilindro = class{
         gl.drawElements(gl.TRIANGLES, this.num_elements, gl.UNSIGNED_SHORT, 0);
       }
 
+    /**Computa la posicion de los vertices */
     calcularVertices()
     {
         this.vertices = [];
@@ -89,6 +90,7 @@ CG.Cilindro = class{
         this.vertices.push(0);
     }
 
+    /**Computa las caras */
     calcularCaras()
     {
         this.faces = [];
