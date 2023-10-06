@@ -43,6 +43,13 @@ var CG = (function(CG) {
       gl.drawElements(gl.TRIANGLES, this.num_elements, gl.UNSIGNED_SHORT, 0);
     }
 
+    //Dibuja wireframe
+    drawWireframe()
+    {
+      gl.uniform4fv(colorUniformLocation, [0,0,0,1]);
+      gl.drawElements(gl.LINE_STRIP, this.num_elements, gl.UNSIGNED_SHORT, 0);
+    }
+
     getVertices() {
       return [
           g_width,  g_height,  g_length,

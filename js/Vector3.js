@@ -41,6 +41,17 @@ CG.Vector3 = class{
     }
 
     /**
+     * Resta dos vectores
+     * @param {Vector3} u Vector 1
+     * @param {Vector3} v Vector 2 a restar
+     * @returns Vector resultante de la resta
+     */
+    static substract(u, v)
+    {
+        return new CG.Vector3(u.x - v.x, u.y - v.y, u.z - v.z);
+    }
+
+    /**
      * Devuelve un vector con los mismos valores
      * @returns Vector3 con los mismos valores.
      */

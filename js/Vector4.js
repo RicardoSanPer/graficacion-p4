@@ -167,4 +167,13 @@ CG.Vector4 = class
         this.z = 0;
         this.w = 0;
     }
+
+    /**
+     * Obtiene los valores del vector
+     * @returns Array con los valores [x,y,z,w]
+     */
+    getValues()
+    {
+        return [this.x, this.y, this.z, this.w];
+    }
 }
