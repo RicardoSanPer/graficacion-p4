@@ -72,13 +72,13 @@ window.addEventListener("load", function(evt) {
       2, 
       CG.Matrix4.translate(new CG.Vector3(0, 0, 5))
     ),
-    /**
     new CG.Dodecaedro(
       gl, 
       [0, 0, 1, 1], 
-      2, 
+      1, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, -5))
     ),
+    /**
     new CG.Toro(
       gl, 
       [0.25, 0.25, 0.25, 1], 
