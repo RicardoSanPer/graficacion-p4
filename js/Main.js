@@ -28,49 +28,17 @@ window.addEventListener("load", function(evt) {
 
   // se crean y posicionan los modelos geométricos, uno de cada tipo
   let geometry = [
-    new CG.PrismaRectangular(
-      gl, 
-      [1, 0.2, 0.3, 1], 
-      2, 3, 4, 
-      CG.Matrix4.translate(new CG.Vector3(-5, 0, 5))
-    ),
     new CG.Cilindro(
       gl, 
       [1, 0, 0, 1], 
       2, 2, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(-5, 0, -5))
     ),
-    
     new CG.Cono(
       gl, 
       [0, 1, 0, 1], 
       2, 2, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(0, 0, -5))
-    ),
-    new CG.Esfera(
-      gl, 
-      [0, 1, 1, 1], 
-      2, 16, 16, 
-      CG.Matrix4.translate(new CG.Vector3(-5, 0, 0))
-    ),
-    
-    new CG.Octaedro(
-      gl, 
-      [1, 1, 0, 1], 
-      2, 
-      CG.Matrix4.translate(new CG.Vector3(5, 0, 0))
-    ),
-    
-    new CG.Icosaedro(gl, 
-      [1, 0 , 1, 1], 
-      2, 
-      CG.Matrix4.translate(new CG.Vector3(0, 0, 0))
-    ),
-    new CG.Tetraedro(
-      gl, 
-      [0.5, 0.5, 0.5, 1], 
-      2, 
-      CG.Matrix4.translate(new CG.Vector3(0, 0, 5))
     ),
     new CG.Dodecaedro(
       gl, 
@@ -78,10 +46,39 @@ window.addEventListener("load", function(evt) {
       2, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, -5))
     ),
+    new CG.Esfera(
+      gl, 
+      [0, 1, 1, 1], 
+      2, 16, 16, 
+      CG.Matrix4.translate(new CG.Vector3(-5, 0, 0))
+    ),
+    new CG.Icosaedro(gl, 
+      [1, 0 , 1, 1], 
+      2, 
+      CG.Matrix4.translate(new CG.Vector3(0, 0, 0))
+    ),
+    new CG.Octaedro(
+      gl, 
+      [1, 1, 0, 1], 
+      2, 
+      CG.Matrix4.translate(new CG.Vector3(5, 0, 0))
+    ),
+    new CG.PrismaRectangular(
+      gl, 
+      [1, 0.2, 0.3, 1], 
+      2, 3, 4, 
+      CG.Matrix4.translate(new CG.Vector3(-5, 0, 5))
+    ),
+    new CG.Tetraedro(
+      gl, 
+      [0.5, 0.5, 0.5, 1], 
+      2, 
+      CG.Matrix4.translate(new CG.Vector3(0, 0, 5))
+    ),
     new CG.Toro(
       gl, 
       [0.25, 0.25, 0.25, 1], 
-      0.5, 2, 10, 5, 
+      4, 1, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, 5))
     ),
   ];

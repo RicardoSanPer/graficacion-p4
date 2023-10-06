@@ -14,8 +14,8 @@ CG.Toro = class{
      */
     constructor(gl, color, diametroi, diametroe, nfaces, nsegments, initial_transform)
     {
-        this.diametroInterno  = (diametroi || 1);
-        this.diametroExterno = (diametroe || 1);
+        this.diametroInterno  = (diametroi || 1)/2;
+        this.diametroExterno = (diametroe || 1)/2;
         //Establecer como minimo 3 caras
         this.nlados = (nfaces || 10);
         this.nlados = (this.nlados < 3)? 3 : this.nlados;
@@ -64,13 +64,13 @@ CG.Toro = class{
     calcularVertices()
     {
         this.vertices = [];
-
+        //Dibujar el toso
         for(var j = 0; j < this.nsegments; j++)
         {    
             let theta = Math.PI * 2 * (j/this.nsegments);
-            let currRad = this.diametroExterno + this.diametroInterno * Math.cos(theta);
-            let y = Math.sin(theta) * this.diametroInterno;
-            //Obtener la altura de cada segmento del cilindro
+            let currRad = this.diametroInterno + this.diametroExterno * Math.cos(theta);
+            let y = Math.sin(theta) * this.diametroExterno;
+            
             for(var i = 0; i < this.nlados; i++)
             {
                 let theta2 = (i/this.nlados) *(Math.PI * 2);
@@ -88,7 +88,7 @@ CG.Toro = class{
     calcularCaras()
     {
         this.faces = [];
-        //Lados del cilindro
+        //Segmentos del toro
         for(var j = 0; j < this.nsegments-1; j++)
         {
             var h = (j * this.nlados);
