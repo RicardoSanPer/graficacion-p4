@@ -11,7 +11,7 @@ CG.Icosaedro = class{
      */
     constructor(gl, color, length ,initial_transform)
     {
-        this.g_length  = (length || 1);
+        this.g_length  = (length || 1)/2;
 
         this.initial_transform = initial_transform || new CG.Matrix4();
 
