@@ -75,7 +75,7 @@ window.addEventListener("load", function(evt) {
     new CG.Dodecaedro(
       gl, 
       [0, 0, 1, 1], 
-      1, 
+      2, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, -5))
     ),
     /**

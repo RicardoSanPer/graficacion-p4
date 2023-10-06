@@ -53,8 +53,10 @@ CG.Esfera = class{
         gl.uniformMatrix4fv(PVM_matrixLocation, false, projectionViewModelMatrix.toArray());
   
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-        //gl.drawElements(gl.LINE_STRIP, this.num_elements, gl.UNSIGNED_SHORT, 0);
         gl.drawElements(gl.TRIANGLES, this.num_elements, gl.UNSIGNED_SHORT, 0);
+
+        gl.uniform4fv(colorUniformLocation, [0,0,0,1]);
+        gl.drawElements(gl.LINE_STRIP, this.num_elements, gl.UNSIGNED_SHORT, 0);
       }
 
     /**Computa la posicion de los vertices */
