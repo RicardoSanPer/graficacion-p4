@@ -84,8 +84,16 @@ if (!gl) throw "WebGL no soportado";
     ),
   ];
 
+  // Activar o desactivar wireframe
+  let verWireframe = false;
+  //Rotacion 1
+  var angleX = 90;
+  var angleY = 45;
+  var distance = 11;
+
   // se define la posición de la cámara (o el observador o el ojo)
-  let camera = new CG.Vector3(0, 11, 7);
+  let camera = new CG.Vector3(0, 0, distance);
+  updateCamera();
   // se define la posición del centro de interés, hacia donde observa la cámara
   let coi = new CG.Vector3(0, 0, 0);
   // se crea una matriz de cámara (o vista)
@@ -97,7 +105,7 @@ if (!gl) throw "WebGL no soportado";
   // se define una matriz que combina las transformaciones de la vista y de proyección
   let viewProjectionMatrix = CG.Matrix4.multiply(projectionMatrix, viewMatrix);
 
-  let verWireframe = false;
+  
 
 window.addEventListener("load", function(evt) {
   // se dibujan los objetos
@@ -105,21 +113,63 @@ window.addEventListener("load", function(evt) {
 
 });
 
-// Funcion para activar el wireframe
-document.querySelector('#wireframe')
-        .addEventListener('change', function()
+/**Obtiene teclas presionadas para rotar la camara */
+document.addEventListener('keydown', function(event) {
+  if(event.keyCode == 65) {
+      angleX += 6;
+  }
+  else if(event.keyCode == 68) {
+      angleX -= 6;
+  }
+  angleX = (angleX > 360)? angleX - 360 : (angleX < 0)? angleX + 360 : angleX;
+
+  if(event.keyCode == 87) {
+    angleY += 6;
+  }
+  else if(event.keyCode == 83) {
+    angleY -= 6;
+  }
+  angleY = (angleY > 90)? 90 : (angleY < -90) ? -90 : angleY;
+
+  if(event.keyCode == 81)
+  {
+    distance += 1;
+  }
+  else if(event.keyCode == 69)
+  {
+    distance -= 1;
+  }
+  distance = (distance < 0)? 0 : distance;
+
+  if(event.keyCode == 32)
+  {
+    verWireframe = !verWireframe;
+  }
+
+  updateCamera();
+  
+  updateView();
+});
+
+/**Actualiza la posicion de la camara */
+function updateCamera()
 {
-    if (this.checked)
-    {
-        verWireframe = true;
-        draw();
-    }
-    else
-    {
-      verWireframe = false;
-      draw();
-    }
-}, false);
+  var angle = Math.PI / 180;
+  let x = Math.cos(angleY * angle) * Math.cos(angleX * angle) * distance;
+  let y = Math.sin(angleY * angle) * distance;
+  let z = Math.cos(angleY * angle) * Math.sin(angleX * angle) * distance;
+  let displacement = new CG.Vector3(x,y,z);
+  camera = displacement;
+}
+
+/**Actualiza las matrices de vista */
+function updateView()
+{
+  viewMatrix = CG.Matrix4.lookAt(camera, coi, new CG.Vector3(0, 1, 0));
+  projectionMatrix = CG.Matrix4.perspective(75*Math.PI/180, canvas.width/canvas.height, 1, 2000);
+  viewProjectionMatrix = CG.Matrix4.multiply(projectionMatrix, viewMatrix);
+  draw();
+}
 
 // se encapsula el código de dibujo en una función
 function draw() {
