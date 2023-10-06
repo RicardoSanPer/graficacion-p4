@@ -4,6 +4,38 @@
 <head>
   <meta charset="utf-8" />
   <title>Page Title</title>
+  <link href="./style.css" rel="stylesheet"/>
+  
+</head>
+
+<body>
+  <canvas id="the_canvas" width="800" height="600" style="border: 1px dotted gray;"></canvas>
+  <div class="selector-content">
+  <input type="checkbox" id="wireframe">
+  <label for="wireframe">Ver Wireframe</label>
+</div>
+</body>
+<footer>
+
+  <script id="2d-vertex-shader" type="vertex-shader">
+    attribute vec4 a_position;
+  
+    uniform mat4 u_PVM_matrix;
+    
+    void main() {
+      gl_Position = u_PVM_matrix * a_position;
+    }
+    </script>
+  
+    <script id="2d-fragment-shader" type="fragment-shader">
+    precision mediump float;
+  
+    uniform vec4 u_color;
+  
+    void main() {
+      gl_FragColor = u_color;
+    }
+    </script>
 
   <script src="./js/Vector3.js"></script>
   <script src="./js/Vector4.js"></script>
@@ -23,34 +55,8 @@
   <script src="./js/Dodecaedro.js"></script>
   
   <script src="./js/Toro.js"></script>
-  <!--
-  -->
   <script src="./js/Main.js"></script>
-</head>
 
-<body>
-  <canvas id="the_canvas" width="800" height="600" style="border: 1px dotted gray;"></canvas>
-
-  <script id="2d-vertex-shader" type="vertex-shader">
-  attribute vec4 a_position;
-
-  uniform mat4 u_PVM_matrix;
   
-  void main() {
-    gl_Position = u_PVM_matrix * a_position;
-  }
-  </script>
-
-  <script id="2d-fragment-shader" type="fragment-shader">
-  precision mediump float;
-
-  uniform vec4 u_color;
-
-  void main() {
-    gl_FragColor = u_color;
-  }
-  </script>
-
-</body>
-
+</footer>
 </html>

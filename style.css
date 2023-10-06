@@ -1,0 +1,42 @@
+
+body
+{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/**Clases para estilizar selectores como checkbox y radio**/
+.selector-content
+{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin: 10px;
+}
+  /**Usando > se puede aplicar a los hijos de un div, para que solo el
+  div se tenga que establecer de la clase sin tener que asignarla individualmente
+  a cada clase*/
+
+.selector-content > *{
+    background-color: rgba(235, 247, 255, 0.842);
+	box-shadow: 1px 1px 1px rgba(99, 117, 129, 0.6);
+	backdrop-filter: blur(2px);
+	border-radius: 3px;
+    padding: 10px;
+	margin: 10px;
+    width: 100px;
+    height: auto;
+    cursor: pointer;
+    transition: 0.3s;
+}
+/**Oculta la apariencia default de radios y checkbox*/
+input[type=checkbox], input[type=radio]{
+    display: none;
+}
+/**Cuando un radio o checkbox es seleccionado*/
+.selector-content > :checked + label{
+    background-color: rgba(85, 164, 218, 0.6);
+    scale: 1.1;
+}

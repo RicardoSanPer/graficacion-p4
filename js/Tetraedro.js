@@ -5,8 +5,8 @@ CG.Tetraedro = class{
     /**
      * 
      * @param {*} gl Programa de Webgl
-     * @param {Array} color Color del icosaedro (RGBA)
-     * @param {Number} length radio del icosaedro
+     * @param {Array} color Color del tetraedro (RGBA)
+     * @param {Number} length radio del tetraedro
      * @param {Matrix4} initial_transform Transformacion inicial
      */
     constructor(gl, color, length ,initial_transform)
@@ -45,9 +45,13 @@ CG.Tetraedro = class{
   
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.drawElements(gl.TRIANGLES, this.num_elements, gl.UNSIGNED_SHORT, 0);
+    }
 
-        gl.uniform4fv(colorUniformLocation, [0,0,0,1]);
-        gl.drawElements(gl.LINE_STRIP, this.num_elements, gl.UNSIGNED_SHORT, 0);
+    //Dibuja wireframe
+    drawWireframe()
+    {
+      gl.uniform4fv(colorUniformLocation, [0,0,0,1]);
+      gl.drawElements(gl.LINE_STRIP, this.num_elements, gl.UNSIGNED_SHORT, 0);
     }
 
     getVertices()

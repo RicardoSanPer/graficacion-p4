@@ -2,14 +2,13 @@ var CG =  CG || {};
 
 CG.Toro = class{
 
-    /**
-     * 
-     * @param {*} gl Programa de Webgl
-     * @param {Array} color Color del cilindro (RGBA)
-     * @param {Number} diameter Diametro del toro
-     * @param {Number} height Altura de la circunferencia
-     * @param {Number} nfaces Numero de caras en la circunderencia
-     * @param {Number} nsegments Numero de subdivisiones en el toro
+    /** 
+     * @param {*} gl Programa de WebGL
+     * @param {Number} color Color del toro
+     * @param {Number} diametroi diametro del toso
+     * @param {Number} diametroe diametro del la circunferencia que dibuja el toro
+     * @param {Number} nfaces numero de lados en la circunferencia
+     * @param {Number} nsegments numero de circunferencias que formaran el toro
      * @param {Matrix4} initial_transform Transformacion inicial
      */
     constructor(gl, color, diametroi, diametroe, nfaces, nsegments, initial_transform)
@@ -55,7 +54,11 @@ CG.Toro = class{
   
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.drawElements(gl.TRIANGLES, this.num_elements, gl.UNSIGNED_SHORT, 0);
+      }
 
+      //Dibuja wireframe
+      drawWireframe()
+      {
         gl.uniform4fv(colorUniformLocation, [0,0,0,1]);
         gl.drawElements(gl.LINE_STRIP, this.num_elements, gl.UNSIGNED_SHORT, 0);
       }
