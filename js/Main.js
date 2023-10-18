@@ -72,7 +72,7 @@ if (!gl) throw "WebGL no soportado";
       gl, 
       [1, 0.2, 0.3, 1], 
       2, 3, 4, 
-      CG.Matrix4.translate(new CG.Vector3(0, 0, 0))
+      CG.Matrix4.translate(new CG.Vector3(-5, 0, 5))
     ),
     new CG.Tetraedro(
       gl, 
@@ -200,14 +200,6 @@ function draw() {
 
   gl.uniform3f(lightUniformLocation, posicionLuz.x, posicionLuz.y, posicionLuz.z);
   geometry[6].draw(gl,
-    positionAttributeLocation,
-    normalAttributeLocation, 
-    colorUniformLocation,
-    PVM_matrixLocation,
-    VM_matrixLocation,
-    projectionMatrix,
-    viewMatrix);
-  geometry[1].draw(gl,
     positionAttributeLocation,
     normalAttributeLocation, 
     colorUniformLocation,
