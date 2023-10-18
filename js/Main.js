@@ -74,13 +74,13 @@ if (!gl) throw "WebGL no soportado";
       2, 3, 4, 
       CG.Matrix4.translate(new CG.Vector3(-5, 0, 5))
     ),
-    /*
+    
     new CG.Tetraedro(
       gl, 
       [0.5, 0.5, 0.5, 1], 
       2, 
       CG.Matrix4.translate(new CG.Vector3(0, 0, 5))
-    ),
+    ),/*
     new CG.Toro(
       gl, 
       [0.25, 0.25, 0.25, 1], 
