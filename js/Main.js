@@ -45,7 +45,7 @@ if (!gl) throw "WebGL no soportado";
       2, 2, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(0, 0, -5))
     ),
-    new CG.Dodecaedro(
+    /*new CG.Dodecaedro(
       gl, 
       [0, 0, 1, 1], 
       2, 
@@ -67,13 +67,14 @@ if (!gl) throw "WebGL no soportado";
       [1, 1, 0, 1], 
       2, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, 0))
-    ),
+    ),*/
     new CG.PrismaRectangular(
       gl, 
       [1, 0.2, 0.3, 1], 
       2, 3, 4, 
       CG.Matrix4.translate(new CG.Vector3(-5, 0, 5))
     ),
+    /*
     new CG.Tetraedro(
       gl, 
       [0.5, 0.5, 0.5, 1], 
@@ -85,7 +86,7 @@ if (!gl) throw "WebGL no soportado";
       [0.25, 0.25, 0.25, 1], 
       4, 1, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, 5))
-    ),
+    ),*/
   ];
 
   // Activar o desactivar wireframe
@@ -199,14 +200,22 @@ function draw() {
   let posCamaraTransformada = projectionMatrix.multiplyVector(posicionLuz);
 
   gl.uniform3f(lightUniformLocation, posicionLuz.x, posicionLuz.y, posicionLuz.z);
-  geometry[6].draw(gl,
-    positionAttributeLocation,
-    normalAttributeLocation, 
-    colorUniformLocation,
-    PVM_matrixLocation,
-    VM_matrixLocation,
-    projectionMatrix,
-    viewMatrix);
+  for (let i=0; i<geometry.length; i++) {
+    // se dibuja la geometría
+    geometry[i].draw(
+      gl,
+      positionAttributeLocation,
+      normalAttributeLocation, 
+      colorUniformLocation,
+      PVM_matrixLocation,
+      VM_matrixLocation,
+      projectionMatrix,
+      viewMatrix);
+      if(verWireframe)
+      {
+        geometry[i].drawWireframe();
+      }
+  }
   /**
   // se itera sobre cada objeto geométrico definido
   for (let i=0; i<geometry.length; i++) {

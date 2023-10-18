@@ -45,19 +45,37 @@ CG.Cilindro = class{
         this.num_elements = vertices.length/3;
     }
 
-    draw(gl, positionAttributeLocation, colorUniformLocation, PVM_matrixLocation, projectionViewMatrix) {
+    draw(gl, positionAttributeLocation, normalAttributeLocation, colorUniformLocation, PVM_matrixLocation, VM_matrixLocation, projectionMatrix, viewMatrix) {
+        // el buffer de posiciones
         gl.enableVertexAttribArray(positionAttributeLocation);
         gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
         gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
   
+        // el buffer de normales
+        gl.enableVertexAttribArray(normalAttributeLocation);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
+        gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+  
+        // el color
         gl.uniform4fv(colorUniformLocation, this.color);
         
-        let projectionViewModelMatrix = CG.Matrix4.multiply(projectionViewMatrix, this.initial_transform);
+        // VM_matrixLocation
+        let viewModelMatrix = CG.Matrix4.multiply(viewMatrix, this.initial_transform);
+        gl.uniformMatrix4fv(VM_matrixLocation, false, viewModelMatrix.toArray());
   
+        // PVM_matrixLocation
+        let projectionViewModelMatrix = CG.Matrix4.multiply(projectionMatrix, viewModelMatrix);
         gl.uniformMatrix4fv(PVM_matrixLocation, false, projectionViewModelMatrix.toArray());
   
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-        gl.drawElements(gl.TRIANGLES, this.num_elements, gl.UNSIGNED_SHORT, 0);
+        // dibujado
+        gl.drawArrays(gl.TRIANGLES, 0, this.num_elements);
+      }
+  
+      //Dibuja wireframe
+      drawWireframe()
+      {
+        gl.uniform4fv(colorUniformLocation, [0,0,0,1]);
+        gl.drawElements(gl.LINE_STRIP, this.num_elements, gl.UNSIGNED_SHORT, 0);
       }
 
       //Dibuja wireframe
@@ -128,7 +146,7 @@ CG.Cilindro = class{
          {
              let index = i % this.nlados;
              let index2  = ((index + 1) % this.nlados);
-             faces.push(centroC, index + tope, index2 + tope);
+             faces.push(centroC, index2 + tope,index + tope);
          }
 
         //Lados del cilindro
@@ -141,7 +159,7 @@ CG.Cilindro = class{
                 let index2  = h + ((index + 1) % this.nlados);
                 let index3 = index + this.nlados;
                 //Dibujar ambos triangulos de la cara
-                faces.push(index, index2, index3);
+                faces.push(index, index3, index2);
                 faces.push(index3, index2 + this.nlados, index2);
             }
         }
