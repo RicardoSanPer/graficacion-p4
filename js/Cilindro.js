@@ -25,50 +25,63 @@ CG.Cilindro = class{
         this.nsegments += 2;
 
         this.initial_transform = initial_transform || new CG.Matrix4();
-
-        this.positionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-        
-        this.calcularVertices();
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW);
-
         this.color = color;
 
-        this.indexBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 
-        this.calcularCaras();
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.faces), gl.STATIC_DRAW);
+        let vertices = this.getVertices();
+        let normals = this.getNormals(vertices);
 
-        this.num_elements = this.faces.length;
+        // creación del buffer de datos del prisma
+        this.positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+        // creación del buffer de normales del prisma
+        this.normalBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
+
+        // número de elementos que define el prisma
+        this.num_elements = vertices.length/3;
     }
 
-    draw(gl, positionAttributeLocation, colorUniformLocation, PVM_matrixLocation, projectionViewMatrix) {
+    draw(gl, positionAttributeLocation, normalAttributeLocation, colorUniformLocation, PVM_matrixLocation, VM_matrixLocation, projectionMatrix, viewMatrix) {
+        // el buffer de posiciones
         gl.enableVertexAttribArray(positionAttributeLocation);
         gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
         gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
   
+        // el buffer de normales
+        gl.enableVertexAttribArray(normalAttributeLocation);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
+        gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+  
+        // el color
         gl.uniform4fv(colorUniformLocation, this.color);
         
-        let projectionViewModelMatrix = CG.Matrix4.multiply(projectionViewMatrix, this.initial_transform);
+        // VM_matrixLocation
+        let viewModelMatrix = CG.Matrix4.multiply(viewMatrix, this.initial_transform);
+        gl.uniformMatrix4fv(VM_matrixLocation, false, viewModelMatrix.toArray());
   
+        // PVM_matrixLocation
+        let projectionViewModelMatrix = CG.Matrix4.multiply(projectionMatrix, viewModelMatrix);
         gl.uniformMatrix4fv(PVM_matrixLocation, false, projectionViewModelMatrix.toArray());
   
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-        gl.drawElements(gl.TRIANGLES, this.num_elements, gl.UNSIGNED_SHORT, 0);
+        // dibujado
+        gl.drawArrays(gl.TRIANGLES, 0, this.num_elements);
       }
-
+  
       //Dibuja wireframe
       drawWireframe()
       {
         gl.uniform4fv(colorUniformLocation, [0,0,0,1]);
-        gl.drawElements(gl.LINE_STRIP, this.num_elements, gl.UNSIGNED_SHORT, 0);
+        gl.drawArrays(gl.LINE_STRIP, 0, this.num_elements);
       }
 
     /**Computa la posicion de los vertices */
-    calcularVertices()
+    getVertices()
     {
-        this.vertices = [];
+        let pos = [];
 
         for(var j = 0; j < this.nsegments; j++)
         {    
@@ -81,25 +94,33 @@ CG.Cilindro = class{
                 let x = Math.cos(theta) * this.g_radius;
                 let y = Math.sin(theta) * this.g_radius;
 
-                this.vertices.push(x);
-                this.vertices.push(-this.g_height + h);
-                this.vertices.push(y);
+                pos.push(x);
+                pos.push(-this.g_height + h);
+                pos.push(y);
             }
         }
 
-        this.vertices.push(0);
-        this.vertices.push(-this.g_height);
-        this.vertices.push(0);
+        pos.push(0);
+        pos.push(-this.g_height);
+        pos.push(0);
 
-        this.vertices.push(0);
-        this.vertices.push(this.g_height);
-        this.vertices.push(0);
+        pos.push(0);
+        pos.push(this.g_height);
+        pos.push(0);
+
+        let faces = this.getFaces();
+        let vertices = [];
+        
+        for (let i=0; i<faces.length; i++) {
+            vertices.push(pos[faces[i]*3], pos[faces[i]*3 +1], pos[faces[i]*3 +2]);
+        }
+        return vertices;
     }
 
     /**Computa las caras */
-    calcularCaras()
+    getFaces()
     {
-        this.faces = [];
+        let faces = [];
         //Centro de la base
         let centroB = (this.nlados * this.nsegments);
         let centroC = (this.nlados * this.nsegments )+ 1;
@@ -110,7 +131,7 @@ CG.Cilindro = class{
         {
             let index = i % this.nlados;
             let index2  = (index + 1) % this.nlados;
-            this.faces.push(centroB, index, index2);
+            faces.push(centroB, index, index2);
         }
 
          // Obtener circulo tope        
@@ -118,7 +139,7 @@ CG.Cilindro = class{
          {
              let index = i % this.nlados;
              let index2  = ((index + 1) % this.nlados);
-             this.faces.push(centroC, index + tope, index2 + tope);
+             faces.push(centroC, index2 + tope,index + tope);
          }
 
         //Lados del cilindro
@@ -131,9 +152,32 @@ CG.Cilindro = class{
                 let index2  = h + ((index + 1) % this.nlados);
                 let index3 = index + this.nlados;
                 //Dibujar ambos triangulos de la cara
-                this.faces.push(index, index2, index3);
-                this.faces.push(index3, index2 + this.nlados, index2);
+                faces.push(index, index3, index2);
+                faces.push(index3, index2 + this.nlados, index2);
             }
         }
+        return faces;
     }
+
+    getNormals(vertices) {
+        let normals = [];
+        let v1 = new CG.Vector3();
+        let v2 = new CG.Vector3();
+        let v3 = new CG.Vector3();
+        let n;
+      
+        for (let i=0; i<vertices.length; i+=9) {
+          v1.set( vertices[i  ], vertices[i+1], vertices[i+2] );
+          v2.set( vertices[i+3], vertices[i+4], vertices[i+5] );
+          v3.set( vertices[i+6], vertices[i+7], vertices[i+8] );
+          n = CG.Vector3.cross(CG.Vector3.substract(v1, v2), CG.Vector3.substract(v2, v3)).normalize();
+          normals.push(
+            n.x, n.y, n.z, 
+            n.x, n.y, n.z, 
+            n.x, n.y, n.z
+          );
+        }
+  
+        return normals;
+      }
 }
