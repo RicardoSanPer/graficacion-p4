@@ -50,13 +50,13 @@ if (!gl) throw "WebGL no soportado";
       [0, 0, 1, 1], 
       2, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, -5))
-    ),/*
+    ),
     new CG.Esfera(
       gl, 
       [0, 1, 1, 1], 
       2, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(-5, 0, 0))
-    ),
+    ),/*
     new CG.Icosaedro(gl, 
       [1, 0 , 1, 1], 
       2, 
@@ -216,21 +216,6 @@ function draw() {
         geometry[i].drawWireframe();
       }
   }
-  /**
-  // se itera sobre cada objeto geométrico definido
-  for (let i=0; i<geometry.length; i++) {
-    // se dibuja la geometría
-    geometry[i].draw(
-      gl,
-      positionAttributeLocation,
-      normalAttributeLocation, 
-      colorUniformLocation,
-      PVM_matrixLocation,
-      VM_matrixLocation,
-      projectionMatrix,
-      viewMatrix
-    )
-  }*/
 }
 
 //////////////////////////////////////////////////////////
