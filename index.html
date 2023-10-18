@@ -95,13 +95,12 @@
       float spec = pow(max(dot(viewDir, reflectDir),0.0), 16.0);
       vec3 specular = specularStrength * spec * vec3(1.0,1.0,1.0);
 
-      vec3 result = ambient + diffuse;
+      vec3 result = (ambient + diffuse)*vec3(u_color);
 
       if(useSpecular)
       {
         result = result + specular;
       }
-      result = result * vec3(u_color);
       gl_FragColor = vec4(result, u_color.a);
     }
   </script>
