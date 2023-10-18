@@ -80,13 +80,13 @@ if (!gl) throw "WebGL no soportado";
       [0.5, 0.5, 0.5, 1], 
       2, 
       CG.Matrix4.translate(new CG.Vector3(0, 0, 5))
-    ),/*
+    ),
     new CG.Toro(
       gl, 
       [0.25, 0.25, 0.25, 1], 
       4, 1, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, 5))
-    ),*/
+    ),
   ];
 
   // Activar o desactivar wireframe
