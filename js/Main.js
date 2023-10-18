@@ -29,7 +29,7 @@ if (!gl) throw "WebGL no soportado";
 
    // si el navegador no soporta WebGL la variable gl no está definida y se lanza una excepción
   
-   let posicionLuz = new CG.Vector3(0, 0, 2);
+   let posicionLuz = new CG.Vector4(0, 2, 0, 1);
 
   // se crean y posicionan los modelos geométricos, uno de cada tipo
   let geometry = [
@@ -197,9 +197,9 @@ function draw() {
   // pero si cada objeto geométrico tiene su propio estilo podemos cambiar el programa dentro del for dependiendo del modelo
   gl.useProgram(program);
   
-  let posCamaraTransformada = projectionMatrix.multiplyVector(posicionLuz);
-
-  gl.uniform3f(lightUniformLocation, posicionLuz.x, posicionLuz.y, posicionLuz.z);
+  
+  let lightpos = viewMatrix.multiplyVector(posicionLuz);
+  gl.uniform3f(lightUniformLocation, lightpos.x, lightpos.y, lightpos.z);
   for (let i=0; i<geometry.length; i++) {
     // se dibuja la geometría
     geometry[i].draw(

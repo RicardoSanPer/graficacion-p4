@@ -80,7 +80,7 @@ CG.Toro = class{
     getVertices()
     {
         let pos = [];
-        //Dibujar el toso
+        //Dibujar el toro
         for(var j = 0; j < this.nsegments; j++)
         {    
             let theta = Math.PI * 2 * (j/this.nsegments);
