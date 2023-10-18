@@ -45,12 +45,12 @@ if (!gl) throw "WebGL no soportado";
       2, 2, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(0, 0, -5))
     ),
-    /*new CG.Dodecaedro(
+    new CG.Dodecaedro(
       gl, 
       [0, 0, 1, 1], 
       2, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, -5))
-    ),
+    ),/*
     new CG.Esfera(
       gl, 
       [0, 1, 1, 1], 
