@@ -1,2 +1,4 @@
 # graficacion-p4
-Practica 4 de Graficación por Computadora
+Practica 5 de Graficación por Computadora.
+
+Por Ricardo Sánchez Pérez.
