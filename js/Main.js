@@ -61,13 +61,13 @@ if (!gl) throw "WebGL no soportado";
       [1, 0 , 1, 1], 
       2, 
       CG.Matrix4.translate(new CG.Vector3(0, 0, 0))
-    ),/*
+    ),
     new CG.Octaedro(
       gl, 
       [1, 1, 0, 1], 
       2, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, 0))
-    ),*/
+    ),
     new CG.PrismaRectangular(
       gl, 
       [1, 0.2, 0.3, 1], 
