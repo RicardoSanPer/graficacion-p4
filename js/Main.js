@@ -21,11 +21,15 @@ if (!gl) throw "WebGL no soportado";
 
   // se construye una referencia al attribute "a_position" definido en el shader
   let positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+  let normalAttributeLocation = gl.getAttribLocation(program, "a_normal");
   let colorUniformLocation = gl.getUniformLocation(program, "u_color");
+  let lightUniformLocation = gl.getUniformLocation(program, "u_light_position");
   let PVM_matrixLocation = gl.getUniformLocation(program, "u_PVM_matrix");
+  let VM_matrixLocation = gl.getUniformLocation(program, "u_VM_matrix");
 
    // si el navegador no soporta WebGL la variable gl no está definida y se lanza una excepción
   
+   let posicionLuz = new CG.Vector3(0, 0, 2);
 
   // se crean y posicionan los modelos geométricos, uno de cada tipo
   let geometry = [
@@ -68,7 +72,7 @@ if (!gl) throw "WebGL no soportado";
       gl, 
       [1, 0.2, 0.3, 1], 
       2, 3, 4, 
-      CG.Matrix4.translate(new CG.Vector3(-5, 0, 5))
+      CG.Matrix4.translate(new CG.Vector3(0, 0, 0))
     ),
     new CG.Tetraedro(
       gl, 
@@ -186,26 +190,46 @@ function draw() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   // se le indica a WebGL que programa debe utilizar
-  // recordando, un programa en este contexto es una pareja compuesta por un shader de vértices y uno de fragmentos
+  // recordando, un programa en este contexto es una pareja compuesta por un shader de vértices y uno de fragmento
 
   // como todos los objetos que vamos a dibujar usan el mismo par de shader podemos usar esta función fuera del siguiente for
   // pero si cada objeto geométrico tiene su propio estilo podemos cambiar el programa dentro del for dependiendo del modelo
   gl.useProgram(program);
+  
+  let posCamaraTransformada = projectionMatrix.multiplyVector(posicionLuz);
+
+  gl.uniform3f(lightUniformLocation, posicionLuz.x, posicionLuz.y, posicionLuz.z);
+  geometry[6].draw(gl,
+    positionAttributeLocation,
+    normalAttributeLocation, 
+    colorUniformLocation,
+    PVM_matrixLocation,
+    VM_matrixLocation,
+    projectionMatrix,
+    viewMatrix);
+  geometry[1].draw(gl,
+    positionAttributeLocation,
+    normalAttributeLocation, 
+    colorUniformLocation,
+    PVM_matrixLocation,
+    VM_matrixLocation,
+    projectionMatrix,
+    viewMatrix);
+  /**
   // se itera sobre cada objeto geométrico definido
   for (let i=0; i<geometry.length; i++) {
     // se dibuja la geometría
     geometry[i].draw(
-      gl, // referencia al contexto de render de WebGL
-      positionAttributeLocation, // referencia a: attribute vec4 a_position;
-      colorUniformLocation, // referencia a: uniform vec4 u_color;
-      PVM_matrixLocation, // referencia a: uniform mat4 u_PVM_matrix;
-      viewProjectionMatrix // la matriz de transformación de la vista y proyección
-      );
-      if(verWireframe)
-      {
-        geometry[i].drawWireframe();
-      }
-  }
+      gl,
+      positionAttributeLocation,
+      normalAttributeLocation, 
+      colorUniformLocation,
+      PVM_matrixLocation,
+      VM_matrixLocation,
+      projectionMatrix,
+      viewMatrix
+    )
+  }*/
 }
 
 //////////////////////////////////////////////////////////
