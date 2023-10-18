@@ -43,6 +43,11 @@ CG.Esfera = class{
         this.num_elements = vertices.length/3;
     }
 
+    setTransform(transform)
+    {
+      this.initial_transform = transform;
+    }
+
     draw(gl, positionAttributeLocation, normalAttributeLocation, colorUniformLocation, PVM_matrixLocation, VM_matrixLocation, projectionMatrix, viewMatrix) {
         // el buffer de posiciones
         gl.enableVertexAttribArray(positionAttributeLocation);
