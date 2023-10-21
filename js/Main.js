@@ -25,7 +25,7 @@ CamPosition = gl.getUniformLocation(program, "cameraPos");
 specularUniform = gl.getUniformLocation(program, "useSpecular");
 
 let posicionLuz = new CG.Vector4(0, 3, 0, 1);
-let usarEspecular = false;
+let usarEspecular = true;
 
 
 let geometry = [
@@ -50,7 +50,7 @@ let geometry = [
     new CG.Esfera(
       gl, 
       [0, 1, 1, 1], 
-      2, 16, 16, 
+      2, 32, 16, 
       CG.Matrix4.translate(new CG.Vector3(-5, 0, 0))
     ),
     new CG.Icosaedro(gl, 
@@ -83,17 +83,10 @@ let geometry = [
       [0.25, 0.25, 0.25, 1], 
       4, 1, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, 5))
-    ),
-    //Luz
-    new CG.Esfera(
-      gl, 
-      [1, 1, 1, 0], 
-      0.25, 8, 8, 
-      CG.Matrix4.translate(new CG.Vector3(posicionLuz.x, posicionLuz.y, posicionLuz.z))
-    ),
+    )
   ];
 
-let camara = new CG.Camara(canvas);
+let camara = new CG.CamaraCOI(canvas, new CG.Vector3(0,0,0));
     
 //Dibuja la escena
 function draw()
@@ -104,11 +97,10 @@ function draw()
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.useProgram(program);
 
-    camara.updateCamera();
     camara.updateMatrix();
     let cameraPos = camara.position;
 
-    let lightpos = camara.viewMatrix.multiplyVector(new CG.Vector4(2,2,2,1));
+    let lightpos = camara.viewMatrix.multiplyVector(posicionLuz);
     gl.uniform3f(lightUniformLocation, lightpos.x, lightpos.y, lightpos.z);
     gl.uniform3f(CamPosition, cameraPos.x, cameraPos.y, cameraPos.z);
     gl.uniform1i(specularUniform, usarEspecular);
@@ -165,11 +157,42 @@ function createProgram(gl, vertexShader, fragmentShader) {
 
     console.log(gl.getProgramInfoLog(program));
 }
+//Input
+document.addEventListener('keydown', function(event) {
+    let angleX = 0;
+    let angleY = 0;
+    let distance = 0;
+    if(event.keyCode == 65) {
+        angleX = 6;
+    }
+    else if(event.keyCode == 68) {
+        angleX = -6;
+    }
+  
+    if(event.keyCode == 87) {
+      angleY = 6;
+    }
+    else if(event.keyCode == 83) {
+      angleY = -6;
+    }
+  
+    if(event.keyCode == 81)
+    {
+      distance = 1;
+    }
+    else if(event.keyCode == 69)
+    {
+      distance = -1;
+    }
+    camara.updatePosition(angleX, angleY, distance);
+  });
+
 //Bucle de actualizacion
 function update(delta)
 {
     geometry[6].Rotate(0,90 * delta,0);
     geometry[6].setTranslation(0,0.5 * Math.cos(counter * 4),0);
+    posicionLuz.set( Math.sin(counter * 4)*9,3, Math.cos(counter * 4)*9)
 }
 
 //Bucle de dibujado
@@ -177,6 +200,7 @@ function loop(timestamp)
 {  
     let delta = (timestamp - lastRender)/ 1000;
     counter += delta;
+    camara.Update(delta);
     update(delta);
     draw();
     lastRender = timestamp;
