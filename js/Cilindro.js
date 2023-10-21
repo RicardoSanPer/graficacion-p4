@@ -1,6 +1,6 @@
 var CG =  CG || {};
 
-CG.Cilindro = class{
+CG.Cilindro = class extends CG.Mesh{
 
     /**
      * 
@@ -14,6 +14,8 @@ CG.Cilindro = class{
      */
     constructor(gl, color, diameter, height, nfaces, nsegments, initial_transform)
     {
+        super(color, initial_transform);
+
         this.g_radius  = (diameter || 1);
         this.g_height = (height || 1);
         //Establecer como minimo 3 caras
@@ -24,59 +26,8 @@ CG.Cilindro = class{
         this.nsegments = (this.nsegments < 0)? 0 : this.nsegments;
         this.nsegments += 2;
 
-        this.initial_transform = initial_transform || new CG.Matrix4();
-        this.color = color;
-
-
-        let vertices = this.getVertices();
-        let normals = this.getNormals(vertices);
-
-        // creación del buffer de datos del prisma
-        this.positionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-
-        // creación del buffer de normales del prisma
-        this.normalBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
-
-        // número de elementos que define el prisma
-        this.num_elements = vertices.length/3;
+        this.setBuffers(gl);
     }
-
-    draw(gl, positionAttributeLocation, normalAttributeLocation, colorUniformLocation, PVM_matrixLocation, VM_matrixLocation, projectionMatrix, viewMatrix) {
-        // el buffer de posiciones
-        gl.enableVertexAttribArray(positionAttributeLocation);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-        gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
-  
-        // el buffer de normales
-        gl.enableVertexAttribArray(normalAttributeLocation);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
-        gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
-  
-        // el color
-        gl.uniform4fv(colorUniformLocation, this.color);
-        
-        // VM_matrixLocation
-        let viewModelMatrix = CG.Matrix4.multiply(viewMatrix, this.initial_transform);
-        gl.uniformMatrix4fv(VM_matrixLocation, false, viewModelMatrix.toArray());
-  
-        // PVM_matrixLocation
-        let projectionViewModelMatrix = CG.Matrix4.multiply(projectionMatrix, viewModelMatrix);
-        gl.uniformMatrix4fv(PVM_matrixLocation, false, projectionViewModelMatrix.toArray());
-  
-        // dibujado
-        gl.drawArrays(gl.TRIANGLES, 0, this.num_elements);
-      }
-  
-      //Dibuja wireframe
-      drawWireframe()
-      {
-        gl.uniform4fv(colorUniformLocation, [0,0,0,1]);
-        gl.drawArrays(gl.LINE_STRIP, 0, this.num_elements);
-      }
 
     /**Computa la posicion de los vertices */
     getVertices()

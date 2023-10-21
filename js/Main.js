@@ -1,116 +1,177 @@
-class Main {
 
-    constructor()
-    {
-        this.canvas = document.getElementById("the_canvas");
-        this.gl = this.canvas.getContext("webgl");
-        if(!this.gl)
-        {
-            return;
-        }
-
-        //Crear programa
-        let vertexShaderSource = document.getElementById("2d-vertex-shader").text;
-        let vertexShader = this.createShader(this.gl, this.gl.VERTEX_SHADER, vertexShaderSource);
-
-        let fragmentShaderSource = document.getElementById("2d-fragment-shader").text;
-        let fragmentShader = this.createShader(this.gl, this.gl.FRAGMENT_SHADER, fragmentShaderSource);
-
-        this.program = this.createProgram(this.gl, vertexShader, fragmentShader);
-
-        this.positionAttributeLocation = this.gl.getAttribLocation(this.program, "a_position");
-        this.normalAttributeLocation = this.gl.getAttribLocation(this.program, "a_normal");
-        this.colorUniformLocation = this.gl.getUniformLocation(this.program, "u_color");
-        this.lightUniformLocation = this.gl.getUniformLocation(this.program, "u_light_position");
-        this.PVM_matrixLocation = this.gl.getUniformLocation(this.program, "u_PVM_matrix");
-        this.VM_matrixLocation = this.gl.getUniformLocation(this.program, "u_VM_matrix");
-        this.CamPosition = this.gl.getUniformLocation(this.program, "cameraPos");
-        this.specularUniform = this.gl.getUniformLocation(this.program, "useSpecular");
-        
-        this.posicionLuz = new CG.Vector4(0, 3, 0, 1);
-        this.usarEspecular = false;
-
-        this.prisma = new CG.PrismaRectangular(
-            this.gl, 
-            [1, 0.2, 0.3, 1], 
-            1, 1, 1, 
-            CG.Matrix4.translate(new CG.Vector3(0, 0, 0))
-        );
-
-        this.camara = new CG.Camara(this.canvas);
-
-        this.update = this.draw.toString();
-    }
-
-    draw()
-    {
-        this.gl.enable(this.gl.DEPTH_TEST);
-        this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
-        this.gl.clearColor(0.4, 0.4, 0.4, 1);
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-        this.gl.useProgram(this.program);
-
-        this.camara.updateCamera();
-        this.camara.updateMatrix();
-        let cameraPos = this.camara.position;
-
-        let lightpos = this.camara.viewMatrix.multiplyVector(new CG.Vector4(0,2,0,1));
-        this.gl.uniform3f(this.lightUniformLocation, lightpos.x, lightpos.y, lightpos.z);
-        this.gl.uniform3f(this.CamPosition, cameraPos.x, cameraPos.y, cameraPos.z);
-        this.gl.uniform1i(this.specularUniform, this.usarEspecular);
-
-        this.prisma.draw(
-            this.gl,
-            this.positionAttributeLocation,
-            this.normalAttributeLocation, 
-            this.colorUniformLocation,
-            this.PVM_matrixLocation,
-            this.VM_matrixLocation,
-            this.camara.projectionMatrix,
-            this.camara.viewMatrix
-        )
-    }
-    //////////////////////////////////////////////////////////
-    // Funciones de utilería para la construcción de shaders
-    //////////////////////////////////////////////////////////
-    /**
-     * Función que crear un shader, dado un contexto de render, un tipo y el código fuente
-     */
-    createShader(gl, type, source) {
-        let shader = gl.createShader(type);
-        gl.shaderSource(shader, source);
-        gl.compileShader(shader);
-    
-        let success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-    
-        if (success) {
-        return shader;
-        }
-    
-        console.log(gl.getShaderInfoLog(shader));
-        gl.deleteShader(shader);
-    }
-    
-    /**
-     * Función que toma un shader de vértices con uno de fragmentos y construye un programa
-     */
-    createProgram(gl, vertexShader, fragmentShader) {
-        let program = gl.createProgram();
-        gl.attachShader(program, vertexShader);
-        gl.attachShader(program, fragmentShader);
-        gl.linkProgram(program);
-    
-        let success = gl.getProgramParameter(program, gl.LINK_STATUS);
-    
-        if (success) {
-        return program;
-        }
-    
-        console.log(gl.getProgramInfoLog(program));
-    }
-
+canvas = document.getElementById("the_canvas");
+gl = canvas.getContext("webgl");
+if(!gl)
+{
+    throw "WebGL no soportado";
 }
 
+//Crear programa
+let vertexShaderSource = document.getElementById("2d-vertex-shader").text;
+let vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+
+let fragmentShaderSource = document.getElementById("2d-fragment-shader").text;
+let fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+
+let program = createProgram(gl, vertexShader, fragmentShader);
+
+positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+normalAttributeLocation = gl.getAttribLocation(program, "a_normal");
+colorUniformLocation = gl.getUniformLocation(program, "u_color");
+lightUniformLocation = gl.getUniformLocation(program, "u_light_position");
+PVM_matrixLocation = gl.getUniformLocation(program, "u_PVM_matrix");
+VM_matrixLocation = gl.getUniformLocation(program, "u_VM_matrix");
+CamPosition = gl.getUniformLocation(program, "cameraPos");
+specularUniform = gl.getUniformLocation(program, "useSpecular");
+
+let posicionLuz = new CG.Vector4(0, 3, 0, 1);
+let usarEspecular = false;
 
 
-var renderer = new Main();
+let geometry = [
+    new CG.Cilindro(
+      gl, 
+      [1, 0, 0, 1], 
+      2, 2, 16, 16, 
+      CG.Matrix4.translate(new CG.Vector3(-5, 0, -5))
+    ),
+    new CG.Cono(
+      gl, 
+      [0, 1, 0, 1], 
+      2, 2, 16, 16, 
+      CG.Matrix4.translate(new CG.Vector3(0, 0, -5))
+    ),
+    new CG.Dodecaedro(
+      gl, 
+      [0, 0, 1, 1], 
+      2, 
+      CG.Matrix4.translate(new CG.Vector3(5, 0, -5))
+    ),
+    new CG.Esfera(
+      gl, 
+      [0, 1, 1, 1], 
+      2, 16, 16, 
+      CG.Matrix4.translate(new CG.Vector3(-5, 0, 0))
+    ),
+    new CG.Icosaedro(gl, 
+      [1, 0 , 1, 1], 
+      2, 
+      CG.Matrix4.translate(new CG.Vector3(0, 0, 0))
+    ),
+    new CG.Octaedro(
+      gl, 
+      [1, 1, 0, 1], 
+      2, 
+      CG.Matrix4.translate(new CG.Vector3(5, 0, 0))
+    ),
+    new CG.PrismaRectangular(
+      gl, 
+      [1, 0.2, 0.3, 1], 
+      2, 3, 4, 
+      CG.Matrix4.translate(new CG.Vector3(-5, 0, 5))
+    ),
+    
+    new CG.Tetraedro(
+      gl, 
+      [0.5, 0.5, 0.5, 1], 
+      2, 
+      CG.Matrix4.translate(new CG.Vector3(0, 0, 5))
+    ),
+    new CG.Toro(
+      gl, 
+      [0.25, 0.25, 0.25, 1], 
+      4, 1, 16, 16, 
+      CG.Matrix4.translate(new CG.Vector3(5, 0, 5))
+    ),
+    //Luz
+    new CG.Esfera(
+      gl, 
+      [1, 1, 1, 0], 
+      0.25, 8, 8, 
+      CG.Matrix4.translate(new CG.Vector3(posicionLuz.x, posicionLuz.y, posicionLuz.z))
+    ),
+  ];
+
+
+let camara = new CG.Camara(canvas);
+    
+//Dibuja la escena
+function draw()
+{
+    gl.enable(gl.DEPTH_TEST);
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    gl.clearColor(0.4, 0.4, 0.4, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.useProgram(program);
+
+    camara.updateCamera();
+    camara.updateMatrix();
+    let cameraPos = camara.position;
+
+    let lightpos = camara.viewMatrix.multiplyVector(new CG.Vector4(2,2,2,1));
+    gl.uniform3f(lightUniformLocation, lightpos.x, lightpos.y, lightpos.z);
+    gl.uniform3f(CamPosition, cameraPos.x, cameraPos.y, cameraPos.z);
+    gl.uniform1i(specularUniform, usarEspecular);
+
+
+    for (let i=0; i<geometry.length; i++) {
+        // se dibuja la geometría
+        geometry[i].draw(
+          gl,
+          positionAttributeLocation,
+          normalAttributeLocation, 
+          colorUniformLocation,
+          PVM_matrixLocation,
+          VM_matrixLocation,
+          camara.projectionMatrix,
+          camara.viewMatrix);
+        }
+}
+//////////////////////////////////////////////////////////
+// Funciones de utilería para la construcción de shaders
+//////////////////////////////////////////////////////////
+/**
+ * Función que crear un shader, dado un contexto de render, un tipo y el código fuente
+ */
+function createShader(gl, type, source) {
+    let shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+
+    let success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+
+    if (success) {
+        return shader;
+    }
+
+    console.log(gl.getShaderInfoLog(shader));
+    gl.deleteShader(shader);
+}
+
+/**
+ * Función que toma un shader de vértices con uno de fragmentos y construye un programa
+ */
+function createProgram(gl, vertexShader, fragmentShader) {
+    let program = gl.createProgram();
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
+
+    let success = gl.getProgramParameter(program, gl.LINK_STATUS);
+
+    if (success) {
+        return program;
+    }
+
+    console.log(gl.getProgramInfoLog(program));
+}
+
+//Bucle de dibujado
+function loop(timestamp)
+{
+    camara.rotate();
+    draw();
+    window.requestAnimationFrame(loop);
+}
+
+window.requestAnimationFrame(loop)

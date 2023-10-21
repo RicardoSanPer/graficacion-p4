@@ -36,4 +36,9 @@ CG.Camara = class{
         this.projectionMatrix = CG.Matrix4.perspective(75*Math.PI/180, this.canvas.width/this.canvas.height, 1, 2000);;
         this.viewProjectionMatrix = CG.Matrix4.multiply(this.projectionMatrix, this.viewMatrix);
     }
+
+    rotate()
+    {
+        this.angleX += 1;
+    }
 }
