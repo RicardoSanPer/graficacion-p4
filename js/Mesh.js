@@ -6,6 +6,12 @@ CG.Mesh = class{
         
         this.color = color;
         this.initial_transform = initial_transform || new CG.Matrix4();
+
+        this.translation = new CG.Vector3(0,0,0);
+        this.rotation = new CG.Vector3(0,0,0);
+        this.scaleV = new CG.Vector3(1,1,1);
+
+        this.transformMatrix = new CG.Matrix4();
   
       }
 
@@ -42,8 +48,9 @@ CG.Mesh = class{
         // el color
         gl.uniform4fv(colorUniformLocation, this.color);
         
+        let transform = CG.Matrix4.multiply(this.initial_transform, this.transformMatrix);
         // VM_matrixLocation
-        let viewModelMatrix = CG.Matrix4.multiply(viewMatrix, this.initial_transform);
+        let viewModelMatrix = CG.Matrix4.multiply(viewMatrix, transform);
         gl.uniformMatrix4fv(VM_matrixLocation, false, viewModelMatrix.toArray());
   
         // PVM_matrixLocation
@@ -67,5 +74,72 @@ CG.Mesh = class{
       getNormals(vertices)
       {
         return [];
+      }
+
+      setRotation(x,y,z)
+      {
+        x = (x || 0);
+        y = (y || 0);
+        z = (z || 0);
+
+        this.rotation.set(x,y,z);
+
+        this.updateTransformMatrix();
+      }
+      setTranslation(x,y,z)
+      {
+        x = (x || 0);
+        y = (y || 0);
+        z = (z || 0);
+
+        this.translation.set(x,y,z);
+        this.updateTransformMatrix();
+      }
+      setScale(x,y,z)
+      {
+        x = (x || 1);
+        y = (y || 1);
+        z = (z || 1);
+
+        this.scaleV.set(x,y,z);
+        this.updateTransformMatrix();
+      }
+
+      Rotate(x,y,z)
+      {
+
+        let conversion = Math.PI / 180;
+        x = (x || 0);
+        y = (y || 0);
+        z = (z || 0);
+
+        this.rotation.x += x * conversion;
+        this.rotation.y += y * conversion;
+        this.rotation.z += z * conversion;
+
+        this.updateTransformMatrix();
+      }
+
+      Translate(x,y,z)
+      {
+
+        x = (x || 0);
+        y = (y || 0);
+        z = (z || 0);
+
+        this.rotation.x += x;
+        this.rotation.y += y;
+        this.rotation.z += z;
+
+        this.updateTransformMatrix();
+      }
+
+      updateTransformMatrix()
+      {
+        this.transformMatrix = CG.Matrix4.scale(this.scaleV);
+        this.transformMatrix = CG.Matrix4.multiply(this.transformMatrix, CG.Matrix4.translate(this.translation));
+        this.transformMatrix = CG.Matrix4.multiply(this.transformMatrix, CG.Matrix4.rotateX(this.rotation.x));
+        this.transformMatrix = CG.Matrix4.multiply(this.transformMatrix, CG.Matrix4.rotateY(this.rotation.y));
+        this.transformMatrix = CG.Matrix4.multiply(this.transformMatrix, CG.Matrix4.rotateZ(this.rotation.z));
       }
 }

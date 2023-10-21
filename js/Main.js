@@ -64,6 +64,7 @@ let geometry = [
       2, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, 0))
     ),
+    //6
     new CG.PrismaRectangular(
       gl, 
       [1, 0.2, 0.3, 1], 
@@ -91,7 +92,6 @@ let geometry = [
       CG.Matrix4.translate(new CG.Vector3(posicionLuz.x, posicionLuz.y, posicionLuz.z))
     ),
   ];
-
 
 let camara = new CG.Camara(canvas);
     
@@ -168,8 +168,8 @@ function createProgram(gl, vertexShader, fragmentShader) {
 
 //Bucle de dibujado
 function loop(timestamp)
-{
-    camara.rotate();
+{  
+    geometry[6].Rotate(0,1,0);
     draw();
     window.requestAnimationFrame(loop);
 }
