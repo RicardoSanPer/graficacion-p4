@@ -68,7 +68,7 @@ let geometry = [
     new CG.PrismaRectangular(
       gl, 
       [1, 0.2, 0.3, 1], 
-      2, 3, 4, 
+      1, 1, 1, 
       CG.Matrix4.translate(new CG.Vector3(-5, 0, 5))
     ),
     
@@ -165,13 +165,24 @@ function createProgram(gl, vertexShader, fragmentShader) {
 
     console.log(gl.getProgramInfoLog(program));
 }
+//Bucle de actualizacion
+function update(delta)
+{
+    geometry[6].Rotate(0,90 * delta,0);
+    geometry[6].setTranslation(0,0.5 * Math.cos(counter * 4),0);
+}
 
 //Bucle de dibujado
 function loop(timestamp)
 {  
-    geometry[6].Rotate(0,1,0);
+    let delta = (timestamp - lastRender)/ 1000;
+    counter += delta;
+    update(delta);
     draw();
+    lastRender = timestamp;
+
     window.requestAnimationFrame(loop);
 }
-
+var lastRender = 0;
+var counter = 0;
 window.requestAnimationFrame(loop)

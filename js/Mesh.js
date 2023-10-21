@@ -127,9 +127,9 @@ CG.Mesh = class{
         y = (y || 0);
         z = (z || 0);
 
-        this.rotation.x += x;
-        this.rotation.y += y;
-        this.rotation.z += z;
+        this.translation.x += x;
+        this.translation.y += y;
+        this.translation.z += z;
 
         this.updateTransformMatrix();
       }
