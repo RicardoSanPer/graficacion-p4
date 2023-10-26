@@ -30,7 +30,8 @@ CG.Cono = class extends CG.Mesh{
         this.nsegments = (this.nsegments < 0)? 0 : this.nsegments; 
         this.nsegments += 2;
 
-        this.setBuffers(gl);
+        this.setSmoothBuffer(gl);
+        this.setFlatBuffer(gl);
     }
 
     /**
@@ -60,18 +61,37 @@ CG.Cono = class extends CG.Mesh{
                 pos.push(y);
             }
         }
+        
+        return pos;
+    }
 
+    getFlatVertices()
+    {
+        var pos = [];
+        
         pos.push(0);
         pos.push(-this.g_height);
         pos .push(0);
 
-        let faces = this.getFaces();
+        for(var i = 0; i < this.nlados; i++)
+            {
+                let theta = (i/this.nlados) *(Math.PI * 2);
+                let x = Math.cos(theta) * this.g_radius;
+                let y = Math.sin(theta) * this.g_radius;
+
+                pos.push(x);
+                pos.push(-this.g_height);
+                pos.push(y);
+            }
+
+
+        let faces = this.getFlatFaces();
         let vertices = [];
         
         for (let i=0; i<faces.length; i++) {
             vertices.push(pos[faces[i]*3], pos[faces[i]*3 +1], pos[faces[i]*3 +2]);
         }
-        
+
         return vertices;
     }
 
@@ -79,16 +99,7 @@ CG.Cono = class extends CG.Mesh{
     getFaces()
     {
         let faces = [];
-        //Centro de la base
-        let centroB = (this.nlados * (this.nsegments));
         
-        // Obtener circulo base    
-        for(var i = 0; i < this.nlados; i++)
-        {
-            let index = i % this.nlados;
-            let index2  = (index + 1) % this.nlados;
-            faces.push(centroB, index, index2);
-        }
          
         //Lados del cono
         for(var j = 0; j < this.nsegments - 1; j++)
@@ -107,25 +118,24 @@ CG.Cono = class extends CG.Mesh{
         return faces;
     }
 
-    getNormals(vertices) {
-        let normals = [];
-        let v1 = new CG.Vector3();
-        let v2 = new CG.Vector3();
-        let v3 = new CG.Vector3();
-        let n;
-      
-        for (let i=0; i<vertices.length; i+=9) {
-          v1.set( vertices[i  ], vertices[i+1], vertices[i+2] );
-          v2.set( vertices[i+3], vertices[i+4], vertices[i+5] );
-          v3.set( vertices[i+6], vertices[i+7], vertices[i+8] );
-          n = CG.Vector3.cross(CG.Vector3.substract(v1, v2), CG.Vector3.substract(v2, v3)).normalize();
-          normals.push(
-            n.x, n.y, n.z, 
-            n.x, n.y, n.z, 
-            n.x, n.y, n.z
-          );
+    getFlatFaces()
+    {
+        let faces = [];
+        // Obtener circulo base    
+        for(var i = 1; i < this.nlados; i++)
+        {
+            let index = i % this.nlados;
+            let index2  = index + 1;
+            faces.push(0, index, index2);
         }
-  
-        return normals;
-      }
+        faces.push(0, this.nlados, 1);
+        return faces;   
+    }
+
+
+    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+    {
+        this.drawSmooth(gl, positionAttributeLocation, normalAttributeLocation);
+        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation);
+    }
 }

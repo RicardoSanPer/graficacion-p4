@@ -28,31 +28,31 @@ let posicionLuz = new CG.Vector4(0, 3, 0, 1);
 let usarEspecular = true;
 
 
-let geometry = [
+let geometry = [/*
     new CG.Cilindro(
       gl, 
       [1, 0, 0, 1], 
       2, 2, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(-5, 0, -5))
-    ),
+    ),*/
     new CG.Cono(
       gl, 
       [0, 1, 0, 1], 
       2, 2, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(0, 0, -5))
-    ),
+    ),/*  
     new CG.Dodecaedro(
       gl, 
       [0, 0, 1, 1], 
       2, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, -5))
-    ),
+    ),*/
     new CG.Esfera(
       gl, 
       [0, 1, 1, 1], 
       2, 32, 16, 
       CG.Matrix4.translate(new CG.Vector3(-5, 0, 0))
-    ),
+    ),/*
     new CG.Icosaedro(gl, 
       [1, 0 , 1, 1], 
       2, 
@@ -83,10 +83,10 @@ let geometry = [
       [0.25, 0.25, 0.25, 1], 
       4, 1, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, 5))
-    )
+    )*/ 
   ];
 
-let camara = new CG.CamaraCOI(canvas, new CG.Vector3(0,0,0));
+let camara = new CG.CamaraCOI(canvas, new CG.Vector3(0,0,-5));
     
 //Dibuja la escena
 function draw()
@@ -190,9 +190,7 @@ document.addEventListener('keydown', function(event) {
 //Bucle de actualizacion
 function update(delta)
 {
-    geometry[6].Rotate(0,90 * delta,0);
-    geometry[6].setTranslation(0,0.5 * Math.cos(counter * 4),0);
-    posicionLuz.set( Math.sin(counter * 4)*9,3, Math.cos(counter * 4)*9)
+    posicionLuz.set(0,Math.cos(counter * 4)*9, 0)
 }
 
 //Bucle de dibujado
