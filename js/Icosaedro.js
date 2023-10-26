@@ -17,10 +17,10 @@ CG.Icosaedro = class extends CG.Mesh{
         this.initial_transform = initial_transform || new CG.Matrix4();
         this.color = color;
 
-        this.setBuffers(gl);
+        this.setFlatBuffer(gl);
     }
 
-    getVertices()
+    getFlatVertices()
     {
         var pos = [];
         var y = Math.sin(Math.PI / 6) * this.g_length;
@@ -43,7 +43,7 @@ CG.Icosaedro = class extends CG.Mesh{
         }
         pos.push(0, this.g_length, 0);
 
-        let faces = this.getFaces();
+        let faces = this.getFlatFaces();
         let vertices = [];
         
         for (let i=0; i<faces.length; i++) {
@@ -52,7 +52,7 @@ CG.Icosaedro = class extends CG.Mesh{
         return vertices;
     }
 
-    getFaces()
+    getFlatFaces()
     {
         return[
             
@@ -81,25 +81,8 @@ CG.Icosaedro = class extends CG.Mesh{
         ];
     }
 
-    getNormals(vertices) {
-        let normals = [];
-        let v1 = new CG.Vector3();
-        let v2 = new CG.Vector3();
-        let v3 = new CG.Vector3();
-        let n;
-      
-        for (let i=0; i<vertices.length; i+=9) {
-          v1.set( vertices[i  ], vertices[i+1], vertices[i+2] );
-          v2.set( vertices[i+3], vertices[i+4], vertices[i+5] );
-          v3.set( vertices[i+6], vertices[i+7], vertices[i+8] );
-          n = CG.Vector3.cross(CG.Vector3.substract(v1, v2), CG.Vector3.substract(v2, v3)).normalize();
-          normals.push(
-            n.x, n.y, n.z, 
-            n.x, n.y, n.z, 
-            n.x, n.y, n.z
-          );
-        }
-  
-        return normals;
-      }
+    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+    {
+        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation);
+    }
 }

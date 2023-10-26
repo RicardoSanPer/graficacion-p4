@@ -11,11 +11,11 @@ var CG = (function(CG) {
       
       super(color, initial_transform);
 
-      this.setBuffers(gl);
+      this.setFlatBuffer(gl);
       
     }
 
-    getVertices() {
+    getFlatVertices() {
       
       let pos = [
           g_width,  g_height,  g_length,
@@ -28,15 +28,16 @@ var CG = (function(CG) {
         -g_width, -g_height, -g_length
       ];
 
-      let faces = this.getFaces();
+      let faces = this.getFlatFaces();
       let vertices = [];
       
       for (let i=0; i<faces.length; i++) {
-        vertices.push(pos[faces[i]*3], pos[faces[i]*3 +1], pos[faces[i]*3 +2]);
+          vertices.push(pos[faces[i]*3], pos[faces[i]*3 +1], pos[faces[i]*3 +2]);
       }
+
       return vertices;
     }
-    getFaces() {
+    getFlatFaces() {
       return [
         0, 2, 6,
         0, 6, 4,
@@ -58,30 +59,12 @@ var CG = (function(CG) {
       ];
     }
     
-    getNormals(vertices) {
-      let normals = [];
-      let v1 = new CG.Vector3();
-      let v2 = new CG.Vector3();
-      let v3 = new CG.Vector3();
-      let n;
-    
-      for (let i=0; i<vertices.length; i+=9) {
-        v1.set( vertices[i  ], vertices[i+1], vertices[i+2] );
-        v2.set( vertices[i+3], vertices[i+4], vertices[i+5] );
-        v3.set( vertices[i+6], vertices[i+7], vertices[i+8] );
-        n = CG.Vector3.cross(CG.Vector3.substract(v1, v2), CG.Vector3.substract(v2, v3)).normalize();
-        normals.push(
-          n.x, n.y, n.z, 
-          n.x, n.y, n.z, 
-          n.x, n.y, n.z
-        );
-      }
-
-      return normals;
+    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+    {
+        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation);
     }
+
   }
-
-
   CG.PrismaRectangular = PrismaRectangular;
   return CG;
 })(CG || {});

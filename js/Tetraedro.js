@@ -14,9 +14,9 @@ CG.Tetraedro = class extends CG.Mesh{
         super(color, initial_transform);
         this.g_length  = (length || 1);
 
-        this.setBuffers(gl);
+        this.setFlatBuffer(gl);
     }
-    getVertices()
+    getFlatVertices()
     {
         var pos = [];
         pos.push(0, this.g_length, 0);
@@ -30,7 +30,7 @@ CG.Tetraedro = class extends CG.Mesh{
             pos.push(x,y,z);
         }
 
-        let faces = this.getFaces();
+        let faces = this.getFlatFaces();
         let vertices = [];
         
         for (let i=0; i<faces.length; i++) {
@@ -39,7 +39,7 @@ CG.Tetraedro = class extends CG.Mesh{
         return vertices;
     }
 
-    getFaces()
+    getFlatFaces()
     {
         return[
             
@@ -71,5 +71,9 @@ CG.Tetraedro = class extends CG.Mesh{
         }
   
         return normals;
+      }
+      drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+      {
+          this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation);
       }
 }

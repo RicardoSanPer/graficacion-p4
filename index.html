@@ -14,6 +14,7 @@
   <div class="controles">
   <div class="lista">
     <label>Controles</label>
+    <label>https://stackoverflow.com/questions/19245363/opengl-glut-surface-normals-of-cone</label>
     <ul>
       <li><label>W,S:</label> Rotar la camara arriba y abajo.</li>
       <li><label>A, D:</label> Rotar la camara a la izquierda y derecha.</li>
@@ -88,7 +89,7 @@
       vec3 diffuse = diff * vec3(1.0,1.0,1.0);
 
       //Especular
-      float specularStrength = 5.0;
+      float specularStrength = 1.0;
       vec3 viewDir = normalize(cameraPos - v_position);
       vec3 reflectDir = reflect(-lightDir, norm);
 

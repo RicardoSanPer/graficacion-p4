@@ -23,7 +23,7 @@ CG.Toro = class extends CG.Mesh{
         this.nsegments = (nsegments || 10);
         this.nsegments = (this.nsegments < 0)? 3 : this.nsegments;
 
-        this.setBuffers(gl);
+        this.setSmoothBuffer(gl);
     }
 
     /**Computa la posicion de los vertices */
@@ -49,13 +49,7 @@ CG.Toro = class extends CG.Mesh{
             }
         }
 
-        let faces = this.getFaces();
-        let vertices = [];
-        
-        for (let i=0; i<faces.length; i++) {
-            vertices.push(pos[faces[i]*3], pos[faces[i]*3 +1], pos[faces[i]*3 +2]);
-        }
-        return vertices;
+        return pos;
     }
 
     /**Computa las caras */
@@ -89,26 +83,8 @@ CG.Toro = class extends CG.Mesh{
         }
         return faces;
     }
-
-    getNormals(vertices) {
-        let normals = [];
-        let v1 = new CG.Vector3();
-        let v2 = new CG.Vector3();
-        let v3 = new CG.Vector3();
-        let n;
-      
-        for (let i=0; i<vertices.length; i+=9) {
-          v1.set( vertices[i  ], vertices[i+1], vertices[i+2] );
-          v2.set( vertices[i+3], vertices[i+4], vertices[i+5] );
-          v3.set( vertices[i+6], vertices[i+7], vertices[i+8] );
-          n = CG.Vector3.cross(CG.Vector3.substract(v1, v2), CG.Vector3.substract(v2, v3)).normalize();
-          normals.push(
-            n.x, n.y, n.z, 
-            n.x, n.y, n.z, 
-            n.x, n.y, n.z
-          );
-        }
-  
-        return normals;
-      }
+    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+    {
+        this.drawSmooth(gl, positionAttributeLocation, normalAttributeLocation);
+    }
 }

@@ -14,10 +14,10 @@ CG.Dodecaedro = class extends CG.Mesh{
         super(color, initial_transform);
         this.g_length  = (length || 1)/2;
 
-        this.setBuffers(gl);
+        this.setFlatBuffer(gl);
     }
 
-    getVertices()
+    getFlatVertices()
     {
         let l = this.g_length;
         let phi = (1 + Math.sqrt(5))/2;
@@ -47,7 +47,7 @@ CG.Dodecaedro = class extends CG.Mesh{
         -l*phi,0,-l/phi, //t 19
         ];
 
-        let faces = this.getFaces();
+        let faces = this.getFlatFaces();
         let vertices = [];
         
         for (let i=0; i<faces.length; i++) {
@@ -56,7 +56,7 @@ CG.Dodecaedro = class extends CG.Mesh{
         return vertices;
     }
 
-    getFaces()
+    getFlatFaces()
     {
         return[
             0, 12, 14,
@@ -109,25 +109,8 @@ CG.Dodecaedro = class extends CG.Mesh{
         ];
     }
 
-    getNormals(vertices) {
-        let normals = [];
-        let v1 = new CG.Vector3();
-        let v2 = new CG.Vector3();
-        let v3 = new CG.Vector3();
-        let n;
-      
-        for (let i=0; i<vertices.length; i+=9) {
-          v1.set( vertices[i  ], vertices[i+1], vertices[i+2] );
-          v2.set( vertices[i+3], vertices[i+4], vertices[i+5] );
-          v3.set( vertices[i+6], vertices[i+7], vertices[i+8] );
-          n = CG.Vector3.cross(CG.Vector3.substract(v1, v2), CG.Vector3.substract(v2, v3)).normalize();
-          normals.push(
-            n.x, n.y, n.z, 
-            n.x, n.y, n.z, 
-            n.x, n.y, n.z
-          );
-        }
-  
-        return normals;
-      }
+    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+    {
+        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation);
+    }
 }
