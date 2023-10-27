@@ -21,10 +21,12 @@ colorUniformLocation = gl.getUniformLocation(program, "u_color");
 lightUniformLocation = gl.getUniformLocation(program, "u_light_position");
 PVM_matrixLocation = gl.getUniformLocation(program, "u_PVM_matrix");
 VM_matrixLocation = gl.getUniformLocation(program, "u_VM_matrix");
+ambientColorLocation = gl.getUniformLocation(program, "ambientColor");
 CamPosition = gl.getUniformLocation(program, "cameraPos");
 specularUniform = gl.getUniformLocation(program, "useSpecular");
 
-let posicionLuz = new CG.Vector4(5, 0, 5, 1);
+let lightDir = new CG.Vector4(1, 0, 0, 0);
+let ambientColor = new CG.Vector3(135/255, 206/255, 235/255);
 let usarEspecular = true;
 
 
@@ -93,15 +95,16 @@ function draw()
 {
     gl.enable(gl.DEPTH_TEST);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    gl.clearColor(0.4, 0.4, 0.4, 1);
+    gl.clearColor(ambientColor.x,ambientColor.y,ambientColor.z, 1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.useProgram(program);
 
     camara.updateMatrix();
     let cameraPos = camara.position;
 
-    let lightpos = camara.viewMatrix.multiplyVector(posicionLuz);
+    let lightpos = camara.viewMatrix.multiplyVector(lightDir);
     gl.uniform3f(lightUniformLocation, lightpos.x, lightpos.y, lightpos.z);
+    gl.uniform3f(ambientColorLocation, ambientColor.x,ambientColor.y,ambientColor.z)
     gl.uniform3f(CamPosition, cameraPos.x, cameraPos.y, cameraPos.z);
     gl.uniform1i(specularUniform, usarEspecular);
 
@@ -190,7 +193,7 @@ document.addEventListener('keydown', function(event) {
 //Bucle de actualizacion
 function update(delta)
 {
-    posicionLuz.set(0,Math.sin(counter) * 9,0);
+
 }
 
 //Bucle de dibujado
