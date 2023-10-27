@@ -80,8 +80,8 @@ let geometry = [
     ), 
     new CG.Toro(
       gl, 
-      [0.5, 0.5, 0.5, 1], 
-      4, 1, 16, 16, 
+      [0.25, 0.25, 0.25, 1], 
+      4, 1, 32, 16, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, 5))
     )
   ];

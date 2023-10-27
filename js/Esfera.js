@@ -89,6 +89,20 @@ CG.Esfera = class extends CG.Mesh{
         return faces;
     }
 
+    getSmoothNormals(vertices)
+    {
+        let normals = []
+        let v1 = new CG.Vector3();
+        for (let i=0; i<vertices.length; i+=3) {
+            v1.set( vertices[i  ], vertices[i+1], vertices[i+2] );
+            v1 = v1.normalize();
+            normals.push(
+              v1.x, v1.y, v1.z,
+            );
+          }
+        return normals;
+    }
+
     drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
     {
         this.drawSmooth(gl, positionAttributeLocation, normalAttributeLocation);
