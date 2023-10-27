@@ -24,7 +24,7 @@ VM_matrixLocation = gl.getUniformLocation(program, "u_VM_matrix");
 CamPosition = gl.getUniformLocation(program, "cameraPos");
 specularUniform = gl.getUniformLocation(program, "useSpecular");
 
-let posicionLuz = new CG.Vector4(0, 300, 0, 1);
+let posicionLuz = new CG.Vector4(5, 0, 5, 1);
 let usarEspecular = true;
 
 
@@ -32,7 +32,7 @@ let geometry = [
     new CG.Cilindro(
       gl, 
       [1, 0, 0, 1], 
-      2, 2, 16, 16, 
+      2, 2, 16, 0, 
       CG.Matrix4.translate(new CG.Vector3(-5, 0, -5))
     ),
     new CG.Cono(
@@ -80,7 +80,7 @@ let geometry = [
     ), 
     new CG.Toro(
       gl, 
-      [0.25, 0.25, 0.25, 1], 
+      [0.25, 1, 0.25, 1], 
       4, 1, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, 5))
     )
@@ -190,7 +190,7 @@ document.addEventListener('keydown', function(event) {
 //Bucle de actualizacion
 function update(delta)
 {
-    //posicionLuz.set(0,0, 0)
+    posicionLuz.set(5,Math.sin(counter) * 9,5);
 }
 
 //Bucle de dibujado

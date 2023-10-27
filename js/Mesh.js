@@ -18,7 +18,7 @@ CG.Mesh = class{
       setSmoothBuffer(gl)
       {
         let vertices = this.getVertices();
-
+        let normals = this.getSmoothNormals(vertices);
         this.positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
@@ -26,7 +26,7 @@ CG.Mesh = class{
         // creación del buffer de normales del prisma
         this.normalBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
 
         this.indexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
@@ -138,6 +138,10 @@ CG.Mesh = class{
         return [];
       }
 
+      getSmoothNormals(vertices)
+      {
+        return vertices;
+      }
       /**
        * Obtiene la lista de vértices para la geometria con drawArray (geometria con shading suavizado)
        * @returns 
