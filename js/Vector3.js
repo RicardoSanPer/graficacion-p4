@@ -132,6 +132,16 @@ CG.Vector3 = class{
     }
 
     /**
+     * Multiplica el vector por un escalar
+     * @param {Number} f 
+     * @returns vector escalado
+     */
+    scale(f)
+    {
+        return new CG.Vector3(this.x *f, this.y *f, this.z *f);
+    }
+
+    /**
      * Asigna nuevos valores al vector
      * @param {Number} x Valor para x
      * @param {Number} y Valor para y

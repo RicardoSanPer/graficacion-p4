@@ -1,6 +1,6 @@
 var CG =  CG || {};
 
-CG.Esfera = class{
+CG.Esfera = class extends CG.Mesh{
 
     /**
      * 
@@ -13,6 +13,7 @@ CG.Esfera = class{
      */
     constructor(gl, color, radius, nfaces, nsegments, initial_transform)
     {
+        super(color, initial_transform);
         this.g_radius  = (radius || 1);
         //Establecer como minimo 3 caras
         this.nlados = (nfaces || 10);
@@ -24,62 +25,10 @@ CG.Esfera = class{
 
         this.initial_transform = initial_transform || new CG.Matrix4();
         this.color = color;
-
-
-        let vertices = this.getVertices();
-        let normals = this.getNormals(vertices);
-
-        // creación del buffer de datos del prisma
-        this.positionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-
-        // creación del buffer de normales del prisma
-        this.normalBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
-
-        // número de elementos que define el prisma
-        this.num_elements = vertices.length/3;
-    }
-
-    setTransform(transform)
-    {
-      this.initial_transform = transform;
-    }
-
-    draw(gl, positionAttributeLocation, normalAttributeLocation, colorUniformLocation, PVM_matrixLocation, VM_matrixLocation, projectionMatrix, viewMatrix) {
-        // el buffer de posiciones
-        gl.enableVertexAttribArray(positionAttributeLocation);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-        gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
-  
-        // el buffer de normales
-        gl.enableVertexAttribArray(normalAttributeLocation);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
-        gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
-  
-        // el color
-        gl.uniform4fv(colorUniformLocation, this.color);
         
-        // VM_matrixLocation
-        let viewModelMatrix = CG.Matrix4.multiply(viewMatrix, this.initial_transform);
-        gl.uniformMatrix4fv(VM_matrixLocation, false, viewModelMatrix.toArray());
-  
-        // PVM_matrixLocation
-        let projectionViewModelMatrix = CG.Matrix4.multiply(projectionMatrix, viewModelMatrix);
-        gl.uniformMatrix4fv(PVM_matrixLocation, false, projectionViewModelMatrix.toArray());
-  
-        // dibujado
-        gl.drawArrays(gl.TRIANGLES, 0, this.num_elements);
-      }
+        this.setSmoothBuffer(gl);
 
-    //Dibuja wireframe
-    drawWireframe()
-      {
-        gl.uniform4fv(colorUniformLocation, [0,0,0,1]);
-        gl.drawArrays(gl.LINE_STRIP, 0, this.num_elements);
-      }
+    }
     /**Computa la posicion de los vertices */
     getVertices()
     {
@@ -102,7 +51,13 @@ CG.Esfera = class{
                 pos.push(h);
                 pos.push(z);
             }
-        }
+        }   
+        return pos;
+    }
+
+    getFlatVertices()
+    {
+        let pos = this.getVertices();
         let faces = this.getFaces();
         let vertices = [];
         
@@ -134,25 +89,22 @@ CG.Esfera = class{
         return faces;
     }
 
-    getNormals(vertices) {
-        let normals = [];
+    getSmoothNormals(vertices)
+    {
+        let normals = []
         let v1 = new CG.Vector3();
-        let v2 = new CG.Vector3();
-        let v3 = new CG.Vector3();
-        let n;
-      
-        for (let i=0; i<vertices.length; i+=9) {
-          v1.set( vertices[i  ], vertices[i+1], vertices[i+2] );
-          v2.set( vertices[i+3], vertices[i+4], vertices[i+5] );
-          v3.set( vertices[i+6], vertices[i+7], vertices[i+8] );
-          n = CG.Vector3.cross(CG.Vector3.substract(v1, v2), CG.Vector3.substract(v2, v3)).normalize();
-          normals.push(
-            n.x, n.y, n.z, 
-            n.x, n.y, n.z, 
-            n.x, n.y, n.z
-          );
-        }
-  
+        for (let i=0; i<vertices.length; i+=3) {
+            v1.set( vertices[i  ], vertices[i+1], vertices[i+2] );
+            v1 = v1.normalize();
+            normals.push(
+              v1.x, v1.y, v1.z,
+            );
+          }
         return normals;
-      }
+    }
+
+    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+    {
+        this.drawSmooth(gl, positionAttributeLocation, normalAttributeLocation);
+    }
 }
