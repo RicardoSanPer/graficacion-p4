@@ -80,7 +80,7 @@ let geometry = [
     ), 
     new CG.Toro(
       gl, 
-      [0.25, 1, 0.25, 1], 
+      [0.5, 0.5, 0.5, 1], 
       4, 1, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, 5))
     )
@@ -190,7 +190,7 @@ document.addEventListener('keydown', function(event) {
 //Bucle de actualizacion
 function update(delta)
 {
-    posicionLuz.set(5,Math.sin(counter) * 9,5);
+    posicionLuz.set(0,Math.sin(counter) * 9,0);
 }
 
 //Bucle de dibujado

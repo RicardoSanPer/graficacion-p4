@@ -151,20 +151,11 @@ CG.Cilindro = class extends CG.Mesh{
     {
         let normals = []
         let v1 = new CG.Vector3();
-        let v2 = new CG.Vector3();
-        let v3 = new CG.Vector3();
-        let n;
-        for (let i=0; i<vertices.length; i+=9) {
+        for (let i=0; i<vertices.length; i+=3) {
             v1.set( vertices[i  ], 0, vertices[i+2] );
-            v2.set( vertices[i+3], 0, vertices[i+5] );
-            v3.set( vertices[i+6], 0, vertices[i+8] );
             v1 = v1.normalize();
-            v2 = v2.normalize();
-            v3 = v3.normalize();
             normals.push(
-              v1.x, v1.y, v1.z, 
-              v2.x, v2.y, v2.z, 
-              v3.x, v3.y, v3.z
+              v1.x, v1.y, v1.z,
             );
           }
         return normals;

@@ -48,7 +48,6 @@ CG.Toro = class extends CG.Mesh{
                 pos.push(z);
             }
         }
-
         return pos;
     }
 
@@ -71,6 +70,7 @@ CG.Toro = class extends CG.Mesh{
             }
         }
         //Dibujar las ultimas caras
+        
         h = ((this.nsegments-1) * this.nlados);
         for(var i = 0; i < this.nlados; i++)
         {
@@ -83,6 +83,30 @@ CG.Toro = class extends CG.Mesh{
         }
         return faces;
     }
+
+    getSmoothNormals(vertices)
+    {
+        let normals = []
+        let v1 = new CG.Vector3();
+        for (let i=0; i < vertices.length; i+=3) {
+            v1.set( vertices[i  ], vertices[i+1], vertices[i+2] );
+
+            let v1n = new CG.Vector3();
+            v1n.set(v1.x, 0, v1.z);
+            v1n = v1n.normalize();
+
+            v1n = v1n.scale(((this.diametroExterno / 2) + this.diametroInterno));
+            let n = CG.Vector3.substract(v1, v1n);
+            
+            n = n.normalize();
+            normals.push(
+              n.x, n.y, n.z,
+            );
+        }
+            
+        return normals;
+    }
+
     drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
     {
         this.drawSmooth(gl, positionAttributeLocation, normalAttributeLocation);
