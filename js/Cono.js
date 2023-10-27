@@ -132,12 +132,14 @@ CG.Cono = class extends CG.Mesh{
         return faces;   
     }
 
+    //TODO: Arreglar normales
     getSmoothNormals(vertices)
     {
         let normals = []
         let v1 = new CG.Vector3();
+        let coneAngle = Math.atan(this.g_height / this.g_radius);
         for (let i=0; i<vertices.length; i+=3) {
-            v1.set( vertices[i  ], 0, vertices[i+2] );
+            v1.set( vertices[i  ], Math.sin(coneAngle), vertices[i+2] );
             v1 = v1.normalize();
             normals.push(
               v1.x, v1.y, v1.z,
