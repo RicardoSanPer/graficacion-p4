@@ -80,13 +80,13 @@ let geometry = [
       [0, 1, 0, 1], 
       2, 2, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(0, 0, -5))
-    ),
+    ),*/
     new CG.Dodecaedro(
       gl, 
       [0, 0, 1, 1], 
       2, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, -5))
-    ),*/
+    ),
     new CG.Esfera(
       gl, 
       [0, 1, 1, 1], 
@@ -140,6 +140,7 @@ function draw()
     let cameraPos = camara.position;
 
     let lightpos = camara.viewMatrix.multiplyVector(lightDir);
+    
     gl.uniform3f(lightUniformLocation, lightpos.x, lightpos.y, lightpos.z);
     gl.uniform3f(ambientColorLocation, ambientColor.x,ambientColor.y,ambientColor.z)
     gl.uniform3f(CamPosition, cameraPos.x, cameraPos.y, cameraPos.z);
@@ -148,14 +149,6 @@ function draw()
     gl.uniform1i(textureLocation, 0);
     gl.uniform1i(normalTextureLocation, 1);
     gl.uniform1i(specularTextureLocation, 2);
-
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.activeTexture(gl.TEXTURE1);
-    gl.bindTexture(gl.TEXTURE_2D, normal);
-    gl.activeTexture(gl.TEXTURE2);
-    gl.bindTexture(gl.TEXTURE_2D, specular);
-
 
     for (let i=0; i<geometry.length; i++) {
         // se dibuja la geometría

@@ -12,9 +12,16 @@ CG.Mesh = class{
         this.scaleV = new CG.Vector3(1,1,1);
 
         this.transformMatrix = new CG.Matrix4();
+
+        this.texture = this.loadTexture("earth.jpg", gl);
+        this.normalTexture = this.loadTexture("earth_normal2.jpg", gl);
+        this.specularTexture = this.loadTexture("earth_specular.jpg", gl);
   
       }
-
+      /**
+       * Crea los buffers de geometria suavizada
+       * @param {*} gl 
+       */
       setSmoothBuffer(gl)
       {
         let vertices = this.getVertices();
@@ -40,6 +47,10 @@ CG.Mesh = class{
         this.numfaces = this.getFaces().length;
       }
 
+      /**
+       * Crea buffer de geometria plana
+       * @param {*} gl 
+       */
       setFlatBuffer(gl)
       {
         let vertices = this.getFlatVertices();
@@ -61,6 +72,23 @@ CG.Mesh = class{
         this.num_elements = vertices.length / 3;
 
       }
+      /**
+       * Carga una imagen
+       * @param {String} src 
+       * @param {*} gl 
+       * @returns 
+       */
+      loadTexture(src, gl) {
+        const texture = gl.createTexture();
+        const image = new Image();
+        image.onload = () => {
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+            gl.generateMipmap(gl.TEXTURE_2D);
+        };
+        image.src = src;
+        return texture;
+    }
       
       /**
        * Dibuja la geometría con normales de vértice
@@ -115,9 +143,24 @@ CG.Mesh = class{
         gl.bindBuffer(gl.ARRAY_BUFFER, this.uvFlatBuffer);
         gl.vertexAttribPointer(uvUniformLocation, 2, gl.FLOAT, false, 0,0);
 
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+
         gl.drawArrays(gl.TRIANGLES, 0, this.num_elements);
       }
 
+      /**
+       * Dibuja la geometria
+       * @param {*} gl 
+       * @param {*} positionAttributeLocation 
+       * @param {*} normalAttributeLocation 
+       * @param {*} colorUniformLocation 
+       * @param {*} PVM_matrixLocation 
+       * @param {*} VM_matrixLocation 
+       * @param {*} projectionMatrix 
+       * @param {*} viewMatrix 
+       * @param {*} uvUniformLocation 
+       */
       draw(gl, positionAttributeLocation, normalAttributeLocation, colorUniformLocation, PVM_matrixLocation, VM_matrixLocation, projectionMatrix, viewMatrix, uvUniformLocation) 
       {
         // el color
@@ -132,9 +175,15 @@ CG.Mesh = class{
         // PVM_matrixLocation
         let projectionViewModelMatrix = CG.Matrix4.multiply(projectionMatrix, viewModelMatrix);
         gl.uniformMatrix4fv(PVM_matrixLocation, false, projectionViewModelMatrix.toArray());
-        
-        
-        
+
+        //texturas
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, this.normalTexture);
+        gl.activeTexture(gl.TEXTURE2);
+        gl.bindTexture(gl.TEXTURE_2D, this.specularTexture);
+
         
         this.drawGeometry(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation);
         
@@ -220,16 +269,29 @@ CG.Mesh = class{
         return normals;
       }
 
+      /**
+       * Genera las UVs de geometria plana
+       * @returns array con las coordenadas uv
+       */
       getFlatUV()
       {
         return [];
       }
-
+      /**
+       * Genera las UVs de la geometria suave
+       * @returns array con las coordenadas uv
+       */
       getSmoothUV()
       {
         return [];
       }
 
+      /**
+       * Establece una rotacion para el objeto
+       * @param {Number} x 
+       * @param {Number} y 
+       * @param {Number} z 
+       */
       setRotation(x,y,z)
       {
         x = (x || 0);
@@ -240,6 +302,12 @@ CG.Mesh = class{
 
         this.updateTransformMatrix();
       }
+      /**
+       * Establece una traslacion para el objeto
+       * @param {Number} x 
+       * @param {Number} y 
+       * @param {Number} z 
+       */
       setTranslation(x,y,z)
       {
         x = (x || 0);
@@ -249,6 +317,12 @@ CG.Mesh = class{
         this.translation.set(x,y,z);
         this.updateTransformMatrix();
       }
+      /**
+       * Establece una escala para el objeto
+       * @param {Number} x 
+       * @param {Number} y 
+       * @param {Number} z 
+       */
       setScale(x,y,z)
       {
         x = (x || 1);
@@ -258,7 +332,7 @@ CG.Mesh = class{
         this.scaleV.set(x,y,z);
         this.updateTransformMatrix();
       }
-
+      
       Rotate(x,y,z)
       {
 
