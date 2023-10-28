@@ -26,16 +26,26 @@ CamPosition = gl.getUniformLocation(program, "cameraPos");
 specularUniform = gl.getUniformLocation(program, "useSpecular");
 
 texcoordLocation = gl.getAttribLocation(program, "a_texcoord");
+
 textureLocation = gl.getUniformLocation(program, "u_texture");
+normalTextureLocation = gl.getUniformLocation(program, "u_normalmap");
+specularTextureLocation = gl.getUniformLocation(program, "u_specularmap");
 
 let lightDir = new CG.Vector4(1, 1, 0, 0);
 let ambientColor = new CG.Vector3(135/255, 206/255, 235/255);
 let usarEspecular = true;
 
-var texture = gl.createTexture(); 
+var texture = gl.createTexture();
 var image = new Image();
-//image.src = "tile.png";
-image.src = "map_sqr.jpg";
+image.src = "earth.jpg";
+
+var normal = gl.createTexture();
+var normalImage = new Image();
+normalImage.src = "earth_normal2.jpg";
+
+var specular = gl.createTexture();
+var specularImage = new Image();
+specularImage.src = "earth_specular.jpg";
 image.addEventListener('load', function() {
   // Now that the image has loaded make copy it to the texture.
   gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -43,7 +53,22 @@ image.addEventListener('load', function() {
   gl.generateMipmap(gl.TEXTURE_2D);
 });
 
+normalImage.addEventListener('load', function() {
+  // Now that the image has loaded make copy it to the texture.
+  gl.bindTexture(gl.TEXTURE_2D, normal);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, normalImage);
+  gl.generateMipmap(gl.TEXTURE_2D);
+});
+
+specularImage.addEventListener('load', function() {
+  // Now that the image has loaded make copy it to the texture.
+  gl.bindTexture(gl.TEXTURE_2D, specular);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, specularImage);
+  gl.generateMipmap(gl.TEXTURE_2D);
+});
+
 let geometry = [
+  /*
     new CG.Cilindro(
       gl, 
       [1, 0, 0, 1], 
@@ -61,13 +86,13 @@ let geometry = [
       [0, 0, 1, 1], 
       2, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, -5))
-    ),
+    ),*/
     new CG.Esfera(
       gl, 
       [0, 1, 1, 1], 
       2, 32, 16, 
       CG.Matrix4.translate(new CG.Vector3(-5, 0, 0))
-    ),
+    ),/*
     new CG.Icosaedro(gl, 
       [1, 0 , 1, 1], 
       2, 
@@ -97,7 +122,7 @@ let geometry = [
       [0.25, 0.25, 0.25, 1], 
       4, 1, 32, 16, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, 5))
-    )
+    )*/
   ];
 
 let camara = new CG.CamaraCOI(canvas, new CG.Vector3(0,0,0));
@@ -119,7 +144,17 @@ function draw()
     gl.uniform3f(ambientColorLocation, ambientColor.x,ambientColor.y,ambientColor.z)
     gl.uniform3f(CamPosition, cameraPos.x, cameraPos.y, cameraPos.z);
     gl.uniform1i(specularUniform, usarEspecular);
+
     gl.uniform1i(textureLocation, 0);
+    gl.uniform1i(normalTextureLocation, 1);
+    gl.uniform1i(specularTextureLocation, 2);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, normal);
+    gl.activeTexture(gl.TEXTURE2);
+    gl.bindTexture(gl.TEXTURE_2D, specular);
 
 
     for (let i=0; i<geometry.length; i++) {
@@ -207,7 +242,7 @@ document.addEventListener('keydown', function(event) {
 //Bucle de actualizacion
 function update(delta)
 {
-  //lightDir.set(Math.cos(counter) * 6,3,Math.sin(counter) * 6);
+  lightDir.set(Math.cos(counter) * 6,3,Math.sin(counter) * 6);
 }
 
 //Bucle de dibujado
