@@ -44,6 +44,10 @@
   <script id="2d-vertex-shader" type="vertex-shader">
     attribute vec4 a_position;
     attribute vec3 a_normal;
+    
+    attribute vec2 a_texcoord;
+
+    varying vec2 v_texcoord;
 
     uniform mat4 u_VM_matrix;
     uniform mat4 u_PVM_matrix;
@@ -54,7 +58,7 @@
     void main() {
       v_normal = vec3( u_VM_matrix * vec4(a_normal, 0) );
       v_position = vec3( u_VM_matrix * a_position );
-
+      v_texcoord = a_texcoord;
       gl_Position = u_PVM_matrix * a_position;
     }
   </script>
@@ -75,8 +79,12 @@
     uniform vec3 cameraPos;
     //Color de Ambiente
     uniform vec3 ambientColor;
-
+    //Usar especular
     uniform bool useSpecular;
+
+    //texturas
+    varying vec2 v_texcoord;
+    uniform sampler2D u_texture;
     void main() {
       
       //Ambiente
@@ -103,13 +111,15 @@
       float fres = 1.0 - dot(v_normal, vec3(0,0,1));
       vec3 fresnel = fres * fres * ambientColor;
 
-      vec3 result = (ambient + diffuse + fresnel)*vec3(u_color);
+      vec3 result = (ambient + diffuse + fresnel)*vec3(texture2D(u_texture, v_texcoord));
 
       if(useSpecular)
       {
         result = result + specular;
       }
       gl_FragColor = vec4(result, u_color.a);
+      //gl_FragColor = texture2D(u_texture, v_texcoord);
+      //gl_FragColor = vec4(v_texcoord, 0, 1);
     }
   </script>
 

@@ -52,9 +52,23 @@ CG.Octaedro = class extends CG.Mesh{
         ]
     }
 
-    
-    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+    getFlatUV()
     {
-        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation);
+        let uv = [ 0.125,1, 0.25,0.5, 0,0.5, 
+            0.875,1, 1,0.5, 0.75,0.5,
+            0.625,1, 0.75,0.5, 0.5,0.5,
+            0.375,1, 0.5,0.5, 0.25,0.5,
+
+            0.125,0, 0,0.5, 0.25,0.5,
+            0.875,0,  0.75,0.5, 1,0.5,
+            0.625,0,  0.5,0.5, 0.75,0.5,
+            0.375,0,  0.25,0.5, 0.5,0.5,
+        ];
+        return uv;
+    }
+    
+    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation)
+    {
+        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation);
     }
 }

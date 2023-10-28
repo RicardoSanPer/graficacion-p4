@@ -31,6 +31,11 @@ CG.Mesh = class{
         this.indexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.getFaces()), gl.STATIC_DRAW);
+
+        let uv = this.getSmoothUV();
+        this.uvSmoothBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.uvSmoothBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uv), gl.STATIC_DRAW);
         
         this.numfaces = this.getFaces().length;
       }
@@ -48,17 +53,22 @@ CG.Mesh = class{
         gl.bindBuffer(gl.ARRAY_BUFFER, this.normalFlatBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
 
+        let uv = this.getFlatUV();
+        this.uvFlatBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.uvFlatBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uv), gl.STATIC_DRAW);
+
         this.num_elements = vertices.length / 3;
 
       }
-
+      
       /**
        * Dibuja la geometría con normales de vértice
        * @param {*} gl 
        * @param {*} positionAttributeLocation 
        * @param {*} normalAttributeLocation 
        */
-      drawSmooth(gl, positionAttributeLocation, normalAttributeLocation)
+      drawSmooth(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation)
       {
         // el buffer de posiciones
         gl.enableVertexAttribArray(positionAttributeLocation);
@@ -71,6 +81,11 @@ CG.Mesh = class{
         gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
         gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
+        //coordenadas de textura
+        gl.enableVertexAttribArray(uvUniformLocation);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.uvSmoothBuffer);
+        gl.vertexAttribPointer(uvUniformLocation, 2, gl.FLOAT, false, 0,0);
+
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.drawElements(gl.TRIANGLES, this.numfaces, gl.UNSIGNED_SHORT, 0);
         
@@ -82,7 +97,7 @@ CG.Mesh = class{
        * @param {*} positionAttributeLocation 
        * @param {*} normalAttributeLocation 
        */
-      drawFlat(gl, positionAttributeLocation, normalAttributeLocation)
+      drawFlat(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation)
       {
         // el buffer de posiciones
         gl.enableVertexAttribArray(positionAttributeLocation);
@@ -95,13 +110,19 @@ CG.Mesh = class{
         gl.bindBuffer(gl.ARRAY_BUFFER, this.normalFlatBuffer);
         gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
+        //coordenadas de textura
+        gl.enableVertexAttribArray(uvUniformLocation);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.uvFlatBuffer);
+        gl.vertexAttribPointer(uvUniformLocation, 2, gl.FLOAT, false, 0,0);
+
         gl.drawArrays(gl.TRIANGLES, 0, this.num_elements);
       }
 
-      draw(gl, positionAttributeLocation, normalAttributeLocation, colorUniformLocation, PVM_matrixLocation, VM_matrixLocation, projectionMatrix, viewMatrix) 
+      draw(gl, positionAttributeLocation, normalAttributeLocation, colorUniformLocation, PVM_matrixLocation, VM_matrixLocation, projectionMatrix, viewMatrix, uvUniformLocation) 
       {
         // el color
         gl.uniform4fv(colorUniformLocation, this.color);
+
         
         let transform = CG.Matrix4.multiply(this.initial_transform, this.transformMatrix);
         // VM_matrixLocation
@@ -111,9 +132,11 @@ CG.Mesh = class{
         // PVM_matrixLocation
         let projectionViewModelMatrix = CG.Matrix4.multiply(projectionMatrix, viewModelMatrix);
         gl.uniformMatrix4fv(PVM_matrixLocation, false, projectionViewModelMatrix.toArray());
-  
         
-        this.drawGeometry(gl, positionAttributeLocation, normalAttributeLocation);
+        
+        
+        
+        this.drawGeometry(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation);
         
         // dibujado
       }
@@ -124,7 +147,7 @@ CG.Mesh = class{
        * @param {*} positionAttributeLocation 
        * @param {*} normalAttributeLocation 
        */
-      drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+      drawGeometry(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation)
       {
 
       }
@@ -195,6 +218,16 @@ CG.Mesh = class{
         }
   
         return normals;
+      }
+
+      getFlatUV()
+      {
+        return [];
+      }
+
+      getSmoothUV()
+      {
+        return [];
       }
 
       setRotation(x,y,z)

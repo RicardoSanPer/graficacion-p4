@@ -125,7 +125,7 @@ CG.Cilindro = class extends CG.Mesh{
     {
         let faces = [];
            
-        for(var i = 1; i < this.nlados+2; i++)
+        for(var i = 1; i < this.nlados; i++)
         {
             let index = i % this.nlados;
             let index2  = index + 1;
@@ -136,13 +136,12 @@ CG.Cilindro = class extends CG.Mesh{
         let centroC = this.nlados + 1;
 
          // Obtener circulo tope        
-         for(var i = centroC + 1; i < this.nlados * 2+1; i++)
+         for(var i = 1; i < this.nlados; i++)
          {
-             let index = i;
+             let index = i + centroC;
              let index2  = index + 1;
              faces.push(centroC, index2,index);
          }
-         
         faces.push(centroC,centroC + 1, this.nlados + centroC);
         return faces;   
     }
@@ -161,9 +160,86 @@ CG.Cilindro = class extends CG.Mesh{
         return normals;
     }
 
-    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+    getSmoothUV()
     {
-        this.drawSmooth(gl, positionAttributeLocation, normalAttributeLocation);
-        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation);
+        let uv = [];
+        for(let j = 0; j < this.nsegments; j++)
+        {
+            let y = j / (this.nsegments - 1);
+            for(let i = 0; i < this.nlados; i++)
+            {
+                let x = i / (this.nlados - 1);  
+                uv.push(1-x, 1 - y/2,);
+            }
+        }
+        return uv;
+    }
+
+    getFlatUV()
+    {
+        let uv = [];
+         
+        for(var i = 0; i < this.nlados; i++)
+        {
+            let theta = (i/this.nlados) *(Math.PI * 2);
+            let theta2 = ((i+1)/this.nlados) *(Math.PI * 2);
+            let x = Math.cos(theta) * -1;
+            let y = Math.sin(theta);
+            let centerx = 0.25;
+            x = x / 4;
+            y = y / 4;
+            
+            x += centerx;
+            y += 0.25;
+
+            uv.push(centerx, 0.25,
+                x,y);
+
+            x = Math.cos(theta2) * -1;
+            y = Math.sin(theta2);
+
+            x = x / 4;
+            y = y / 4;
+            
+            x += centerx;
+            y += 0.25;
+            uv.push(x,y);
+            
+        }
+        for(var i = 0; i < this.nlados + 1; i++)
+        {
+            let theta = (i/this.nlados) *(Math.PI * 2);
+            let theta2 = ((i+1)/this.nlados) *(Math.PI * 2);
+            let x = Math.cos(theta2);
+            let y = Math.sin(theta2);
+            let centerx = 0.75;
+            x = x / 4;
+            y = y / 4;
+            
+            x += centerx;
+            y += 0.25;
+
+            uv.push(centerx, 0.25,
+                x,y);
+
+            x = Math.cos(theta);
+            y = Math.sin(theta);
+
+            x = x / 4;
+            y = y / 4;
+            
+            x += centerx;
+            y += 0.25;
+            uv.push(x,y);
+            
+        }
+
+        return uv;
+    }
+
+    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation)
+    {
+        this.drawSmooth(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation);
+        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation);
     }
 }

@@ -81,8 +81,44 @@ CG.Icosaedro = class extends CG.Mesh{
         ];
     }
 
-    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+    getFlatUV()
     {
-        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation);
+        let uv =
+        [
+            //Fondo
+            1/11,1, 2/11,2/3, 0,2/3,
+            3/11,1, 4/11,2/3, 2/11,2/3,
+            5/11,1, 6/11,2/3, 4/11,2/3,
+            7/11,1, 8/11,2/3, 6/11,2/3,
+            9/11,1, 10/11,2/3, 8/11,2/3,
+
+            0,2/3, 2 /11,2/3, 1/11,1/3,
+            1/11,1/3,2/11,2/3, 3/11,1/3, 
+
+            2/11,2/3, 4/11,2/3, 3/11,1/3,            
+            3/11,1/3,4/11,2/3, 5/11,1/3, 
+
+            4/11,2/3, 6/11,2/3, 5/11,1/3,            
+            5/11,1/3,6/11,2/3, 7/11,1/3,
+
+            6/11,2/3, 8/11,2/3, 7/11,1/3,            
+            7/11,1/3,8/11,2/3, 9/11,1/3,
+
+            8/11,2/3, 10/11,2/3, 9/11,1/3,            
+            9/11,1/3,10/11,2/3, 1,1/3,
+
+            //Tope
+            1/11,1/3, 3 /11,1/3, 2/11,0,
+            3/11,1/3, 5/11,1/3, 4/11,0,
+            5/11,1/3, 7/11,1/3, 6/11,0,
+            7/11,1/3, 9/11,1/3, 8/11,0,
+            9/11,1/3, 1,1/3, 10/11,0,
+        ]
+        return uv;
+    }
+
+    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation)
+    {
+        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation);
     }
 }

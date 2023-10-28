@@ -72,8 +72,16 @@ CG.Tetraedro = class extends CG.Mesh{
   
         return normals;
       }
-      drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+      getFlatUV()
       {
-          this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation);
+        let uv = [0.5,0, 0,1, 1,1,
+            0.5,0, 0,1, 1,1,
+            0.5,0, 0,1, 1,1,
+            0.5,0, 0,1, 1,1];
+        return uv;
+      }
+      drawGeometry(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation)
+      {
+          this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation);
       }
 }

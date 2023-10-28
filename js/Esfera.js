@@ -103,8 +103,23 @@ CG.Esfera = class extends CG.Mesh{
         return normals;
     }
 
-    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation)
     {
-        this.drawSmooth(gl, positionAttributeLocation, normalAttributeLocation);
+        this.drawSmooth(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation);
+    }
+
+    getSmoothUV()
+    {
+        let uv = [];
+        for(let j = 0; j < this.nsegments; j++)
+        {
+            let y = j / (this.nsegments - 1);
+            for(let i = 0; i < this.nlados; i++)
+            {
+                let x = i / (this.nlados - 1);  
+                uv.push(1-x, y,);
+            }
+        }
+        return uv;
     }
 }

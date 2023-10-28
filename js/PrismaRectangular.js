@@ -11,8 +11,7 @@ var CG = (function(CG) {
       
       super(color, initial_transform);
 
-      this.setFlatBuffer(gl);
-      
+      this.setFlatBuffer(gl);      
     }
 
     getFlatVertices() {
@@ -58,10 +57,35 @@ var CG = (function(CG) {
         3,6,2,
       ];
     }
-    
-    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+
+    getFlatUV()
     {
-        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation);
+      let uv = [];
+      uv.push(
+        1,0, 0,0, 0,1,
+        1,0, 0,1, 1,1,
+        
+        1,0, 0,0, 0,1,
+        1,0, 0,1, 1,1,
+
+        0,1, 1,1, 1,0,
+        0,1, 1,0, 0,0,
+
+        0,1, 1,1, 1,0,
+        0,1, 1,0, 0,0,
+
+        0,1, 1,1, 1,0,
+        0,1, 1,0, 0,0,
+
+        0,1, 1,1, 1,0,
+        0,1, 1,0, 0,0,
+      )
+      return uv;
+    }
+    
+    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation)
+    {
+        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation);
     }
 
   }

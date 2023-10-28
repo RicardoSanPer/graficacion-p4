@@ -25,10 +25,22 @@ ambientColorLocation = gl.getUniformLocation(program, "ambientColor");
 CamPosition = gl.getUniformLocation(program, "cameraPos");
 specularUniform = gl.getUniformLocation(program, "useSpecular");
 
-let lightDir = new CG.Vector4(1, 0, 0, 0);
+texcoordLocation = gl.getAttribLocation(program, "a_texcoord");
+textureLocation = gl.getUniformLocation(program, "u_texture");
+
+let lightDir = new CG.Vector4(0, 1, 0, 0);
 let ambientColor = new CG.Vector3(135/255, 206/255, 235/255);
 let usarEspecular = true;
 
+var texture = gl.createTexture(); 
+var image = new Image();
+image.src = "map_sqr.jpg";
+image.addEventListener('load', function() {
+  // Now that the image has loaded make copy it to the texture.
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+  gl.generateMipmap(gl.TEXTURE_2D);
+});
 
 let geometry = [
     new CG.Cilindro(
@@ -43,12 +55,13 @@ let geometry = [
       2, 2, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(0, 0, -5))
     ),
+    /*
     new CG.Dodecaedro(
       gl, 
       [0, 0, 1, 1], 
       2, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, -5))
-    ),
+    ),*/
     new CG.Esfera(
       gl, 
       [0, 1, 1, 1], 
@@ -70,16 +83,15 @@ let geometry = [
     new CG.PrismaRectangular(
       gl, 
       [1, 0.2, 0.3, 1], 
-      1, 1, 1, 
+      3, 3, 3, 
       CG.Matrix4.translate(new CG.Vector3(-5, 0, 5))
     ),
-    
     new CG.Tetraedro(
       gl, 
       [0.5, 0.5, 0.5, 1], 
       2, 
       CG.Matrix4.translate(new CG.Vector3(0, 0, 5))
-    ), 
+    ),
     new CG.Toro(
       gl, 
       [0.25, 0.25, 0.25, 1], 
@@ -107,6 +119,7 @@ function draw()
     gl.uniform3f(ambientColorLocation, ambientColor.x,ambientColor.y,ambientColor.z)
     gl.uniform3f(CamPosition, cameraPos.x, cameraPos.y, cameraPos.z);
     gl.uniform1i(specularUniform, usarEspecular);
+    gl.uniform1i(textureLocation, 0);
 
 
     for (let i=0; i<geometry.length; i++) {
@@ -119,7 +132,8 @@ function draw()
           PVM_matrixLocation,
           VM_matrixLocation,
           camara.projectionMatrix,
-          camara.viewMatrix);
+          camara.viewMatrix,
+          texcoordLocation);
         }
 }
 //////////////////////////////////////////////////////////
