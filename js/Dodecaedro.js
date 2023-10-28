@@ -109,8 +109,30 @@ CG.Dodecaedro = class extends CG.Mesh{
         ];
     }
 
-    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+    getFlatUV()
     {
-        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation);
+        let uv = [];
+        let theta1 = (1/5) * (Math.PI * 2);
+        let theta2 = (2/5) * (Math.PI * 2);
+
+        let x1 = (Math.sin(theta1) / 2) + 0.5;
+        let y1 = (Math.cos(theta1) / 2) + 0.5;
+
+        let x2 = (Math.sin(theta2) / 2) + 0.5;
+        let y2 = (Math.cos(theta2) / 2) + 0.5;
+        for(let i = 0; i < 12; i++)
+        {
+            uv.push(0.5,0,1-x1,1-y1,1-x2,1-y2,
+                
+                    0.5,0,1-x2,1-y2, x2,1-y2,
+                    0.5,0, x2,1-y2, x2,1-y1,
+                    );
+        }
+        return uv;
+    }
+
+    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation)
+    {
+        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation);
     }
 }

@@ -28,12 +28,13 @@ specularUniform = gl.getUniformLocation(program, "useSpecular");
 texcoordLocation = gl.getAttribLocation(program, "a_texcoord");
 textureLocation = gl.getUniformLocation(program, "u_texture");
 
-let lightDir = new CG.Vector4(0, 1, 0, 0);
+let lightDir = new CG.Vector4(1, 1, 0, 0);
 let ambientColor = new CG.Vector3(135/255, 206/255, 235/255);
 let usarEspecular = true;
 
 var texture = gl.createTexture(); 
 var image = new Image();
+//image.src = "tile.png";
 image.src = "map_sqr.jpg";
 image.addEventListener('load', function() {
   // Now that the image has loaded make copy it to the texture.
@@ -55,13 +56,12 @@ let geometry = [
       2, 2, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(0, 0, -5))
     ),
-    /*
     new CG.Dodecaedro(
       gl, 
       [0, 0, 1, 1], 
       2, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, -5))
-    ),*/
+    ),
     new CG.Esfera(
       gl, 
       [0, 1, 1, 1], 
@@ -207,7 +207,7 @@ document.addEventListener('keydown', function(event) {
 //Bucle de actualizacion
 function update(delta)
 {
-
+  //lightDir.set(Math.cos(counter) * 6,3,Math.sin(counter) * 6);
 }
 
 //Bucle de dibujado
