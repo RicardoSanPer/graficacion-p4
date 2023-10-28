@@ -11,9 +11,9 @@ CG.Esfera = class extends CG.Mesh{
      * @param {Number} nsegments Numero de subdivisiones a lo largo de la altura
      * @param {Matrix4} initial_transform Transformacion inicial
      */
-    constructor(gl, color, radius, nfaces, nsegments, initial_transform)
+    constructor(gl, color, radius, nfaces, nsegments, initial_transform, texture, normal, specular)
     {
-        super(color, initial_transform);
+        super(color, initial_transform, texture, normal, specular);
         this.g_radius  = (radius || 1);
         //Establecer como minimo 3 caras
         this.nlados = (nfaces || 10);

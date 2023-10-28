@@ -2,7 +2,7 @@ var CG =  CG || {};
 
 CG.Mesh = class{
 
-    constructor(color, initial_transform) {
+    constructor(color, initial_transform, texture, normal, specular) {
         
         this.color = color;
         this.initial_transform = initial_transform || new CG.Matrix4();
@@ -13,9 +13,15 @@ CG.Mesh = class{
 
         this.transformMatrix = new CG.Matrix4();
 
-        this.texture = this.loadTexture("earth.jpg", gl);
-        this.normalTexture = this.loadTexture("earth_normal2.jpg", gl);
-        this.specularTexture = this.loadTexture("earth_specular.jpg", gl);
+        let path = "resources/textures/";
+
+        texture = (texture || "uvgrid.png");
+        normal = (normal || "uvgrid.png");
+        specular = (specular || "uvgrid.png");
+
+        this.texture = this.loadTexture(path + texture, gl);
+        this.normalTexture = this.loadTexture(path + normal, gl);
+        this.specularTexture = this.loadTexture(path + specular, gl);
   
       }
       /**
@@ -332,7 +338,7 @@ CG.Mesh = class{
         this.scaleV.set(x,y,z);
         this.updateTransformMatrix();
       }
-      
+
       Rotate(x,y,z)
       {
 

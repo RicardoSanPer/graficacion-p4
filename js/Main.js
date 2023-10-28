@@ -31,44 +31,11 @@ textureLocation = gl.getUniformLocation(program, "u_texture");
 normalTextureLocation = gl.getUniformLocation(program, "u_normalmap");
 specularTextureLocation = gl.getUniformLocation(program, "u_specularmap");
 
-let lightDir = new CG.Vector4(1, 1, 0, 0);
+let lightDir = new CG.Vector4(0, 1, 0, 0);
 let ambientColor = new CG.Vector3(135/255, 206/255, 235/255);
 let usarEspecular = true;
 
-var texture = gl.createTexture();
-var image = new Image();
-image.src = "earth.jpg";
-
-var normal = gl.createTexture();
-var normalImage = new Image();
-normalImage.src = "earth_normal2.jpg";
-
-var specular = gl.createTexture();
-var specularImage = new Image();
-specularImage.src = "earth_specular.jpg";
-image.addEventListener('load', function() {
-  // Now that the image has loaded make copy it to the texture.
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
-  gl.generateMipmap(gl.TEXTURE_2D);
-});
-
-normalImage.addEventListener('load', function() {
-  // Now that the image has loaded make copy it to the texture.
-  gl.bindTexture(gl.TEXTURE_2D, normal);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, normalImage);
-  gl.generateMipmap(gl.TEXTURE_2D);
-});
-
-specularImage.addEventListener('load', function() {
-  // Now that the image has loaded make copy it to the texture.
-  gl.bindTexture(gl.TEXTURE_2D, specular);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, specularImage);
-  gl.generateMipmap(gl.TEXTURE_2D);
-});
-
 let geometry = [
-  /*
     new CG.Cilindro(
       gl, 
       [1, 0, 0, 1], 
@@ -80,7 +47,7 @@ let geometry = [
       [0, 1, 0, 1], 
       2, 2, 16, 16, 
       CG.Matrix4.translate(new CG.Vector3(0, 0, -5))
-    ),*/
+    ),
     new CG.Dodecaedro(
       gl, 
       [0, 0, 1, 1], 
@@ -91,8 +58,11 @@ let geometry = [
       gl, 
       [0, 1, 1, 1], 
       2, 32, 16, 
-      CG.Matrix4.translate(new CG.Vector3(-5, 0, 0))
-    ),/*
+      CG.Matrix4.translate(new CG.Vector3(-5, 0, 0)),
+      "earth.jpg",
+      "earth_normal2.jpg",
+      "earth_specular.jpg"
+    ),
     new CG.Icosaedro(gl, 
       [1, 0 , 1, 1], 
       2, 
@@ -122,7 +92,7 @@ let geometry = [
       [0.25, 0.25, 0.25, 1], 
       4, 1, 32, 16, 
       CG.Matrix4.translate(new CG.Vector3(5, 0, 5))
-    )*/
+    )
   ];
 
 let camara = new CG.CamaraCOI(canvas, new CG.Vector3(0,0,0));
@@ -235,7 +205,7 @@ document.addEventListener('keydown', function(event) {
 //Bucle de actualizacion
 function update(delta)
 {
-  lightDir.set(Math.cos(counter) * 6,3,Math.sin(counter) * 6);
+  lightDir.set(Math.cos(counter) * 6,Math.sin(counter) * 6,0);
 }
 
 //Bucle de dibujado

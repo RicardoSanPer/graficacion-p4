@@ -9,9 +9,9 @@ CG.Tetraedro = class extends CG.Mesh{
      * @param {Number} length radio del tetraedro
      * @param {Matrix4} initial_transform Transformacion inicial
      */
-    constructor(gl, color, length ,initial_transform)
+    constructor(gl, color, length ,initial_transform, texture, normal, specular)
     {
-        super(color, initial_transform);
+        super(color, initial_transform, texture, normal, specular);
         this.g_length  = (length || 1);
 
         this.setFlatBuffer(gl);

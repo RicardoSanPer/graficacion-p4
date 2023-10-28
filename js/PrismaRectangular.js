@@ -4,12 +4,12 @@ var CG = (function(CG) {
   class PrismaRectangular extends CG.Mesh {
     /**
      */
-    constructor(gl, color, width, height, length, initial_transform) {
+    constructor(gl, color, width, height, length, initial_transform, texture, normal, specular) {
       g_width  = (width  || 1)/2;
       g_height = (height || 1)/2;
       g_length = (length || 1)/2;
       
-      super(color, initial_transform);
+      super(color, initial_transform, texture, normal, specular);
 
       this.setFlatBuffer(gl);      
     }
