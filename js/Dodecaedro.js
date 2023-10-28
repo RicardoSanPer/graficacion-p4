@@ -125,7 +125,7 @@ CG.Dodecaedro = class extends CG.Mesh{
             uv.push(0.5,0,1-x1,1-y1,1-x2,1-y2,
                 
                     0.5,0,1-x2,1-y2, x2,1-y2,
-                    0.5,0, x2,1-y2, x2,1-y1,
+                    0.5,0, x2,1-y2, x1,1-y1,
                     );
         }
         return uv;

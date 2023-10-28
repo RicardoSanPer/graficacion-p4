@@ -10,7 +10,7 @@ CG.CamaraCOI = class{
         this.canvas = canvas;
 
         this.position = new CG.Vector3(0, 0, this.distance);
-        this.coi = coi;
+        this.coi = (coi || new CG.Vector3(0,0,0));
 
         this.displacementX = 0;
         this.displacementY = 0;

@@ -25,14 +25,11 @@
     <div class="lista">
       <label>Luz</label>
       <br>
-      <input type="range" min="-7" max="7" value="0" step="0.1" name="rangeX" id="rangeX" oninput="changeLightPosX(value)">
+      <input type="range" min="0" max="360" value="90" step="0.1" name="rangeX" id="rangeX" oninput="changeLightPosX(value)">
       <label for="rangeX">X</label>
       <br>
-      <input type="range" min="-7" max="7" value="3" step="0.1" name="rangeY" id="rangeY" oninput="changeLightPosY(value)">
+      <input type="range" min="-90" max="90" value="45" step="0.1" name="rangeY" id="rangeY" oninput="changeLightPosY(value)">
       <label for="rangeY">Y</label>
-      <br>
-      <input type="range" min="-7" max="7" value="0" step="0.1" name="rangeZ" id="rangeZ" oninput="changeLightPosZ(value)">
-      <label for="rangeZ">Z</label>
       <br>
       <input type="checkbox" name="specular" id="specular" onchange="switchSpecular(this)">
       <label for="specular">Especular</label>
@@ -79,8 +76,6 @@
     uniform vec3 cameraPos;
     //Color de Ambiente
     uniform vec3 ambientColor;
-    //Usar especular
-    uniform bool useSpecular;
 
     //texturas
     varying vec2 v_texcoord;
@@ -95,6 +90,8 @@
 
       //Difusa
       vec3 texNormal = normalize(vec3(texture2D(u_normalmap, v_texcoord)));
+      texNormal = vec3(texNormal.x, texNormal.z, texNormal.y);
+      
       vec3 norm = normalize(v_normal * texNormal);
       //vec3 lightDir = normalize(u_light_position - v_position);
       vec3 lightDir = normalize(u_light_position);
@@ -115,11 +112,8 @@
       vec3 fresnel = fres * ambientColor;
 
       vec3 result = (ambient + diffuse + fresnel)*vec3(texture2D(u_texture, v_texcoord));
+      result = result + specular;
 
-      if(useSpecular)
-      {
-        result = result + specular;
-      }
       gl_FragColor = vec4(result, u_color.a);
       //gl_FragColor = texture2D(u_specularmap, v_texcoord);
       //gl_FragColor = vec4(v_texcoord, 0, 1);
@@ -146,6 +140,7 @@
   
   <script src="./js/Toro.js"></script>
   <script src="./js/CamaraCOI.js"></script>
+  <script src="./js/LuzDireccional.js"></script>
   <script src="./js/Main.js"></script>
 
   
