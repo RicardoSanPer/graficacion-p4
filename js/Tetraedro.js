@@ -9,9 +9,9 @@ CG.Tetraedro = class extends CG.Mesh{
      * @param {Number} length radio del tetraedro
      * @param {Matrix4} initial_transform Transformacion inicial
      */
-    constructor(gl, color, length ,initial_transform)
+    constructor(gl, color, length ,initial_transform, texture, normal, specular)
     {
-        super(color, initial_transform);
+        super(gl, color, initial_transform, texture, normal, specular);
         this.g_length  = (length || 1);
 
         this.setFlatBuffer(gl);
@@ -72,8 +72,16 @@ CG.Tetraedro = class extends CG.Mesh{
   
         return normals;
       }
-      drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+      getFlatUV()
       {
-          this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation);
+        let uv = [0.5,0, 0,1, 1,1,
+            0.5,0, 0,1, 1,1,
+            0.5,0, 0,1, 1,1,
+            0.5,0, 0,1, 1,1];
+        return uv;
+      }
+      drawGeometry(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation)
+      {
+          this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation);
       }
 }

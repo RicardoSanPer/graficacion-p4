@@ -10,10 +10,11 @@ CG.CamaraCOI = class{
         this.canvas = canvas;
 
         this.position = new CG.Vector3(0, 0, this.distance);
-        this.coi = coi;
+        this.coi = (coi || new CG.Vector3(0,0,0));
 
         this.displacementX = 0;
         this.displacementY = 0;
+        this.displacementZ = 0;
 
         this.updatePosition();
     }
@@ -21,16 +22,20 @@ CG.CamaraCOI = class{
     //Actualizar posicion de la camara
     Update(delta)
     {
+        //Suavizado del movimiento
         this.displacementX = this.lerp(this.displacementX, 0, delta * 20);
         this.displacementY = this.lerp(this.displacementY, 0, delta * 20);
+        this.displacementZ = this.lerp(this.displacementZ, 0, delta * 20);
 
         this.angleX += this.displacementX;
         this.angleY += this.displacementY;
-
+        this.distance += this.displacementZ;
+        //Clamp
         this.angleX = (this.angleX > 360) ? this.angleX - 360 : (this.angleX < 0)? this.angleX + 360 : this.angleX;
         this.angleY = (this.angleY > 90) ? 90 : (this.angleY < -90)? -90 : this.angleY;
         this.distance = (this.distance < 0)? 0 : this.distance;
 
+        //Mover
         var angle = Math.PI / 180;
         this.distance = (this.distance < 0)? 0 : this.distance;
         let x = Math.cos(this.angleY * angle) * Math.cos(this.angleX * angle) * this.distance;
@@ -49,6 +54,7 @@ CG.CamaraCOI = class{
         this.viewProjectionMatrix = CG.Matrix4.multiply(this.projectionMatrix, this.viewMatrix);
     }
 
+    //Desplaza la camara
     updatePosition(x,y,z)
     {
         x = (x || 0);
@@ -56,7 +62,7 @@ CG.CamaraCOI = class{
         z = (z || 0);
         this.displacementX = x;
         this.displacementY = y;
-        this.distance += z;
+        this.displacementZ += z;
     }
 
     lerp(a,b,delta)

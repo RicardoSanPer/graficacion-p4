@@ -1,199 +1,70 @@
+let canvas = document.getElementById("the_canvas");
+let renderer = new CG.Renderer();
+let isCanvasFocus = false;
+let mousePreviousPos = [0,0];
+let mouseVector = [0,0];
+const overlay = document.getElementById('overlay');
 
-canvas = document.getElementById("the_canvas");
-gl = canvas.getContext("webgl");
-if(!gl)
-{
-    throw "WebGL no soportado";
-}
-
-//Crear programa
-let vertexShaderSource = document.getElementById("2d-vertex-shader").text;
-let vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-
-let fragmentShaderSource = document.getElementById("2d-fragment-shader").text;
-let fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
-
-let program = createProgram(gl, vertexShader, fragmentShader);
-
-positionAttributeLocation = gl.getAttribLocation(program, "a_position");
-normalAttributeLocation = gl.getAttribLocation(program, "a_normal");
-colorUniformLocation = gl.getUniformLocation(program, "u_color");
-lightUniformLocation = gl.getUniformLocation(program, "u_light_position");
-PVM_matrixLocation = gl.getUniformLocation(program, "u_PVM_matrix");
-VM_matrixLocation = gl.getUniformLocation(program, "u_VM_matrix");
-ambientColorLocation = gl.getUniformLocation(program, "ambientColor");
-CamPosition = gl.getUniformLocation(program, "cameraPos");
-specularUniform = gl.getUniformLocation(program, "useSpecular");
-
-let lightDir = new CG.Vector4(1, 0, 0, 0);
-let ambientColor = new CG.Vector3(135/255, 206/255, 235/255);
-let usarEspecular = true;
-
-
-let geometry = [
-    new CG.Cilindro(
-      gl, 
-      [1, 0, 0, 1], 
-      2, 2, 16, 0, 
-      CG.Matrix4.translate(new CG.Vector3(-5, 0, -5))
-    ),
-    new CG.Cono(
-      gl, 
-      [0, 1, 0, 1], 
-      2, 2, 16, 16, 
-      CG.Matrix4.translate(new CG.Vector3(0, 0, -5))
-    ),
-    new CG.Dodecaedro(
-      gl, 
-      [0, 0, 1, 1], 
-      2, 
-      CG.Matrix4.translate(new CG.Vector3(5, 0, -5))
-    ),
-    new CG.Esfera(
-      gl, 
-      [0, 1, 1, 1], 
-      2, 32, 16, 
-      CG.Matrix4.translate(new CG.Vector3(-5, 0, 0))
-    ),
-    new CG.Icosaedro(gl, 
-      [1, 0 , 1, 1], 
-      2, 
-      CG.Matrix4.translate(new CG.Vector3(0, 0, 0))
-    ),
-    new CG.Octaedro(
-      gl, 
-      [1, 1, 0, 1], 
-      2, 
-      CG.Matrix4.translate(new CG.Vector3(5, 0, 0))
-    ),
-    //6
-    new CG.PrismaRectangular(
-      gl, 
-      [1, 0.2, 0.3, 1], 
-      1, 1, 1, 
-      CG.Matrix4.translate(new CG.Vector3(-5, 0, 5))
-    ),
-    
-    new CG.Tetraedro(
-      gl, 
-      [0.5, 0.5, 0.5, 1], 
-      2, 
-      CG.Matrix4.translate(new CG.Vector3(0, 0, 5))
-    ), 
-    new CG.Toro(
-      gl, 
-      [0.25, 0.25, 0.25, 1], 
-      4, 1, 32, 16, 
-      CG.Matrix4.translate(new CG.Vector3(5, 0, 5))
-    )
-  ];
-
-let camara = new CG.CamaraCOI(canvas, new CG.Vector3(0,0,0));
-    
-//Dibuja la escena
-function draw()
-{
-    gl.enable(gl.DEPTH_TEST);
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    gl.clearColor(ambientColor.x,ambientColor.y,ambientColor.z, 1);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.useProgram(program);
-
-    camara.updateMatrix();
-    let cameraPos = camara.position;
-
-    let lightpos = camara.viewMatrix.multiplyVector(lightDir);
-    gl.uniform3f(lightUniformLocation, lightpos.x, lightpos.y, lightpos.z);
-    gl.uniform3f(ambientColorLocation, ambientColor.x,ambientColor.y,ambientColor.z)
-    gl.uniform3f(CamPosition, cameraPos.x, cameraPos.y, cameraPos.z);
-    gl.uniform1i(specularUniform, usarEspecular);
-
-
-    for (let i=0; i<geometry.length; i++) {
-        // se dibuja la geometría
-        geometry[i].draw(
-          gl,
-          positionAttributeLocation,
-          normalAttributeLocation, 
-          colorUniformLocation,
-          PVM_matrixLocation,
-          VM_matrixLocation,
-          camara.projectionMatrix,
-          camara.viewMatrix);
-        }
-}
-//////////////////////////////////////////////////////////
-// Funciones de utilería para la construcción de shaders
-//////////////////////////////////////////////////////////
-/**
- * Función que crear un shader, dado un contexto de render, un tipo y el código fuente
- */
-function createShader(gl, type, source) {
-    let shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-
-    let success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-
-    if (success) {
-        return shader;
-    }
-
-    console.log(gl.getShaderInfoLog(shader));
-    gl.deleteShader(shader);
-}
-
-/**
- * Función que toma un shader de vértices con uno de fragmentos y construye un programa
- */
-function createProgram(gl, vertexShader, fragmentShader) {
-    let program = gl.createProgram();
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
-    gl.linkProgram(program);
-
-    let success = gl.getProgramParameter(program, gl.LINK_STATUS);
-
-    if (success) {
-        return program;
-    }
-
-    console.log(gl.getProgramInfoLog(program));
-}
 //Input
 document.addEventListener('keydown', function(event) {
-    let angleX = 0;
-    let angleY = 0;
-    let distance = 0;
-    if(event.keyCode == 65) {
-        angleX = 6;
+  if(isCanvasFocus)
+  {
+    if(event.key == 'Escape' && isCanvasFocus) {
+      canvas.blur();
+      isCanvasFocus = false;
+      document.body.style.cursor = "auto";
+      overlay.style.display = "none";
     }
-    else if(event.keyCode == 68) {
-        angleX = -6;
-    }
-  
-    if(event.keyCode == 87) {
-      angleY = 6;
-    }
-    else if(event.keyCode == 83) {
-      angleY = -6;
-    }
-  
-    if(event.keyCode == 81)
+    else if(event.key == 'e')
     {
-      distance = 1;
+      renderer.camara.updatePosition(0,0,0.5);
     }
-    else if(event.keyCode == 69)
+    else if(event.key == 'q')
     {
-      distance = -1;
+      renderer.camara.updatePosition(0,0,-0.5);
     }
-    camara.updatePosition(angleX, angleY, distance);
+  }
+    
   });
+
+function setCanvasFocus() 
+{
+  if(!isCanvasFocus)
+  {
+    canvas.focus();
+    isCanvasFocus = true;
+    document.body.style.cursor = "none";
+    overlay.style.display = "block";
+  }
+}
+
+function handleMouseMove(event) {
+  if (isCanvasFocus) {
+      mouseVector[0] = event.clientX - mousePreviousPos[0];
+      mouseVector[1] = event.clientY - mousePreviousPos[1];
+      //console.log(mouseVector);
+  }
+  mousePreviousPos[0] = event.clientX;
+  mousePreviousPos[1] = event.clientY;  
+}
+
+// Event listener for mouse movement
+document.addEventListener('mousemove', handleMouseMove);
+
+function changeLightPosX(value)
+{
+  renderer.lightDir.updatePosition(value);
+}
+
+function changeLightPosY(value)
+{
+  renderer.lightDir.updatePosition(null,value);
+}
 
 //Bucle de actualizacion
 function update(delta)
 {
-
+  renderer.lightDir.Update(delta);
 }
 
 //Bucle de dibujado
@@ -201,10 +72,18 @@ function loop(timestamp)
 {  
     let delta = (timestamp - lastRender)/ 1000;
     counter += delta;
-    camara.Update(delta);
+
+    //Actualizar posicion de la camara
+    renderer.camara.updatePosition(mouseVector[0], mouseVector[1], 0);
+    renderer.camara.Update(delta);
+
     update(delta);
-    draw();
+    renderer.draw();
     lastRender = timestamp;
+
+    //Suavizar movimiento del mouse
+    mouseVector[0] = renderer.camara.lerp(mouseVector[0], 0, delta * 20);
+    mouseVector[1] = renderer.camara.lerp(mouseVector[1], 0, delta * 20);
 
     window.requestAnimationFrame(loop);
 }

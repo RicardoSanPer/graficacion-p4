@@ -16,9 +16,9 @@ CG.Cono = class extends CG.Mesh{
      * @param {Number} nsegments Numero de subdivisiones a lo largo de la altura
      * @param {Matrix4} initial_transform Transformacion inicial
      */
-    constructor(gl, color, diameter, height, nfaces, nsegments, initial_transform)
+    constructor(gl, color, diameter, height, nfaces, nsegments, initial_transform, texture, normal, specular)
     {
-        super(color, initial_transform);
+        super(gl, color, initial_transform, texture, normal, specular);
 
         this.g_radius  = (diameter || 1);
         this.g_height = (height || 1);
@@ -148,10 +148,59 @@ CG.Cono = class extends CG.Mesh{
         return normals;
     }
 
-
-    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+    getSmoothUV()
     {
-        this.drawSmooth(gl, positionAttributeLocation, normalAttributeLocation);
-        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation);
+        let uv = [];
+        for(let j = 0; j < this.nsegments; j++)
+        {
+            let y = j / (this.nsegments - 1);
+            for(let i = 0; i < this.nlados; i++)
+            {
+                let x = i / (this.nlados - 1);  
+                uv.push(1-x, 1 - y/2,);
+            }
+        }
+        return uv;
+    }
+
+    getFlatUV()
+    {
+        let uv = [];
+         
+        for(var i = 0; i < this.nlados + 1; i++)
+        {
+            let theta = (i/this.nlados) *(Math.PI * 2);
+            let theta2 = ((i+1)/this.nlados) *(Math.PI * 2);
+            let x = Math.cos(theta) * -1;
+            let y = Math.sin(theta);
+            let centerx = 0.25;
+            x = x / 4;
+            y = y / 4;
+            
+            x += centerx;
+            y += 0.25;
+
+            uv.push(centerx, 0.25,
+                x,y);
+
+            x = Math.cos(theta2) * -1;
+            y = Math.sin(theta2);
+
+            x = x / 4;
+            y = y / 4;
+            
+            x += centerx;
+            y += 0.25;
+            uv.push(x,y);
+            
+        }
+        return uv
+    }
+
+
+    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation)
+    {
+        this.drawSmooth(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation);
+        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation);
     }
 }

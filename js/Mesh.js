@@ -2,7 +2,7 @@ var CG =  CG || {};
 
 CG.Mesh = class{
 
-    constructor(color, initial_transform) {
+    constructor(gl, color, initial_transform, texture, normal, specular) {
         
         this.color = color;
         this.initial_transform = initial_transform || new CG.Matrix4();
@@ -12,9 +12,22 @@ CG.Mesh = class{
         this.scaleV = new CG.Vector3(1,1,1);
 
         this.transformMatrix = new CG.Matrix4();
+
+        let path = "resources/textures/";
+
+        texture = (texture || "uvgrid.png");
+        normal = (normal || "uvgrid.png");
+        specular = (specular || "uvgrid.png");
+
+        this.texture = this.loadTexture(path + texture, gl);
+        this.normalTexture = this.loadTexture(path + normal, gl);
+        this.specularTexture = this.loadTexture(path + specular, gl);
   
       }
-
+      /**
+       * Crea los buffers de geometria suavizada
+       * @param {*} gl 
+       */
       setSmoothBuffer(gl)
       {
         let vertices = this.getVertices();
@@ -31,10 +44,19 @@ CG.Mesh = class{
         this.indexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.getFaces()), gl.STATIC_DRAW);
+
+        let uv = this.getSmoothUV();
+        this.uvSmoothBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.uvSmoothBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uv), gl.STATIC_DRAW);
         
         this.numfaces = this.getFaces().length;
       }
 
+      /**
+       * Crea buffer de geometria plana
+       * @param {*} gl 
+       */
       setFlatBuffer(gl)
       {
         let vertices = this.getFlatVertices();
@@ -48,17 +70,39 @@ CG.Mesh = class{
         gl.bindBuffer(gl.ARRAY_BUFFER, this.normalFlatBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
 
+        let uv = this.getFlatUV();
+        this.uvFlatBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.uvFlatBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uv), gl.STATIC_DRAW);
+
         this.num_elements = vertices.length / 3;
 
       }
-
+      /**
+       * Carga una imagen
+       * @param {String} src 
+       * @param {*} gl 
+       * @returns 
+       */
+      loadTexture(src, gl) {
+        const texture = gl.createTexture();
+        const image = new Image();
+        image.onload = () => {
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+            gl.generateMipmap(gl.TEXTURE_2D);
+        };
+        image.src = src;
+        return texture;
+    }
+      
       /**
        * Dibuja la geometría con normales de vértice
        * @param {*} gl 
        * @param {*} positionAttributeLocation 
        * @param {*} normalAttributeLocation 
        */
-      drawSmooth(gl, positionAttributeLocation, normalAttributeLocation)
+      drawSmooth(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation)
       {
         // el buffer de posiciones
         gl.enableVertexAttribArray(positionAttributeLocation);
@@ -71,6 +115,11 @@ CG.Mesh = class{
         gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
         gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
+        //coordenadas de textura
+        gl.enableVertexAttribArray(uvUniformLocation);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.uvSmoothBuffer);
+        gl.vertexAttribPointer(uvUniformLocation, 2, gl.FLOAT, false, 0,0);
+
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.drawElements(gl.TRIANGLES, this.numfaces, gl.UNSIGNED_SHORT, 0);
         
@@ -82,7 +131,7 @@ CG.Mesh = class{
        * @param {*} positionAttributeLocation 
        * @param {*} normalAttributeLocation 
        */
-      drawFlat(gl, positionAttributeLocation, normalAttributeLocation)
+      drawFlat(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation)
       {
         // el buffer de posiciones
         gl.enableVertexAttribArray(positionAttributeLocation);
@@ -95,13 +144,34 @@ CG.Mesh = class{
         gl.bindBuffer(gl.ARRAY_BUFFER, this.normalFlatBuffer);
         gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
+        //coordenadas de textura
+        gl.enableVertexAttribArray(uvUniformLocation);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.uvFlatBuffer);
+        gl.vertexAttribPointer(uvUniformLocation, 2, gl.FLOAT, false, 0,0);
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+
         gl.drawArrays(gl.TRIANGLES, 0, this.num_elements);
       }
 
-      draw(gl, positionAttributeLocation, normalAttributeLocation, colorUniformLocation, PVM_matrixLocation, VM_matrixLocation, projectionMatrix, viewMatrix) 
+      /**
+       * Dibuja la geometria
+       * @param {*} gl 
+       * @param {*} positionAttributeLocation 
+       * @param {*} normalAttributeLocation 
+       * @param {*} colorUniformLocation 
+       * @param {*} PVM_matrixLocation 
+       * @param {*} VM_matrixLocation 
+       * @param {*} projectionMatrix 
+       * @param {*} viewMatrix 
+       * @param {*} uvUniformLocation 
+       */
+      draw(gl, positionAttributeLocation, normalAttributeLocation, colorUniformLocation, PVM_matrixLocation, VM_matrixLocation, projectionMatrix, viewMatrix, uvUniformLocation) 
       {
         // el color
         gl.uniform4fv(colorUniformLocation, this.color);
+
         
         let transform = CG.Matrix4.multiply(this.initial_transform, this.transformMatrix);
         // VM_matrixLocation
@@ -111,9 +181,17 @@ CG.Mesh = class{
         // PVM_matrixLocation
         let projectionViewModelMatrix = CG.Matrix4.multiply(projectionMatrix, viewModelMatrix);
         gl.uniformMatrix4fv(PVM_matrixLocation, false, projectionViewModelMatrix.toArray());
-  
+
+        //texturas
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, this.normalTexture);
+        gl.activeTexture(gl.TEXTURE2);
+        gl.bindTexture(gl.TEXTURE_2D, this.specularTexture);
+
         
-        this.drawGeometry(gl, positionAttributeLocation, normalAttributeLocation);
+        this.drawGeometry(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation);
         
         // dibujado
       }
@@ -124,7 +202,7 @@ CG.Mesh = class{
        * @param {*} positionAttributeLocation 
        * @param {*} normalAttributeLocation 
        */
-      drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+      drawGeometry(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation)
       {
 
       }
@@ -197,6 +275,29 @@ CG.Mesh = class{
         return normals;
       }
 
+      /**
+       * Genera las UVs de geometria plana
+       * @returns array con las coordenadas uv
+       */
+      getFlatUV()
+      {
+        return [];
+      }
+      /**
+       * Genera las UVs de la geometria suave
+       * @returns array con las coordenadas uv
+       */
+      getSmoothUV()
+      {
+        return [];
+      }
+
+      /**
+       * Establece una rotacion para el objeto
+       * @param {Number} x 
+       * @param {Number} y 
+       * @param {Number} z 
+       */
       setRotation(x,y,z)
       {
         x = (x || 0);
@@ -207,6 +308,12 @@ CG.Mesh = class{
 
         this.updateTransformMatrix();
       }
+      /**
+       * Establece una traslacion para el objeto
+       * @param {Number} x 
+       * @param {Number} y 
+       * @param {Number} z 
+       */
       setTranslation(x,y,z)
       {
         x = (x || 0);
@@ -216,6 +323,12 @@ CG.Mesh = class{
         this.translation.set(x,y,z);
         this.updateTransformMatrix();
       }
+      /**
+       * Establece una escala para el objeto
+       * @param {Number} x 
+       * @param {Number} y 
+       * @param {Number} z 
+       */
       setScale(x,y,z)
       {
         x = (x || 1);

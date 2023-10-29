@@ -9,41 +9,42 @@
 </head>
 
 <body>
-  <canvas id="the_canvas" width="800" height="600" style="border: 1px dotted gray;"></canvas>
-  
+  <div class="overlay" id="overlay"></div>
+
+  <div class="canvas_container">
+    <button class="clickable_canvas" onclick="setCanvasFocus()">
+      <canvas id="the_canvas" width="800" height="600" style="border: 1px dotted gray;"></canvas>
+    </button>
+  </div>
   <div class="controles">
-  <div class="lista">
-    <label>Controles</label>
-    <label>https://stackoverflow.com/questions/19245363/opengl-glut-surface-normals-of-cone</label>
-    <ul>
-      <li><label>W,S:</label> Rotar la camara arriba y abajo.</li>
-      <li><label>A, D:</label> Rotar la camara a la izquierda y derecha.</li>
-      <li><label>Q, E:</label> Alejar y acercar la camara.</li>
-      <li><label>Espacio:</label> Ver wireframe.</li>
-    </ul>
-    </div>
     <div class="lista">
-      <label>Luz</label>
-      <br>
-      <input type="range" min="-7" max="7" value="0" step="0.1" name="rangeX" id="rangeX" oninput="changeLightPosX(value)">
-      <label for="rangeX">X</label>
-      <br>
-      <input type="range" min="-7" max="7" value="3" step="0.1" name="rangeY" id="rangeY" oninput="changeLightPosY(value)">
-      <label for="rangeY">Y</label>
-      <br>
-      <input type="range" min="-7" max="7" value="0" step="0.1" name="rangeZ" id="rangeZ" oninput="changeLightPosZ(value)">
-      <label for="rangeZ">Z</label>
-      <br>
-      <input type="checkbox" name="specular" id="specular" onchange="switchSpecular(this)">
-      <label for="specular">Especular</label>
-    </div>
-</div>
+      <h3>Controles</h3>
+      Hacer click en el canvas para para manipular la vista. <br>
+      Mover el ratón para girar la camara. <br>
+      Presionar Q para acercar la camara. <br>
+      Presionar E para alejar la camara. <br>
+      Presionar ESCAPE para salir del canvas.
+      </div>
+      <div class="lista">
+        <h3>Luz</h3>
+        <input type="range" min="0" max="360" value="90" step="0.1" name="rangeX" id="rangeX" oninput="changeLightPosX(value)">
+        <label for="rangeX">X</label>
+        <br>
+        <input type="range" min="-90" max="90" value="45" step="0.1" name="rangeY" id="rangeY" oninput="changeLightPosY(value)">
+        <label for="rangeY">Y</label>
+      </div>
+  </div>
+  
 </body>
 <footer>
 
   <script id="2d-vertex-shader" type="vertex-shader">
     attribute vec4 a_position;
     attribute vec3 a_normal;
+    
+    attribute vec2 a_texcoord;
+
+    varying vec2 v_texcoord;
 
     uniform mat4 u_VM_matrix;
     uniform mat4 u_PVM_matrix;
@@ -54,7 +55,7 @@
     void main() {
       v_normal = vec3( u_VM_matrix * vec4(a_normal, 0) );
       v_position = vec3( u_VM_matrix * a_position );
-
+      v_texcoord = a_texcoord;
       gl_Position = u_PVM_matrix * a_position;
     }
   </script>
@@ -76,7 +77,11 @@
     //Color de Ambiente
     uniform vec3 ambientColor;
 
-    uniform bool useSpecular;
+    //texturas
+    varying vec2 v_texcoord;
+    uniform sampler2D u_texture;
+    uniform sampler2D u_normalmap;
+    uniform sampler2D u_specularmap;
     void main() {
       
       //Ambiente
@@ -84,12 +89,15 @@
       vec3 ambient = ambientStrength * ambientColor;
 
       //Difusa
-      vec3 norm = normalize(v_normal);
+      vec3 texNormal = normalize(vec3(texture2D(u_normalmap, v_texcoord)));
+      texNormal = vec3(texNormal.x, texNormal.z, texNormal.y);
+      
+      vec3 norm = normalize(v_normal * texNormal);
       //vec3 lightDir = normalize(u_light_position - v_position);
       vec3 lightDir = normalize(u_light_position);
       float diff = max(dot(norm, lightDir), 0.0);
 
-      vec3 diffuse = diff * vec3(1.0,1.0,1.0);
+      vec3 diffuse = diff * vec3(1.0,1.0,1.0) * 1.5;
 
       //Especular
       float specularStrength = 1.0;
@@ -97,19 +105,17 @@
       vec3 reflectDir = reflect(-lightDir, norm);
 
       float spec = pow(max(dot(viewDir, reflectDir),0.0), 16.0);
-      vec3 specular = specularStrength * spec * vec3(1.0,1.0,1.0);
+      vec3 specular = specularStrength * spec * vec3(texture2D(u_specularmap, v_texcoord));
 
       //fresnel
-      float fres = 1.0 - dot(v_normal, vec3(0,0,1));
-      vec3 fresnel = fres * fres * ambientColor;
+      float fres = 1.0 - dot(norm, vec3(0,0,1));
+      vec3 fresnel = fres * ambientColor;
 
-      vec3 result = (ambient + diffuse + fresnel)*vec3(u_color);
+      vec3 result = (ambient + diffuse + fresnel + specular)*vec3(texture2D(u_texture, v_texcoord));
 
-      if(useSpecular)
-      {
-        result = result + specular;
-      }
       gl_FragColor = vec4(result, u_color.a);
+      //gl_FragColor = texture2D(u_specularmap, v_texcoord);
+      //gl_FragColor = vec4(v_texcoord, 0, 1);
     }
   </script>
 
@@ -133,6 +139,8 @@
   
   <script src="./js/Toro.js"></script>
   <script src="./js/CamaraCOI.js"></script>
+  <script src="./js/LuzDireccional.js"></script>
+  <script src="./js/Renderer.js"></script>
   <script src="./js/Main.js"></script>
 
   

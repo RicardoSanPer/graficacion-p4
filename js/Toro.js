@@ -11,9 +11,9 @@ CG.Toro = class extends CG.Mesh{
      * @param {Number} nsegments numero de circunferencias que formaran el toro
      * @param {Matrix4} initial_transform Transformacion inicial
      */
-    constructor(gl, color, diametroi, diametroe, nfaces, nsegments, initial_transform)
+    constructor(gl, color, diametroi, diametroe, nfaces, nsegments, initial_transform, texture, normal, specular)
     {
-        super(color,initial_transform);
+        super(gl, color, initial_transform, texture, normal, specular);
         this.diametroInterno  = (diametroi || 1)/2;
         this.diametroExterno = (diametroe || 1)/2;
         //Establecer como minimo 3 caras
@@ -107,8 +107,23 @@ CG.Toro = class extends CG.Mesh{
         return normals;
     }
 
-    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation)
+    getSmoothUV()
     {
-        this.drawSmooth(gl, positionAttributeLocation, normalAttributeLocation);
+        let uv = [];
+        for(let j = 0; j < this.nsegments; j++)
+        {
+            let y = j / (this.nsegments - 1);
+            for(let i = 0; i < this.nlados; i++)
+            {
+                let x = i / (this.nlados - 1);  
+                uv.push(x, 1-y,);
+            }
+        }
+        return uv;
+    }
+
+    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation, uvSmoothBuffer)
+    {
+        this.drawSmooth(gl, positionAttributeLocation, normalAttributeLocation, uvSmoothBuffer);
     }
 }
