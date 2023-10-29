@@ -13,7 +13,7 @@ CG.Esfera = class extends CG.Mesh{
      */
     constructor(gl, color, radius, nfaces, nsegments, initial_transform, texture, normal, specular)
     {
-        super(color, initial_transform, texture, normal, specular);
+        super(gl, color, initial_transform, texture, normal, specular);
         this.g_radius  = (radius || 1);
         //Establecer como minimo 3 caras
         this.nlados = (nfaces || 10);

@@ -14,7 +14,7 @@ CG.Cilindro = class extends CG.Mesh{
      */
     constructor(gl, color, diameter, height, nfaces, nsegments, initial_transform, texture, normal, specular)
     {
-        super(color, initial_transform, texture, normal, specular);
+        super(gl, color, initial_transform, texture, normal, specular);
 
         this.g_radius  = (diameter || 1);
         this.g_height = (height || 1);

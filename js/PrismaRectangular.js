@@ -9,7 +9,7 @@ var CG = (function(CG) {
       g_height = (height || 1)/2;
       g_length = (length || 1)/2;
       
-      super(color, initial_transform, texture, normal, specular);
+      super(gl, color, initial_transform, texture, normal, specular);
 
       this.setFlatBuffer(gl);      
     }

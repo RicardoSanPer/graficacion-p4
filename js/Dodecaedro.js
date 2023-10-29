@@ -11,7 +11,7 @@ CG.Dodecaedro = class extends CG.Mesh{
      */
     constructor(gl, color, length ,initial_transform, texture, normal, specular)
     {
-        super(color, initial_transform, texture, normal, specular);
+        super(gl, color, initial_transform, texture, normal, specular);
         this.g_length  = (length || 1)/2;
 
         this.setFlatBuffer(gl);

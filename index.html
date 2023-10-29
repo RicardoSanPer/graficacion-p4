@@ -14,7 +14,6 @@
   <div class="controles">
   <div class="lista">
     <label>Controles</label>
-    <label>https://stackoverflow.com/questions/19245363/opengl-glut-surface-normals-of-cone</label>
     <ul>
       <li><label>W,S:</label> Rotar la camara arriba y abajo.</li>
       <li><label>A, D:</label> Rotar la camara a la izquierda y derecha.</li>
@@ -30,9 +29,6 @@
       <br>
       <input type="range" min="-90" max="90" value="45" step="0.1" name="rangeY" id="rangeY" oninput="changeLightPosY(value)">
       <label for="rangeY">Y</label>
-      <br>
-      <input type="checkbox" name="specular" id="specular" onchange="switchSpecular(this)">
-      <label for="specular">Especular</label>
     </div>
 </div>
 </body>
@@ -111,8 +107,7 @@
       float fres = 1.0 - dot(norm, vec3(0,0,1));
       vec3 fresnel = fres * ambientColor;
 
-      vec3 result = (ambient + diffuse + fresnel)*vec3(texture2D(u_texture, v_texcoord));
-      result = result + specular;
+      vec3 result = (ambient + diffuse + fresnel + specular)*vec3(texture2D(u_texture, v_texcoord));
 
       gl_FragColor = vec4(result, u_color.a);
       //gl_FragColor = texture2D(u_specularmap, v_texcoord);
@@ -141,6 +136,7 @@
   <script src="./js/Toro.js"></script>
   <script src="./js/CamaraCOI.js"></script>
   <script src="./js/LuzDireccional.js"></script>
+  <script src="./js/Renderer.js"></script>
   <script src="./js/Main.js"></script>
 
   

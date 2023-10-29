@@ -2,7 +2,7 @@ var CG =  CG || {};
 
 CG.Mesh = class{
 
-    constructor(color, initial_transform, texture, normal, specular) {
+    constructor(gl, color, initial_transform, texture, normal, specular) {
         
         this.color = color;
         this.initial_transform = initial_transform || new CG.Matrix4();
