@@ -130,7 +130,6 @@ CG.Vector3 = class{
         
         return new CG.Vector3(this.x / dt, this.y / dt, this.z / dt);
     }
-
     /**
      * Multiplica el vector por un escalar
      * @param {Number} f 

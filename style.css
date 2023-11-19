@@ -6,6 +6,8 @@ body
     flex-wrap: wrap;
     justify-content: center;
     font-family: Arial, Helvetica, sans-serif;
+    padding: 0px;
+    margin: 0px;
 }
 
 .overlay {
@@ -46,22 +48,11 @@ ul
     justify-content: center;
     margin: auto;
 }
-.clickable_canvas
-{
-    border: none;
-    color: white;
-    width: 800px;
-    height: 400px;
-    padding: 0px;
-    display: inline-block;
-    margin: 0px;
-    cursor: pointer;
-}
 
 
 canvas{
-    width: 800px;
-    height: 600px;
+    width: 100%;
+    height: 100%;
     margin: 0px;
     padding: 0px;
 	box-shadow: 1px 1px 1px rgba(99, 117, 129, 0.6);

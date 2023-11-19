@@ -9,30 +9,7 @@
 </head>
 
 <body>
-  <div class="overlay" id="overlay"></div>
-
-  <div class="canvas_container">
-    <button class="clickable_canvas" onclick="setCanvasFocus()">
-      <canvas id="the_canvas" width="800" height="600" style="border: 1px dotted gray;"></canvas>
-    </button>
-  </div>
-  <div class="controles">
-    <div class="lista">
-      <h3>Controles</h3>
-      Hacer click en el canvas para para manipular la vista. <br>
-      Mover el ratón para girar la camara. <br>
-      Presionar Q para acercar la camara. <br>
-      Presionar E para alejar la camara. <br>
-      Presionar ESCAPE para salir del canvas.
-      </div>
-      <div class="lista">
-        <h3>Luz</h3>
-        <input type="range" min="0" max="360" value="90" step="0.1" name="rangeX" id="rangeX" oninput="changeLightPosX(value)">
-        <label for="rangeX">X</label>
-        <br>
-        <input type="range" min="-90" max="90" value="45" step="0.1" name="rangeY" id="rangeY" oninput="changeLightPosY(value)">
-        <label for="rangeY">Y</label>
-      </div>
+      <canvas id="the_canvas" width="1920" height="1080" style="border: 1px dotted gray;"></canvas>
   </div>
   
 </body>
@@ -118,29 +95,31 @@
       //gl_FragColor = vec4(v_texcoord, 0, 1);
     }
   </script>
+  <script src="./js/math/Vector3.js"></script>
+  <script src="./js/math/Vector4.js"></script>
+  <script src="./js/math/Matrix3.js"></script>
+  <script src="./js/math/Matrix4.js"></script>
+  <script src="./js/math/Math.js"></script>
+  
+  
+  <script src="./js/util/Mesh.js"></script>
+  <script src="./js/primitivas/PrismaRectangular.js"></script>
+  <script src="./js/primitivas/Cilindro.js"></script>
+  <script src="./js/primitivas/Cono.js"></script>
+  <script src="./js/primitivas/Esfera.js"></script>
+  <script src="./js/primitivas/Octaedro.js"></script>
+  <script src="./js/primitivas/Icosaedro.js"></script>
+  <script src="./js/primitivas/Tetraedro.js"></script>
+  <script src="./js/primitivas/Dodecaedro.js"></script>
+  <script src="./js/primitivas/Toro.js"></script>
 
-  <script src="./js/Mesh.js"></script>
-  <script src="./js/Vector3.js"></script>
-  <script src="./js/Vector4.js"></script>
-  <script src="./js/Matrix3.js"></script>
-  <script src="./js/Matrix4.js"></script>
-  
-  <script src="./js/PrismaRectangular.js"></script>
-  
-  <script src="./js/Cilindro.js"></script>
-  <script src="./js/Cono.js"></script>
-  <script src="./js/Esfera.js"></script>
-  
-  <script src="./js/Octaedro.js"></script>
-  <script src="./js/Icosaedro.js"></script>
-  <script src="./js/Tetraedro.js"></script>
-  
-  <script src="./js/Dodecaedro.js"></script>
-  
-  <script src="./js/Toro.js"></script>
-  <script src="./js/CamaraCOI.js"></script>
-  <script src="./js/LuzDireccional.js"></script>
-  <script src="./js/Renderer.js"></script>
+  <script src="./js/util/CamaraCOI.js"></script>
+  <script src="./js/util/LuzDireccional.js"></script>
+  <script src="./js/util/Renderer.js"></script>
+
+  <script src="./js/gameplay/GameObject.js"></script>
+  <script src="./js/gameplay/player/Player.js"></script>
+  <script src="./js/Scene.js"></script>
   <script src="./js/Main.js"></script>
 
   

@@ -37,73 +37,9 @@ CG.Renderer = class
 
         this.ambientColor = new CG.Vector3(135/255, 206/255, 235/255);
 
-        this.geometry = [
-            new CG.Cilindro(
-            this.gl, 
-            [1, 0, 0, 1], 
-            2, 2, 16, 0, 
-            CG.Matrix4.translate(new CG.Vector3(-5, 0, -5)),
-            "metal.jpg", "metal_normal.jpg", "metal_specular.jpg"
-            ),
-            new CG.Cono(
-            this.gl, 
-            [0, 1, 0, 1], 
-            2, 2, 16, 16, 
-            CG.Matrix4.translate(new CG.Vector3(0, 0, -5)),
-            "gravel.jpg", "gravel_normal2.jpg", "gravel_specular.jpg"
-            ),
-            new CG.Dodecaedro(
-            this.gl, 
-            [0, 0, 1, 1], 
-            2, 
-            CG.Matrix4.translate(new CG.Vector3(5, 0, -5)),
-            ),
-            new CG.Esfera(
-            this.gl, 
-            [0, 1, 1, 1], 
-            2, 32, 16, 
-            CG.Matrix4.translate(new CG.Vector3(-5, 0, 0)),
-            "earth.jpg","earth_normal2.jpg","earth_specular.jpg"
-            ),
-            new CG.Icosaedro(
-            this.gl, 
-            [1, 0 , 1, 1], 
-            2, 
-            CG.Matrix4.translate(new CG.Vector3(0, 0, 0)),
-            "d20.jpg"
-            ),
-            new CG.Octaedro(
-            this.gl, 
-            [1, 1, 0, 1], 
-            2, 
-            CG.Matrix4.translate(new CG.Vector3(5, 0, 0)),
-            "sandstone.jpg", "sandstone_normal.jpg", "sandstone_specular.jpg"
-            ),
-            //6
-            new CG.PrismaRectangular(
-            this.gl, 
-            [1, 0.2, 0.3, 1], 
-            3, 3, 3, 
-            CG.Matrix4.translate(new CG.Vector3(-5, 0, 5)),
-            "brick.jpg", "brick_normal.jpg", "brick_specular.jpg"
-            ),
-            new CG.Tetraedro(
-            this.gl, 
-            [0.5, 0.5, 0.5, 1], 
-            2, 
-            CG.Matrix4.translate(new CG.Vector3(0, 0, 5)),
-            "wall.jpg", "wall_normal.jpg", "wall_specular.jpg"
-            ),
-            new CG.Toro(
-            this.gl, 
-            [0.25, 0.25, 0.25, 1], 
-            4, 1, 32, 16, 
-            CG.Matrix4.translate(new CG.Vector3(5, 0, 5)),
-            "bark.jpg", "bark_normal.jpg", "bark_specular.jpg"
-            ),
-        ];
+        this.geometry = [ ]
 
-        this.camara = new CG.CamaraCOI(this.canvas, new CG.Vector3(0,0,0));
+        this.camara = new CG.CamaraCOI(this.canvas,50, new CG.Vector3(0,0,0));
         this.lightDir = new CG.LuzDireccional();
     }
     
@@ -143,6 +79,11 @@ draw()
           this.camara.viewMatrix,
           this.texcoordLocation);
         }
+}
+
+pushGeometry(geometry)
+{
+    this.geometry.push(geometry);
 }
 //////////////////////////////////////////////////////////
 // Funciones de utilería para la construcción de shaders

@@ -2,11 +2,11 @@ var CG =  CG || {};
 
 CG.CamaraCOI = class{
 
-    constructor(canvas, coi)
+    constructor(canvas, distance, coi)
     {
         this.angleX = 90;
         this.angleY = 45;
-        this.distance = 11;
+        this.distance = (distance || 11);
         this.canvas = canvas;
 
         this.position = new CG.Vector3(0, 0, this.distance);
