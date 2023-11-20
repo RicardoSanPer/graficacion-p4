@@ -8,7 +8,7 @@ CG.Scene = class{
         this.player = new CG.Player(new CG.Vector3(0,-20,0), new CG.Vector3(-45,0,0), this.renderer)
         this.gameobjects[this.player.id] = this.player;
         
-        let enLine = new CG.EnemyLine(10, 1, 7, false, 5, 3, this, this.renderer);
+        let enLine = new CG.EnemyLine(10, 2, 7, false, 10, 0, this, this.renderer);
 
         this.destroy = this.destroy.bind(this);
         this.spawn = this.spawn.bind(this);

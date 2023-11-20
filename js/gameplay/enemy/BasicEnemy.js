@@ -3,7 +3,7 @@ var CG =  CG || {};
 /**
  * Se mueve en un patron de cuadricula. Al llegar a un limite, avanza hacia adelante
  */
-CG.BasicEnemy = class extends CG.GameObject
+CG.BasicEnemy = class extends CG.EnemyEmpty
 {
     /**
      * 
@@ -16,46 +16,29 @@ CG.BasicEnemy = class extends CG.GameObject
      * @param {Vector3} rotacion : Rotacion incial
      * @param {*} renderer 
      */
-    constructor(squares, current, dir, lowerlimit, higherlimit, movementSpeed, pauseTime, posicion, rotacion, renderer)
+    constructor(xsquares, current, dir, lowerlimit, higherlimit, movementSpeed, pauseTime, posicion, rotacion, renderer)
     {
-       super("enemy",posicion, rotacion, new CG.Cono(
-        renderer.gl, 
-        [0, 1, 0, 1], 
-        2, 2, 16, 16, 
-        CG.Matrix4.translate(new CG.Vector3(0, 0, 0)),
-        ),
-        renderer);
+       super(posicion, rotacion, renderer);
         //Movimiento
         this.movementSpeed = (movementSpeed || 1);
         this.pauseTime = (pauseTime || 1);
 
         //Cuadricula
-        this.xhigherlimit = 40;
-        this.xlowerlimit = -40;
-        this.xlenght = 80;
-        this.squares = (squares || 8);
-        if(this.squares < 0)
-        {
-            this.squares = 0;
-        }
-        //Tamaño de casilla
-        this.xjump = this.xlenght / (this.squares+1);
-        //Obtener destino inicial
-        this.startingpos = this.xlowerlimit + this.xjump / 2;
-        this.destino = new CG.Vector3(this.startingpos + this.xjump * current, posicion.y, posicion.z);
-        this.currentSquare = (current || 0);
-        if(this.currentSquare < 0)
-        {
-            this.currentSquare = 0;
-        }
-
-        this.lowerS = lowerlimit;
-        this.higerS = higherlimit;
+        this.xmin = -35;
+        this.width = 70;
+        this.xsquares = xsquares;
+        this.squareSize = this.width / this.xsquares;
+        this.squareOffset = this.squareSize / 2;
+        this.currentSquare = current;
+        this.lowerlimit = lowerlimit;
+        this.higherlimit = higherlimit;
 
         this.dir = dir;
-        this.pauseCounter = 0;
 
-        this.moverY = false;
+        let x = this.xmin + this.squareOffset + (this.currentSquare + 1) * this.squareSize;
+        this.destino = new CG.Vector3(x,this.posicion.y,this.posicion.z);
+
+        this.pauseCounter = 0;
     }
 
     update(delta)
@@ -63,38 +46,21 @@ CG.BasicEnemy = class extends CG.GameObject
         this.posicion.x = CG.Math.lerp(this.posicion.x, this.destino.x, delta * this.movementSpeed);
         this.posicion.z = CG.Math.lerp(this.posicion.z, this.destino.z, delta * this.movementSpeed);
         //Si el enemigo llego al destino
-        if(CG.Vector3.distance(this.posicion, this.destino) < 1)
+        
+        this.pauseCounter += delta;
+        //Mover en X si ya se cambio de posicion y
+        if(CG.Vector3.distance(this.destino, this.posicion) < 1)
         {
-            this.pauseCounter += delta;
-            //Mover a la siguiente casilla X si no hay movimiento z en espera
-            if(!this.moverY)
+            if(this.pauseCounter > this.pauseTime)
             {
-                //Si se llego al borde, mover en z
-                if(this.currentSquare > this.higerS || this.currentSquare < this.lowerS)
+                
+                if(this.currentSquare > this.higherlimit || this.currentSquare < this.lowerlimit)
                 {
-                    this.moverY = true;
-                    this.destino.z += 10;
-                }
-                //De otro modo, poner la siguiente casilla como destino
-                if(this.pauseCounter > this.pauseTime)
-                {
-                    this.pauseCounter = 0;
-                    this.currentSquare += 1 * this.dir;
-                    this.destino.x = this.startingpos + this.xjump * this.currentSquare;
-                }
-            }
-            else
-            {
-                this.pauseCounter += delta;
-                //Mover en X si ya se cambio de posicion y
-                if(this.pauseCounter > this.pauseTime)
-                {
-                    this.moverY = false;
                     this.dir *= -1;
-                    this.pauseCounter = 0;
-                    this.currentSquare += 1 * this.dir;
-                    this.destino.x = this.startingpos + this.xjump * this.currentSquare;
                 }
+                this.currentSquare += this.dir;
+                this.pauseCounter = 0;
+                this.destino.x = this.xmin + this.squareOffset + (this.currentSquare) * this.squareSize;
             }
         }
 

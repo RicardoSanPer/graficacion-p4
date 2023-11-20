@@ -22,6 +22,8 @@ CG.GameObject = class{
         this.rotacion = (rotacion || new CG.Vector3(0,0,0));
 
         this.mesh = mesh;
+
+        this.destroyed = false;
         
         if(renderer != null)
         {
@@ -49,6 +51,7 @@ CG.GameObject = class{
     //Destruye el objeto
     destroy()
     {
+      this.destroyed = true;
       document.dispatchEvent(new CustomEvent("elementDeleted",{detail: {id: this.id,},}));
     }
 }
