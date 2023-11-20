@@ -3,7 +3,7 @@ var CG =  CG || {};
 CG.Projectile = class extends CG.GameObject{
     constructor(posicion, rotacion, renderer)
     {
-        super(posicion,rotacion,
+        super("player_projectile",posicion,rotacion,
                 new CG.Esfera(
                     renderer.gl, 
                     [0, 1, 1, 1], 
@@ -17,7 +17,7 @@ CG.Projectile = class extends CG.GameObject{
 
     update(delta)
     {
-        this.posicion.z -= 60*delta;
+        this.posicion.z -= 120*delta;
         this.counter += delta;
         if(this.counter > 10)
         {

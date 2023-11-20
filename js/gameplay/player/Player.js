@@ -3,7 +3,7 @@ var CG =  CG || {};
 CG.Player = class extends CG.GameObject{
     constructor(posicion, rotacion, renderer)
     {
-       super(posicion, rotacion, new CG.Cono(
+       super("player",posicion, rotacion, new CG.Cono(
         renderer.gl, 
         [0, 1, 0, 1], 
         2, 2, 16, 16, 

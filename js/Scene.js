@@ -7,21 +7,13 @@ CG.Scene = class{
         this.gameobjects = {};
         this.player = new CG.Player(new CG.Vector3(0,-20,0), new CG.Vector3(-45,0,0), this.renderer)
         this.gameobjects[this.player.id] = this.player;
+        
+        let enLine = new CG.EnemyLine(10, 1, 8, false, this, this.renderer);
 
         this.destroy = this.destroy.bind(this);
         this.spawn = this.spawn.bind(this);
 
-        let earth = new CG.Esfera(
-            this.renderer.gl, 
-            [0, 1, 1, 1], 
-            250, 64, 64, 
-            CG.Matrix4.translate(new CG.Vector3(0, 0, 0)),
-            "earth.jpg","earth_normal2.jpg","earth_specular.jpg",
-            );
-            earth.setTranslation(-160, -300, -100);
-            earth.Rotate(25,0,0);
-        this.renderer.add("earth_bg", 
-        earth)
+        
 
         document.addEventListener("elementDeleted", this.destroy);
         document.addEventListener("elementSpawn", this.spawn);

@@ -10,9 +10,12 @@ CG.GameObject = class{
    * @param {*} mesh 
    * @param {*} renderer 
    */
-    constructor(posicion, rotacion, mesh, renderer)
+    constructor(tag, posicion, rotacion, mesh, renderer)
     {
-        this.id = new Date().getTime().toString();
+        this.tag = (tag || "");
+        let time = new Date().getTime();
+        
+        //console.log(this.id);
         this.posicion = new CG.Vector3(0,0,0);
         this.posicion = (posicion || new CG.Vector3(0,0,0));
 
@@ -22,6 +25,12 @@ CG.GameObject = class{
         
         if(renderer != null)
         {
+          //Si el id ya existe, asignar nuevo para evitar errores de renderizado
+          while(renderer.geometry[time.toString()])
+          {
+            time += 1;
+          }
+          this.id = time.toString();
           renderer.geometry[this.id] = this.mesh;
         }
     }
