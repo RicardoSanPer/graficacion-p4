@@ -16,7 +16,7 @@ CG.BasicEnemy = class extends CG.GameObject
      * @param {Vector3} rotacion : Rotacion incial
      * @param {*} renderer 
      */
-    constructor(squares, current, dir, lowerlimit, higherlimit, posicion, rotacion, renderer)
+    constructor(squares, current, dir, lowerlimit, higherlimit, movementSpeed, pauseTime, posicion, rotacion, renderer)
     {
        super("enemy",posicion, rotacion, new CG.Cono(
         renderer.gl, 
@@ -25,22 +25,25 @@ CG.BasicEnemy = class extends CG.GameObject
         CG.Matrix4.translate(new CG.Vector3(0, 0, 0)),
         ),
         renderer);
+        //Movimiento
+        this.movementSpeed = (movementSpeed || 1);
+        this.pauseTime = (pauseTime || 1);
 
         //Cuadricula
         this.xhigherlimit = 40;
         this.xlowerlimit = -40;
         this.xlenght = 80;
         this.squares = (squares || 8);
-        if(this.squares < 1)
+        if(this.squares < 0)
         {
-            this.squares = 1;
+            this.squares = 0;
         }
         //Tamaño de casilla
-        this.xjump = this.xlenght / this.squares;
+        this.xjump = this.xlenght / (this.squares+1);
         //Obtener destino inicial
         this.startingpos = this.xlowerlimit + this.xjump / 2;
-        this.destino = new CG.Vector3(this.startingpos, posicion.y, posicion.z);
-        this.currentSquare = (current || 1);
+        this.destino = new CG.Vector3(this.startingpos + this.xjump * current, posicion.y, posicion.z);
+        this.currentSquare = (current || 0);
         if(this.currentSquare < 0)
         {
             this.currentSquare = 0;
@@ -51,15 +54,14 @@ CG.BasicEnemy = class extends CG.GameObject
 
         this.dir = dir;
         this.pauseCounter = 0;
-        this.pauseTime = 1;
 
         this.moverY = false;
     }
 
     update(delta)
     {
-        this.posicion.x = CG.Math.lerp(this.posicion.x, this.destino.x, delta * 5);
-        this.posicion.z = CG.Math.lerp(this.posicion.z, this.destino.z, delta * 5);
+        this.posicion.x = CG.Math.lerp(this.posicion.x, this.destino.x, delta * this.movementSpeed);
+        this.posicion.z = CG.Math.lerp(this.posicion.z, this.destino.z, delta * this.movementSpeed);
         //Si el enemigo llego al destino
         if(CG.Vector3.distance(this.posicion, this.destino) < 1)
         {
@@ -96,7 +98,7 @@ CG.BasicEnemy = class extends CG.GameObject
             }
         }
 
-        if(this.posicion.z  > 20)
+        if(this.posicion.z  > 25)
         {
             this.destroy();
         }

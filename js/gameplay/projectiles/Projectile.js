@@ -19,7 +19,7 @@ CG.Projectile = class extends CG.GameObject{
     {
         this.posicion.z -= 120*delta;
         this.counter += delta;
-        if(this.counter > 10)
+        if(this.posicion.z < -400)
         {
             this.destroy();
         }
