@@ -120,7 +120,7 @@ CG.Vector4 = class
     normalize()
     {
 
-        let dt = this.distance(this, new CG.Vector4(0,0,0,0));
+        let dt = CG.Vector4.distance(this, new CG.Vector4(0,0,0,0));
         
         return new CG.Vector4(this.x / dt, this.y / dt, this.z / dt, this.w / dt);
     }

@@ -37,7 +37,7 @@ CG.Renderer = class
 
         this.ambientColor = new CG.Vector3(135/255, 206/255, 235/255);
 
-        this.geometry = [ ]
+        this.geometry = {}
 
         this.camara = new CG.CamaraCOI(this.canvas,50, new CG.Vector3(0,0,0));
         this.lightDir = new CG.LuzDireccional();
@@ -66,9 +66,9 @@ draw()
     this.gl.uniform1i(this.normalTextureLocation, 1);
     this.gl.uniform1i(this.specularTextureLocation, 2);
 
-    for (let i=0; i<this.geometry.length; i++) {
+    for (const [key, value] of Object.entries(this.geometry)) {
         // se dibuja la geometría
-        this.geometry[i].draw(
+        value.draw(
           this.gl,
           this.positionAttributeLocation,
           this.normalAttributeLocation, 
@@ -81,9 +81,14 @@ draw()
         }
 }
 
-pushGeometry(geometry)
+destroy(id)
 {
-    this.geometry.push(geometry);
+    delete this.geometry[id];
+}
+
+add(id, mesh)
+{
+    this.geometry[id] = mesh;
 }
 //////////////////////////////////////////////////////////
 // Funciones de utilería para la construcción de shaders

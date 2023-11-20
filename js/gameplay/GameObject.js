@@ -1,35 +1,45 @@
 var CG =  CG || {};
-
+/**
+ * Clase gameobject para objetos de juego que tienen comportamiento dinamico
+ */
 CG.GameObject = class{
-    constructor(posicion, rotacion, renderer)
+  /**
+   * 
+   * @param {Vector3} posicion 
+   * @param {Vector3} rotacion 
+   * @param {*} mesh 
+   * @param {*} renderer 
+   */
+    constructor(posicion, rotacion, mesh, renderer)
     {
+        this.id = new Date().getTime().toString();
         this.posicion = new CG.Vector3(0,0,0);
-        this.posicion.x = (posicion[0] || 0);
-        this.posicion.y = (posicion[1] || 0);
-        this.posicion.z = (posicion[2] || 0);
+        this.posicion = (posicion || new CG.Vector3(0,0,0));
 
-        this.rotacion = new CG.Vector3(0,0,0);
-        this.rotacion.x = (rotacion[0] || 0);
-        this.rotacion.y = (rotacion[1] || 0);
-        this.rotacion.z = (rotacion[2] || 0);
+        this.rotacion = (rotacion || new CG.Vector3(0,0,0));
 
-        this.mesh = new CG.Cono(
-            renderer.gl, 
-            [0, 1, 0, 1], 
-            2, 2, 16, 16, 
-            CG.Matrix4.translate(new CG.Vector3(0, 0, 0)),
-            );
-        renderer.geometry.push(this.mesh);
+        this.mesh = mesh;
+        
+        if(renderer != null)
+        {
+          renderer.geometry[this.id] = this.mesh;
+        }
     }
-
+    /**Actualiza la geometria */
     updateGeometry()
     {
         this.mesh.setRotation(this.rotacion.x, this.rotacion.y, this.rotacion.z);
         this.mesh.setTranslation(this.posicion.x, this.posicion.y, this.posicion.z);
     }
 
+    //Update
     update(delta)
     {
 
+    }
+    //Destruye el objeto
+    destroy()
+    {
+      document.dispatchEvent(new CustomEvent("elementDeleted",{detail: {id: this.id,},}));
     }
 }
