@@ -22,6 +22,6 @@ CG.SpawnParticle = class extends CG.Particle
         this.scale.y = this.animationScale * 5;
         this.scale.z = this.animationScale * 5;
 
-        this.rotacion.z = this.lifePercentage * this.lifePercentage * Math.PI * 2;
+        this.rotacion.z = this.lifePercentage * this.lifePercentage * Math.PI * 0.25;
     }
 }

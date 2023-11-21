@@ -45,9 +45,9 @@ CG.Scene = class{
                 let jump1 = new CG.JumpingEnemy(20, 25, 3, 3, new CG.Vector3(0, -20, -200), new CG.Vector3(0,0,0), this);
                 let jump2 = new CG.JumpingEnemy(20, 25, 3, 3, new CG.Vector3(20, -20, -200), new CG.Vector3(0,0,0), this);
                 let jump3 = new CG.JumpingEnemy(20, 25, 3, 3, new CG.Vector3(-20, -20, -200), new CG.Vector3(0,0,0), this);
-                let s1 = new CG.SpawnParticle(0.5, new CG.Vector3(-20, -20, -195), new CG.Vector3(0,0,0), this);
-                let s2 = new CG.SpawnParticle(0.5, new CG.Vector3(0, -20, -195), new CG.Vector3(0,0,0), this);
-                let s3 = new CG.SpawnParticle(0.5, new CG.Vector3(20, -20, -195), new CG.Vector3(0,0,0), this);
+                let s1 = new CG.SpawnParticle(1, new CG.Vector3(-20, -20, -195), new CG.Vector3(0,0,0), this);
+                let s2 = new CG.SpawnParticle(1, new CG.Vector3(0, -20, -195), new CG.Vector3(0,0,0), this);
+                let s3 = new CG.SpawnParticle(1, new CG.Vector3(20, -20, -195), new CG.Vector3(0,0,0), this);
             }
             else
             {

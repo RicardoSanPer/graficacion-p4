@@ -4,7 +4,7 @@ CG.LuzDireccional = class{
 
     constructor()
     {
-        this.angleX = 90;
+        this.angleX = 180;
         this.angleY = 45;
         this.distance = 11;
 

@@ -32,9 +32,10 @@ CG.EnemyLine = class
             }
             for(let j = 0; j < nenemigos; j++)
             {
-                let x = this.xmin + this.squareOffset + (this.squareSize * j)
+                
+                let x = this.xmin + this.squareOffset + (this.squareSize * j);
                 let pos = new CG.Vector3(x,-20,-200 + (-10 * i));
-                let rot = new CG.Vector3(0,0,0);
+                let rot = new CG.Vector3(90,0,0);
                 let enemigo = new CG.BasicEnemy(xsquares,j,1,j,this.xsquares - (nenemigos- j), moveSpeed,pauseTime,pos,rot, scene);
                 pos.x += this.squareSize;
                 document.dispatchEvent(new CustomEvent("elementSpawn",{detail: 

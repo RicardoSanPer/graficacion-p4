@@ -61,6 +61,10 @@
     uniform sampler2D u_specularmap;
     void main() {
       
+      //Descartar
+      gl_FragColor = texture2D(u_texture, v_texcoord) * u_color;
+      if (gl_FragColor.a <= 0.0) discard;
+
       //Ambiente
       float ambientStrength = 0.3;
       vec3 ambient = ambientStrength * ambientColor;
