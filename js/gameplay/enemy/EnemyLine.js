@@ -2,7 +2,18 @@ var CG =  CG || {};
 
 CG.EnemyLine = class
 {
-    constructor(xsquares, nlines, nenemigos, alternar, moveSpeed, pauseTime, scene, renderer)
+    /**
+     * 
+     * @param {Number} xsquares Numero de cuadros en la casilla
+     * @param {Number} nlines Numero de lineas
+     * @param {Number} nenemigos Numero de enemigos por linea
+     * @param {*} alternar 
+     * @param {Number} moveSpeed Velocidad de movimiento
+     * @param {Number} pauseTime Tiempo de pausa
+     * @param {Scene} scene 
+     * @param {Renderer} renderer 
+     */
+    constructor(xsquares, nlines, nenemigos, alternar, moveSpeed, pauseTime, scene)
     {
         let dir = 1;
         
@@ -22,10 +33,15 @@ CG.EnemyLine = class
             for(let j = 0; j < nenemigos; j++)
             {
                 let x = this.xmin + this.squareOffset + (this.squareSize * j)
-                let pos = new CG.Vector3(x,-20,- 40 + (-10 * i));
+                let pos = new CG.Vector3(x,-20,-200 + (-10 * i));
                 let rot = new CG.Vector3(0,0,0);
-                let enemigo = new CG.BasicEnemy(xsquares,j,1,j,this.xsquares - (nenemigos- j), moveSpeed,pauseTime,pos,rot, renderer);
-                scene.gameobjects[enemigo.id] = enemigo;
+                let enemigo = new CG.BasicEnemy(xsquares,j,1,j,this.xsquares - (nenemigos- j), moveSpeed,pauseTime,pos,rot, scene);
+                document.dispatchEvent(new CustomEvent("elementSpawn",{detail: 
+                    {objeto : "SpawnParticle",
+                        pos : enemigo.posicion,
+                        rot : new CG.Vector3(0,0,0),
+                    },
+                }));
             }
         }
     }

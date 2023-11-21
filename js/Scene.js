@@ -5,14 +5,14 @@ CG.Scene = class{
     {
         this.renderer = new CG.Renderer();
         this.gameobjects = {};
-        this.player = new CG.Player(new CG.Vector3(0,-20,0), new CG.Vector3(-45,0,0), this.renderer)
-        this.gameobjects[this.player.id] = this.player;
-        
-        let enLine = new CG.EnemyLine(10, 2, 7, false, 10, 0, this, this.renderer);
+        this.player = new CG.Player(new CG.Vector3(0,-20,0), new CG.Vector3(-45,0,0), this)
 
         this.destroy = this.destroy.bind(this);
         this.spawn = this.spawn.bind(this);
 
+
+        this.counter = 8;
+        this.time = 8;
         
 
         document.addEventListener("elementDeleted", this.destroy);
@@ -21,6 +21,12 @@ CG.Scene = class{
 
     update(delta)
     {
+        this.counter += delta;
+        if(this.counter > this.time)
+        {
+            this.counter = 0;
+            let en = new CG.EnemyLine(10, 1, 5, false, 10, 1, this);
+        }
         for (const [key, value] of Object.entries(this.gameobjects))
         {
             value.update(delta);
@@ -49,9 +55,11 @@ CG.Scene = class{
         var eventData = e.detail;
         if(eventData.objeto == "Projectile")
         {
-            var objeto = new CG.Projectile(eventData.pos.clone(), eventData.rot.clone(), this.renderer);
-        }   
-        this.renderer.add(objeto.id, objeto.mesh);
-        this.gameobjects[objeto.id] = objeto;
+            var objeto = new CG.Projectile(eventData.pos.clone(), eventData.rot.clone(), this);
+        }
+        else if(eventData.objeto == "SpawnParticle")
+        {
+            var objeto = new CG.SpawnParticle(1, eventData.pos.clone(), eventData.rot.clone(), this);
+        }  
     }
 }

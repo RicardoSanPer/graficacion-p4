@@ -1,15 +1,15 @@
 var CG =  CG || {};
 
 CG.Player = class extends CG.GameObject{
-    constructor(posicion, rotacion, renderer)
+    constructor(posicion, rotacion, scene)
     {
        super("player",posicion, rotacion, new CG.Cono(
-        renderer.gl, 
+        scene.renderer.gl, 
         [0, 1, 0, 1], 
         2, 2, 16, 16, 
         CG.Matrix4.translate(new CG.Vector3(0, 0, 0)),
         ),
-        renderer);
+        scene);
        this.dir = 1;
        this.speed = 100;
        this.velocity = new CG.Vector3(0,0,0);
@@ -39,6 +39,7 @@ CG.Player = class extends CG.GameObject{
 
     spawnProjectile()
     {
+        console.log("Spawn");
         document.dispatchEvent(new CustomEvent("elementSpawn",{detail: 
             {objeto : "Projectile",
                 pos : this.posicion,

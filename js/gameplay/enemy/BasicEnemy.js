@@ -16,9 +16,9 @@ CG.BasicEnemy = class extends CG.EnemyEmpty
      * @param {Vector3} rotacion : Rotacion incial
      * @param {*} renderer 
      */
-    constructor(xsquares, current, dir, lowerlimit, higherlimit, movementSpeed, pauseTime, posicion, rotacion, renderer)
+    constructor(xsquares, current, dir, lowerlimit, higherlimit, movementSpeed, pauseTime, posicion, rotacion, scene)
     {
-       super(posicion, rotacion, renderer);
+       super(posicion, rotacion, scene);
         //Movimiento
         this.movementSpeed = (movementSpeed || 1);
         this.pauseTime = (pauseTime || 1);
@@ -39,28 +39,37 @@ CG.BasicEnemy = class extends CG.EnemyEmpty
         this.destino = new CG.Vector3(x,this.posicion.y,this.posicion.z);
 
         this.pauseCounter = 0;
+
+        this.moveToFront = false;
     }
 
     update(delta)
     {
+        this.pauseCounter += delta;
         this.posicion.x = CG.Math.lerp(this.posicion.x, this.destino.x, delta * this.movementSpeed);
         this.posicion.z = CG.Math.lerp(this.posicion.z, this.destino.z, delta * this.movementSpeed);
         //Si el enemigo llego al destino
         
-        this.pauseCounter += delta;
         //Mover en X si ya se cambio de posicion y
         if(CG.Vector3.distance(this.destino, this.posicion) < 1)
         {
             if(this.pauseCounter > this.pauseTime)
             {
-                
+                this.pauseCounter = 0;
                 if(this.currentSquare > this.higherlimit || this.currentSquare < this.lowerlimit)
                 {
                     this.dir *= -1;
+                    this.currentSquare += this.dir;
+                    this.moveToFront = true;
+                    this.destino.z = this.posicion.z + 20;
+                    this.moveToFront = true;
                 }
-                this.currentSquare += this.dir;
-                this.pauseCounter = 0;
-                this.destino.x = this.xmin + this.squareOffset + (this.currentSquare) * this.squareSize;
+                else
+                {
+                    this.destino.x = this.xmin + this.squareOffset + (this.currentSquare) * this.squareSize;
+                    this.currentSquare += this.dir;
+                }
+                
             }
         }
 

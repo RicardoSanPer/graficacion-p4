@@ -1,16 +1,16 @@
 var CG =  CG || {};
 
 CG.Projectile = class extends CG.GameObject{
-    constructor(posicion, rotacion, renderer)
+    constructor(posicion, rotacion, scene)
     {
         super("player_projectile",posicion,rotacion,
                 new CG.Esfera(
-                    renderer.gl, 
+                    scene.renderer.gl, 
                     [0, 1, 1, 1], 
                     1, 8, 8, 
                     CG.Matrix4.translate(new CG.Vector3(0, 0, 0)),
                     ),
-            renderer);
+            scene);
 
         this.counter = 0;
     }

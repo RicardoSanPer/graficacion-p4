@@ -10,7 +10,7 @@ CG.GameObject = class{
    * @param {*} mesh 
    * @param {*} renderer 
    */
-    constructor(tag, posicion, rotacion, mesh, renderer)
+    constructor(tag, posicion, rotacion, mesh, scene)
     {
         this.tag = (tag || "");
         let time = new Date().getTime();
@@ -20,25 +20,28 @@ CG.GameObject = class{
         this.posicion = (posicion || new CG.Vector3(0,0,0));
 
         this.rotacion = (rotacion || new CG.Vector3(0,0,0));
+        this.scale = new CG.Vector3(1,1,1);
 
         this.mesh = mesh;
 
         this.destroyed = false;
         
-        if(renderer != null)
+        if(scene.renderer != null)
         {
           //Si el id ya existe, asignar nuevo para evitar errores de renderizado
-          while(renderer.geometry[time.toString()])
+          while(scene.renderer.geometry[time.toString()])
           {
             time += 1;
           }
           this.id = time.toString();
-          renderer.geometry[this.id] = this.mesh;
+          scene.renderer.geometry[this.id] = this.mesh;
         }
+        scene.gameobjects[this.id] = this;
     }
     /**Actualiza la geometria */
     updateGeometry()
     {
+        this.mesh.setScale(this.scale.x, this.scale.y, this.scale.z);
         this.mesh.setRotation(this.rotacion.x, this.rotacion.y, this.rotacion.z);
         this.mesh.setTranslation(this.posicion.x, this.posicion.y, this.posicion.z);
     }
