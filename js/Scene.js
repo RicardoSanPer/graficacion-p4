@@ -5,13 +5,26 @@ CG.Scene = class{
     {
         this.renderer = new CG.Renderer();
         this.gameobjects = {};
-        this.player = new CG.Player(new CG.Vector3(0,-20,0), new CG.Vector3(-45,0,0), this)
+        this.player = new CG.Player(new CG.Vector3(0,-20,0), new CG.Vector3(-45,0,0), this);
 
         this.destroy = this.destroy.bind(this);
         this.spawn = this.spawn.bind(this);
 
-
-        this.counter = 8;
+        for(let i = 0; i < 16; i++)
+        {
+            let z1 = Math.floor(Math.random() * 200);
+            let z2 = Math.floor(Math.random() * 200);
+            let z3 = Math.floor(Math.random() * 200);
+            let z4 = Math.floor(Math.random() * 200);
+            let c = new CG.MovingCube(new CG.Vector3(-25,-35,-z1), new CG.Vector3(0,0,0),this);
+            let c2 = new CG.MovingCube(new CG.Vector3(25,-35,-z2), new CG.Vector3(0,0,0),this);
+            let c3 = new CG.MovingCube(new CG.Vector3(25,35,-z3), new CG.Vector3(0,0,0),this);
+            let c4 = new CG.MovingCube(new CG.Vector3(-25,35,-z4), new CG.Vector3(0,0,0),this);
+        }
+        
+        this.counter = 0;
+        this.enemyCount = 5;
+        this.enemyProgress = 0;
         this.time = 8;
         
 
@@ -25,7 +38,22 @@ CG.Scene = class{
         if(this.counter > this.time)
         {
             this.counter = 0;
-            let en = new CG.EnemyLine(10, 1, 5, false, 10, 1, this);
+            this.enemyProgress += 1;
+            if(this.enemyProgress == this.enemyCount)
+            {
+                this.enemyProgress = 0;
+                let jump1 = new CG.JumpingEnemy(20, 25, 3, 3, new CG.Vector3(0, -20, -200), new CG.Vector3(0,0,0), this);
+                let jump2 = new CG.JumpingEnemy(20, 25, 3, 3, new CG.Vector3(20, -20, -200), new CG.Vector3(0,0,0), this);
+                let jump3 = new CG.JumpingEnemy(20, 25, 3, 3, new CG.Vector3(-20, -20, -200), new CG.Vector3(0,0,0), this);
+                let s1 = new CG.SpawnParticle(0.5, new CG.Vector3(-20, -20, -195), new CG.Vector3(0,0,0), this);
+                let s2 = new CG.SpawnParticle(0.5, new CG.Vector3(0, -20, -195), new CG.Vector3(0,0,0), this);
+                let s3 = new CG.SpawnParticle(0.5, new CG.Vector3(20, -20, -195), new CG.Vector3(0,0,0), this);
+            }
+            else
+            {
+                this.enemyProgress += 1;
+                let en = new CG.EnemyLine(10, 1, 5, false, 10, 1, this);
+            }
         }
         for (const [key, value] of Object.entries(this.gameobjects))
         {

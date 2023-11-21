@@ -39,7 +39,7 @@ CG.EnemyLine = class
                 pos.x += this.squareSize;
                 document.dispatchEvent(new CustomEvent("elementSpawn",{detail: 
                     {objeto : "SpawnParticle",
-                        pos : pos,
+                        pos : new CG.Vector3(pos.x, pos.y, pos.z+5),
                         rot : new CG.Vector3(0,0,0),
                     },
                 }));

@@ -35,7 +35,8 @@ CG.Renderer = class
         this.normalTextureLocation = this.gl.getUniformLocation(this.program, "u_normalmap");
         this.specularTextureLocation = this.gl.getUniformLocation(this.program, "u_specularmap");
 
-        this.ambientColor = new CG.Vector3(135/255, 206/255, 235/255);
+        //this.ambientColor = new CG.Vector3(135/255, 206/255, 235/255);
+        this.ambientColor = new CG.Vector3(0, 0, 0);
 
         this.geometry = {}
 
