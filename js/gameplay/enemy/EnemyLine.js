@@ -36,9 +36,10 @@ CG.EnemyLine = class
                 let pos = new CG.Vector3(x,-20,-200 + (-10 * i));
                 let rot = new CG.Vector3(0,0,0);
                 let enemigo = new CG.BasicEnemy(xsquares,j,1,j,this.xsquares - (nenemigos- j), moveSpeed,pauseTime,pos,rot, scene);
+                pos.x += this.squareSize;
                 document.dispatchEvent(new CustomEvent("elementSpawn",{detail: 
                     {objeto : "SpawnParticle",
-                        pos : enemigo.posicion,
+                        pos : pos,
                         rot : new CG.Vector3(0,0,0),
                     },
                 }));

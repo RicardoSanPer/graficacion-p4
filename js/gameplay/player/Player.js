@@ -39,7 +39,6 @@ CG.Player = class extends CG.GameObject{
 
     spawnProjectile()
     {
-        console.log("Spawn");
         document.dispatchEvent(new CustomEvent("elementSpawn",{detail: 
             {objeto : "Projectile",
                 pos : this.posicion,
