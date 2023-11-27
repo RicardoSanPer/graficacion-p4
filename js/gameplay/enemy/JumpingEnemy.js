@@ -26,6 +26,11 @@ CG.JumpingEnemy = class extends CG.EnemyEmpty
     update(delta)
     {
         this.counter += delta;
+        if(this.destroyed)
+        {
+            this.destroySequence(delta);
+            return;
+        }
         this.posicion.z = CG.Math.lerp(this.posicion.z, this.posicionDestino.z, delta * this.movementSpeed);
 
         //Brincar

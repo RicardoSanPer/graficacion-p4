@@ -40,6 +40,9 @@ CG.EnemyLine = class
                 pos.x += this.squareSize;
                 document.dispatchEvent(new CustomEvent("elementSpawn",{detail: 
                     {objeto : "SpawnParticle",
+                        name : "flare.png",
+                        scale : 5,
+                        duration : 1,
                         pos : new CG.Vector3(pos.x, pos.y, pos.z+5),
                         rot : new CG.Vector3(0,0,0),
                     },

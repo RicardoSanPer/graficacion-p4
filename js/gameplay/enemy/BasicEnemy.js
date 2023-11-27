@@ -39,13 +39,17 @@ CG.BasicEnemy = class extends CG.EnemyEmpty
         this.destino = new CG.Vector3(x,this.posicion.y,this.posicion.z);
 
         this.pauseCounter = 0;
-
         this.moveToFront = false;
     }
 
     update(delta)
     {
         this.pauseCounter += delta;
+        if(this.destroyed)
+        {
+            this.destroySequence(delta);
+            return;
+        }
         this.posicion.x = CG.Math.lerp(this.posicion.x, this.destino.x, delta * this.movementSpeed);
         this.posicion.z = CG.Math.lerp(this.posicion.z, this.destino.z, delta * this.movementSpeed);
         //Si el enemigo llego al destino

@@ -23,9 +23,7 @@ CG.GameObject = class{
         this.scale = new CG.Vector3(1,1,1);
 
         this.mesh = mesh;
-
-        this.destroyed = false;
-        
+                
         if(scene.renderer != null)
         {
           //Si el id ya existe, asignar nuevo para evitar errores de renderizado
@@ -54,7 +52,11 @@ CG.GameObject = class{
     //Destruye el objeto
     destroy()
     {
-      this.destroyed = true;
       document.dispatchEvent(new CustomEvent("elementDeleted",{detail: {id: this.id,},}));
+    }
+
+    hit()
+    {
+
     }
 }

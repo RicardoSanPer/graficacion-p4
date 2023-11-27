@@ -6,7 +6,7 @@ CG.Player = class extends CG.GameObject{
        super("player",posicion, rotacion, new CG.Cono(
         scene.renderer.gl, 
         [0, 1, 0, 1], 
-        2, 2, 16, 16, 
+        2, 2, 6, 2, 
         CG.Matrix4.translate(new CG.Vector3(0, 0, 0)),
         ),
         scene);
@@ -14,7 +14,7 @@ CG.Player = class extends CG.GameObject{
        this.speed = 100;
        this.velocity = new CG.Vector3(0,0,0);
        this.inputVector = [0,0];
-        this.fireRate = 0.1;
+        this.fireRate = 0.3;
        this.lastProjectile = 0;
     }
 

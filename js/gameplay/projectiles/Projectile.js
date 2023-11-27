@@ -7,7 +7,7 @@ CG.Projectile = class extends CG.GameObject{
                 new CG.Esfera(
                     scene.renderer.gl, 
                     [0, 1, 1, 1], 
-                    1, 8, 8, 
+                    1, 4, 4, 
                     CG.Matrix4.translate(new CG.Vector3(0, 0, 0)),
                     ),
             scene);
@@ -23,5 +23,19 @@ CG.Projectile = class extends CG.GameObject{
         {
             this.destroy();
         }
+    }
+
+    hit()
+    {
+        document.dispatchEvent(new CustomEvent("elementSpawn",{detail: 
+            {objeto : "SpawnParticle",
+                name : "explosion.png",
+                scale : 1,
+                duration : 0.2,
+                pos : new CG.Vector3(this.posicion.x, this.posicion.y, this.posicion.z+5),
+                rot : new CG.Vector3(0,0,0),
+            },
+        }));
+        this.destroy();
     }
 }
