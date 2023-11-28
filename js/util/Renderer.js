@@ -30,18 +30,20 @@ CG.Renderer = class
         this.CamPosition = this.gl.getUniformLocation(this.program, "cameraPos");
 
         this.texcoordLocation = this.gl.getAttribLocation(this.program, "a_texcoord");
-
+        
         this.textureLocation = this.gl.getUniformLocation(this.program, "u_texture");
         this.normalTextureLocation = this.gl.getUniformLocation(this.program, "u_normalmap");
         this.specularTextureLocation = this.gl.getUniformLocation(this.program, "u_specularmap");
 
-        //this.ambientColor = new CG.Vector3(135/255, 206/255, 235/255);
-        this.ambientColor = new CG.Vector3(0, 0, 0);
+        this.ambientColor = new CG.Vector3(35/255, 6/255, 35/255);
+        //this.ambientColor = new CG.Vector3(0, 0, 0);
 
         this.geometry = {}
 
         this.camara = new CG.CamaraCOI(this.canvas,50, new CG.Vector3(0,0,0));
         this.lightDir = new CG.LuzDireccional();
+
+        this.skybox = new CG.Skybox(this, CG.Matrix4.scale(new CG.Vector3(500, 500, 500)));
     }
     
     
@@ -67,6 +69,7 @@ draw()
     this.gl.uniform1i(this.normalTextureLocation, 1);
     this.gl.uniform1i(this.specularTextureLocation, 2);
 
+
     for (const [key, value] of Object.entries(this.geometry)) {
         // se dibuja la geometría
         value.draw(
@@ -80,6 +83,8 @@ draw()
           this.camara.viewMatrix,
           this.texcoordLocation);
         }
+
+    this.skybox.draw(this.gl, this.camara.viewProjectionMatrix);
 }
 
 destroy(id)
