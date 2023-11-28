@@ -6,7 +6,6 @@ CG.Scene = class{
         this.renderer = new CG.Renderer();
         this.gameobjects = {};
         this.player = new CG.Player(new CG.Vector3(0,-20,0), new CG.Vector3(-45,0,0), this);
-
         this.destroy = this.destroy.bind(this);
         this.spawn = this.spawn.bind(this);
 

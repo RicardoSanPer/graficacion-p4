@@ -14,7 +14,25 @@
   
 </body>
 <footer>
-
+  <script id="skybox-vertex-shader" type="vertex-shader">
+    attribute vec4 a_position;
+    attribute vec2 a_texcoord;
+    uniform mat4 u_PVM_matrix;
+    varying vec2 v_texcoord;
+    void main() {
+      gl_Position = u_PVM_matrix * a_position;
+      v_texcoord = a_texcoord;
+    }
+  </script>
+   
+  <script id="skybox-fragment-shader" type="fragment-shader">
+    precision mediump float;
+    varying vec2 v_texcoord;
+    uniform sampler2D u_texture;
+    void main() {
+      gl_FragColor = texture2D(u_texture, v_texcoord);
+    }
+  </script>
   <script id="2d-vertex-shader" type="vertex-shader">
     attribute vec4 a_position;
     attribute vec3 a_normal;
@@ -121,6 +139,7 @@
   <script src="./js/util/CamaraCOI.js"></script>
   <script src="./js/util/LuzDireccional.js"></script>
   <script src="./js/util/Renderer.js"></script>
+  <script src="./js/util/Skybox.js"></script>
 
   <script src="./js/gameplay/GameObject.js"></script>
   
