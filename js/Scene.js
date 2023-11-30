@@ -9,6 +9,10 @@ CG.Scene = class{
         this.destroy = this.destroy.bind(this);
         this.spawn = this.spawn.bind(this);
 
+        this.bgmusic = new Audio("/resources/audio/bg.mp3");
+        this.bgmusic.loop = true;
+        this.bgmusic.play();
+
         for(let i = 0; i < 4; i++)
         {
             let z1 = Math.floor(Math.random() * 200);
