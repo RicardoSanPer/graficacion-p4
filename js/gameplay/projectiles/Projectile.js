@@ -5,12 +5,12 @@ CG.Projectile = class extends CG.GameObject{
     {
         super("player_projectile",posicion,rotacion,
                 new CG.Esfera(
-                    scene.renderer.gl, 
+                    scene.gl, 
                     [0, 1, 1, 1], 
                     1, 4, 4, 
                     CG.Matrix4.translate(new CG.Vector3(0, 0, 0)),
                     ),
-            scene);
+            scene, new CG.Material_Proyectil(scene.gl, [0,0,1,1]));
 
         this.counter = 0;
     }

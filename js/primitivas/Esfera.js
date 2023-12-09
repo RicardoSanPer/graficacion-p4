@@ -13,7 +13,7 @@ CG.Esfera = class extends CG.Mesh{
      */
     constructor(gl, color, radius, nfaces, nsegments, initial_transform, texture, normal, specular)
     {
-        super(gl, color, initial_transform, texture, normal, specular);
+        super(initial_transform);
         this.g_radius  = (radius || 1);
         //Establecer como minimo 3 caras
         this.nlados = (nfaces || 10);
@@ -101,11 +101,6 @@ CG.Esfera = class extends CG.Mesh{
             );
           }
         return normals;
-    }
-
-    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation)
-    {
-        this.drawSmooth(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation);
     }
 
     getSmoothUV()

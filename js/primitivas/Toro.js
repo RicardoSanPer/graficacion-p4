@@ -13,7 +13,7 @@ CG.Toro = class extends CG.Mesh{
      */
     constructor(gl, color, diametroi, diametroe, nfaces, nsegments, initial_transform, texture, normal, specular)
     {
-        super(gl, color, initial_transform, texture, normal, specular);
+        super(initial_transform);
         this.diametroInterno  = (diametroi || 1)/2;
         this.diametroExterno = (diametroe || 1)/2;
         //Establecer como minimo 3 caras
@@ -122,8 +122,4 @@ CG.Toro = class extends CG.Mesh{
         return uv;
     }
 
-    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation, uvSmoothBuffer)
-    {
-        this.drawSmooth(gl, positionAttributeLocation, normalAttributeLocation, uvSmoothBuffer);
-    }
 }

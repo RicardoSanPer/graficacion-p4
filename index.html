@@ -54,6 +54,41 @@
       gl_Position = u_PVM_matrix * a_position;
     }
   </script>
+
+  <script id="sample-shader" type="fragment-shader">
+    precision mediump float;
+    varying vec2 v_texcoord;
+    uniform vec4 u_color;
+    void main() {
+      gl_FragColor = u_color;
+    }
+  </script>
+
+  <script id="fragment-projectile" type="fragment-shader">
+    precision mediump float;
+    varying vec2 v_texcoord;
+    uniform vec4 u_color;
+
+    uniform vec3 cameraPos;
+
+    //Posicion del fragmento en screenspace
+    varying vec3 v_position;
+    //normal del fragmento en screenspace
+    varying vec3 v_normal;
+
+    void main() {
+      vec3 norm = normalize(v_normal);
+      float fres = 1.0 - dot(norm, vec3(0,0,1)) ;
+      vec3 a = vec3(u_color);
+      vec3 b = vec3(1,1,1);
+      vec3 result = vec3(1,1,1);
+      result.r = a.r + (b.r - a.r) * fres;
+      result.g = a.g + (b.g - a.g) * fres;
+      result.b = a.b + (b.b - a.b) * fres;
+
+      gl_FragColor = vec4(result, 1);
+    }
+  </script>
    
   <script id="2d-fragment-shader" type="fragment-shader">
     precision mediump float;
@@ -112,7 +147,8 @@
 
       vec3 result = (ambient + diffuse + fresnel + specular)*vec3(texture2D(u_texture, v_texcoord));
 
-      gl_FragColor = vec4(result, u_color.a);
+      gl_FragColor = vec4(vec3(texture2D(u_texture, v_texcoord)), u_color.a);
+      //gl_FragColor = vec4(result, u_color.a);
       //gl_FragColor = texture2D(u_specularmap, v_texcoord);
       //gl_FragColor = vec4(v_texcoord, 0, 1);
     }
@@ -122,8 +158,13 @@
   <script src="./js/math/Matrix3.js"></script>
   <script src="./js/math/Matrix4.js"></script>
   <script src="./js/math/Math.js"></script>
+
+  <script src="./js/util/Shader.js"></script>
   
-  
+  <script src="./js/materiales/Material.js"></script>
+  <script src="./js/materiales/Material_Proyectil.js"></script>
+  <script src="./js/materiales/Material_Textura.js"></script>
+
   <script src="./js/util/Mesh.js"></script>
   <script src="./js/primitivas/PrismaRectangular.js"></script>
   <script src="./js/primitivas/Cilindro.js"></script>
@@ -135,6 +176,7 @@
   <script src="./js/primitivas/Dodecaedro.js"></script>
   <script src="./js/primitivas/Toro.js"></script>
   <script src="./js/primitivas/Plane.js"></script>
+  
 
   <script src="./js/util/CamaraCOI.js"></script>
   <script src="./js/util/LuzDireccional.js"></script>
@@ -153,7 +195,7 @@
 
   <script src="./js/gameplay/ambiente/MovingCube.js"></script>
 
-  
+  <script src="./js/util/Sample.js"></script>
   
   <script src="./js/gameplay/enemy/JumpingEnemy.js"></script>
   <script src="./js/gameplay/enemy/EnemyLine.js"></script>

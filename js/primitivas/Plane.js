@@ -4,7 +4,7 @@ CG.Plane = class extends CG.Mesh
 {
     constructor(gl, color, width, height ,initial_transform, texture, normal, specular)
     {
-        super(gl, color, initial_transform, texture, normal, specular);
+        super(initial_transform);
         this.g_length  = (length || 1);
 
         this.width = width / 2;
@@ -43,10 +43,5 @@ CG.Plane = class extends CG.Mesh
             1,1, 1,0, 0,0,
         ];
         return uv;
-    }
-
-    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation)
-    {
-        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation);
     }
 }

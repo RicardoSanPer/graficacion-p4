@@ -70,6 +70,7 @@ draw()
     this.gl.uniform1i(this.specularTextureLocation, 2);
 
 
+    /*
     for (const [key, value] of Object.entries(this.geometry)) {
         // se dibuja la geometría
         value.draw(
@@ -83,7 +84,7 @@ draw()
           this.camara.viewMatrix,
           this.texcoordLocation);
         }
-
+        */
     this.skybox.draw(this.gl, this.camara.viewProjectionMatrix);
 }
 

@@ -11,7 +11,7 @@ CG.Icosaedro = class extends CG.Mesh{
      */
     constructor(gl, color, length ,initial_transform, texture, normal, specular)
     {
-        super(gl, color, initial_transform, texture, normal, specular);
+        super(initial_transform);
         this.g_length  = (length || 1)/2;
 
         this.initial_transform = initial_transform || new CG.Matrix4();
@@ -115,10 +115,5 @@ CG.Icosaedro = class extends CG.Mesh{
             9/11,1/3, 1,1/3, 10/11,0,
         ]
         return uv;
-    }
-
-    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation)
-    {
-        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation);
     }
 }

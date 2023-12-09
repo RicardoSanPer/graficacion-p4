@@ -9,7 +9,7 @@ var CG = (function(CG) {
       g_height = (height || 1)/2;
       g_length = (length || 1)/2;
       
-      super(gl, color, initial_transform, texture, normal, specular);
+      super(initial_transform);
 
       this.setFlatBuffer(gl);      
     }
@@ -82,11 +82,7 @@ var CG = (function(CG) {
       )
       return uv;
     }
-    
-    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation)
-    {
-        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation);
-    }
+
 
   }
   CG.PrismaRectangular = PrismaRectangular;

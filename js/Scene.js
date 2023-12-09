@@ -3,68 +3,62 @@ var CG =  CG || {};
 CG.Scene = class{
     constructor()
     {
-        this.renderer = new CG.Renderer();
+        this.canvas = document.getElementById("the_canvas");
+        this.gl = this.canvas.getContext("webgl");
+        if(!this.gl)
+        {
+            throw "WebGL no soportado";
+        }
+
         this.gameobjects = {};
-        this.player = new CG.Player(new CG.Vector3(0,-20,0), new CG.Vector3(-45,0,0), this);
+
         this.destroy = this.destroy.bind(this);
         this.spawn = this.spawn.bind(this);
+
+        document.addEventListener("elementDeleted", this.destroy);
+        document.addEventListener("elementSpawn", this.spawn);
 
         this.bgmusic = new Audio("/resources/audio/bg.mp3");
         this.bgmusic.loop = true;
         this.bgmusic.play();
-
-        for(let i = 0; i < 4; i++)
-        {
-            let z1 = Math.floor(Math.random() * 200);
-            let z2 = Math.floor(Math.random() * 200);
-            let z3 = Math.floor(Math.random() * 200);
-            let z4 = Math.floor(Math.random() * 200);
-            let c = new CG.MovingCube(new CG.Vector3(-25,-35,-z1), new CG.Vector3(0,0,0),this);
-            let c2 = new CG.MovingCube(new CG.Vector3(25,-35,-z2), new CG.Vector3(0,0,0),this);
-            let c3 = new CG.MovingCube(new CG.Vector3(25,35,-z3), new CG.Vector3(0,0,0),this);
-            let c4 = new CG.MovingCube(new CG.Vector3(-25,35,-z4), new CG.Vector3(0,0,0),this);
-        }
         
         this.counter = 0;
         this.enemyCount = 5;
         this.enemyProgress = 0;
         this.time = 2;
         
+        this.camara = new CG.CamaraCOI(this.canvas,50, new CG.Vector3(0,0,0));
+        this.lightDir = new CG.LuzDireccional();
+        this.player = new CG.Player(new CG.Vector3(0,-20,0), new CG.Vector3(-45,0,0), this);
 
-        document.addEventListener("elementDeleted", this.destroy);
-        document.addEventListener("elementSpawn", this.spawn);
+        this.skybox = new CG.Skybox(this.gl, CG.Matrix4.scale(new CG.Vector3(500, 500, 500) ), "bg2.png");
     }
 
     update(delta)
     {
+        //REnder
+        this.gl.enable(this.gl.DEPTH_TEST);
+        this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+        this.gl.clearColor(1,1,1, 1);
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+
         this.handleCollisions();
         this.counter += delta;
-        if(this.counter > this.time)
-        {
-            this.counter = 0;
-            this.enemyProgress += 1;
-            if(this.enemyProgress == this.enemyCount)
-            {
-                this.enemyProgress = 0;
-                let jump1 = new CG.JumpingEnemy(20, 25, 3, 3, new CG.Vector3(0, -20, -200), new CG.Vector3(0,0,0), this);
-                let jump2 = new CG.JumpingEnemy(20, 25, 3, 3, new CG.Vector3(20, -20, -200), new CG.Vector3(0,0,0), this);
-                let jump3 = new CG.JumpingEnemy(20, 25, 3, 3, new CG.Vector3(-20, -20, -200), new CG.Vector3(0,0,0), this);
-                let s1 = new CG.SpawnParticle("flare.png", 5,1, new CG.Vector3(-20, -20, -195), new CG.Vector3(0,0,0), this);
-                let s2 = new CG.SpawnParticle("flare.png", 5,1, new CG.Vector3(0, -20, -195), new CG.Vector3(0,0,0), this);
-                let s3 = new CG.SpawnParticle("flare.png", 5,1, new CG.Vector3(20, -20, -195), new CG.Vector3(0,0,0), this);
-            }
-            else
-            {
-                this.enemyProgress += 1;
-                let en = new CG.EnemyLine(10, 1, 5, false, 10, 0.5, this);
-            }
-        }
+
+        this.camara.updateMatrix();
+        let cameraPos = this.camara.position;
+
+        let lightpos = this.camara.viewMatrix.multiplyVector(this.lightDir.position);
+
         for (const [key, value] of Object.entries(this.gameobjects))
         {
             value.update(delta);
             value.updateGeometry();
+            value.draw(this.gl, this.camara);
         }
-        this.renderer.draw();
+
+        this.skybox.draw(this.gl, this.camara.viewProjectionMatrix);
+
     }
 
     handleCollisions()
@@ -104,7 +98,7 @@ CG.Scene = class{
     {
         var eventData = e.detail;
         
-        this.renderer.destroy(eventData.id);
+        //this.renderer.destroy(eventData.id);
         delete this.gameobjects[eventData.id];
     }
     //Crea un objeto tipo gameobject

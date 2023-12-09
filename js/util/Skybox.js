@@ -1,7 +1,7 @@
 var CG = CG || {};
 
 CG.Skybox = class{
-    constructor(renderer, initial_transform, texturesrc)
+    constructor(gl, initial_transform, texturesrc)
     {
         this.initial_transform = initial_transform || new CG.Matrix4();
         this.nlados = 16;
@@ -10,29 +10,29 @@ CG.Skybox = class{
         let path = "resources/textures/";
         texturesrc = (texturesrc || "bg2.png");
         texturesrc = path + texturesrc;
-        if (renderer.gl["skybox-program"]) {
-            this.program = renderer.gl["skybox-program"];
+        if (gl["skybox-program"]) {
+            this.program = gl["skybox-program"];
           }
           else {
-            this.program = renderer.createProgram(
-              renderer.gl, 
-              renderer.createShader(renderer.gl, renderer.gl.VERTEX_SHADER, document.getElementById("skybox-vertex-shader").text), 
-              renderer.createShader(renderer.gl, renderer.gl.FRAGMENT_SHADER, document.getElementById("skybox-fragment-shader").text)
+            this.program = CG.Shader.createProgram(
+              gl, 
+              CG.Shader.createShader(gl, gl.VERTEX_SHADER, document.getElementById("skybox-vertex-shader").text), 
+              CG.Shader.createShader(gl, gl.FRAGMENT_SHADER, document.getElementById("skybox-fragment-shader").text)
             );
           }
           
-          this.a_position = renderer.gl.getAttribLocation(this.program, "a_position");
-          this.a_texcoord = renderer.gl.getAttribLocation(this.program, "a_texcoord");
-          this.u_PVM_matrix = renderer.gl.getUniformLocation(this.program, "u_PVM_matrix");
+          this.a_position = gl.getAttribLocation(this.program, "a_position");
+          this.a_texcoord = gl.getAttribLocation(this.program, "a_texcoord");
+          this.u_PVM_matrix = gl.getUniformLocation(this.program, "u_PVM_matrix");
 
-          let texture = renderer.gl.createTexture();
-          renderer.gl.bindTexture(renderer.gl.TEXTURE_2D, texture);
-          renderer.gl.texImage2D(renderer.gl.TEXTURE_2D, 0, renderer.gl.RGBA, 1, 1, 0, renderer.gl.RGBA, renderer.gl.UNSIGNED_BYTE, new Uint8Array([255, 0, 0, 255]));
+          let texture = gl.createTexture();
+          gl.bindTexture(gl.TEXTURE_2D, texture);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 0, 0, 255]));
           let image = new Image();
           image.addEventListener("load", function(evt) {
-            renderer.gl.bindTexture(renderer.gl.TEXTURE_2D, texture);
-            renderer.gl.texImage2D(renderer.gl.TEXTURE_2D, 0, renderer.gl.RGBA, renderer.gl.RGBA,renderer.gl.UNSIGNED_BYTE, image);
-            renderer.gl.generateMipmap(renderer.gl.TEXTURE_2D);
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+            gl.generateMipmap(gl.TEXTURE_2D);
           });
           image.src = texturesrc;
 
@@ -40,18 +40,18 @@ CG.Skybox = class{
           
           let vertices = this.getVertices();
 
-        this.positionBuffer = renderer.gl.createBuffer();
-        renderer.gl.bindBuffer(renderer.gl.ARRAY_BUFFER, this.positionBuffer);
-        renderer.gl.bufferData(renderer.gl.ARRAY_BUFFER, new Float32Array(vertices), renderer.gl.STATIC_DRAW);
+        this.positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 
-        this.indexBuffer = renderer.gl.createBuffer();
-        renderer.gl.bindBuffer(renderer.gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-        renderer.gl.bufferData(renderer.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.getFaces()), renderer.gl.STATIC_DRAW);
+        this.indexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.getFaces()), gl.STATIC_DRAW);
 
         let uv = this.getSmoothUV();
-        this.uvSmoothBuffer = renderer.gl.createBuffer();
-        renderer.gl.bindBuffer(renderer.gl.ARRAY_BUFFER, this.uvSmoothBuffer);
-        renderer.gl.bufferData(renderer.gl.ARRAY_BUFFER, new Float32Array(uv), renderer.gl.STATIC_DRAW);
+        this.uvSmoothBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.uvSmoothBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uv), gl.STATIC_DRAW);
         
         this.numfaces = this.getFaces().length;
         }
@@ -126,7 +126,7 @@ CG.Skybox = class{
         gl.uniformMatrix4fv(this.u_PVM_matrix, false, transform.toArray());
 
         gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
     
         // el buffer de posiciones
         gl.enableVertexAttribArray(this.a_position);

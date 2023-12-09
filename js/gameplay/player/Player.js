@@ -4,12 +4,13 @@ CG.Player = class extends CG.GameObject{
     constructor(posicion, rotacion, scene)
     {
        super("player",posicion, rotacion, new CG.Cono(
-        scene.renderer.gl, 
+        scene.gl, 
         [0, 1, 0, 1], 
         2, 2, 6, 2, 
-        CG.Matrix4.translate(new CG.Vector3(0, 0, 0)),
+        CG.Matrix4.translate(new CG.Vector3(0, 0, 0))
         ),
-        scene);
+        scene,
+        new CG.Material_Textura(scene.gl));
        this.dir = 1;
        this.speed = 100;
        this.velocity = new CG.Vector3(0,0,0);
