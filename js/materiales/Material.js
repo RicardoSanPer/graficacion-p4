@@ -22,6 +22,9 @@ CG.Material = class{
         this.u_PVM_matrix = gl.getUniformLocation(this.program, "u_PVM_matrix");
         this.u_VM_matrix = gl.getUniformLocation(this.program, "u_VM_matrix");
         this.u_color = gl.getUniformLocation(this.program, "u_color");
+
+        
+        this.lightUniformLocation = gl.getUniformLocation(this.program, "u_light_position");
         
 
         this.color = [1,0,0,1];
@@ -30,11 +33,14 @@ CG.Material = class{
     setDrawParams(gl, camara)
     {}
 
-    draw(gl, camara, mesh)
+    draw(gl, camara, light, mesh)
     {
         gl.useProgram(this.program);
         
         let transform = CG.Matrix4.multiply(mesh.initial_transform, mesh.transformMatrix);
+
+        let lightpos = camara.viewMatrix.multiplyVector(light);
+        gl.uniform3f(this.lightUniformLocation, lightpos.x, lightpos.y, lightpos.z);
 
         // VM_matrixLocation
         let viewModelMatrix = CG.Matrix4.multiply(camara.viewMatrix, transform);

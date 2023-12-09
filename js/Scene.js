@@ -54,7 +54,7 @@ CG.Scene = class{
         {
             value.update(delta);
             value.updateGeometry();
-            value.draw(this.gl, this.camara);
+            value.draw(this.gl, this.camara, this.lightDir.position);
         }
 
         this.skybox.draw(this.gl, this.camara.viewProjectionMatrix);

@@ -51,9 +51,9 @@ CG.GameObject = class{
       document.dispatchEvent(new CustomEvent("elementDeleted",{detail: {id: this.id,},}));
     }
 
-    draw(gl, pvm)
+    draw(gl, camara, luzPos)
     {
-        this.material.draw(gl, pvm, this.mesh);
+        this.material.draw(gl, camara, luzPos, this.mesh);
     }    
 
     hit()

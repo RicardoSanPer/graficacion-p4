@@ -147,8 +147,8 @@
 
       vec3 result = (ambient + diffuse + fresnel + specular)*vec3(texture2D(u_texture, v_texcoord));
 
-      gl_FragColor = vec4(vec3(texture2D(u_texture, v_texcoord)), u_color.a);
-      //gl_FragColor = vec4(result, u_color.a);
+      //gl_FragColor = vec4(vec3(texture2D(u_texture, v_texcoord)), u_color.a);
+      gl_FragColor = vec4(result, u_color.a);
       //gl_FragColor = texture2D(u_specularmap, v_texcoord);
       //gl_FragColor = vec4(v_texcoord, 0, 1);
     }
