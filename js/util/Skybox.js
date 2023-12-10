@@ -1,5 +1,5 @@
 var CG = CG || {};
-
+//Skybox
 CG.Skybox = class{
     constructor(gl, initial_transform, texturesrc)
     {

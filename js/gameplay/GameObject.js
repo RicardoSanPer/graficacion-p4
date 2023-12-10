@@ -54,12 +54,13 @@ CG.GameObject = class{
     {
       document.dispatchEvent(new CustomEvent("elementDeleted",{detail: {id: this.id,},}));
     }
-
+    //Dibuja el objeto
     draw(gl, camara, luzPos)
     {
         this.material.draw(gl, camara, luzPos, this.mesh);
     }    
 
+    //Comportamiento al ser golpeado
     hit()
     {
 

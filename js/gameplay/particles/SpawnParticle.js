@@ -1,5 +1,5 @@
 var CG =  CG || {};
-
+/**Particula que crece y rota */
 CG.SpawnParticle = class extends CG.Particle
 {
     constructor(name, size, time, posicion, rotacion, scene)

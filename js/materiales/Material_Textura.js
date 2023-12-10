@@ -1,6 +1,6 @@
 var CG =  CG || {};
 /**
- * Clase Material
+ * Material que usa texturas
  */
 CG.Material_Textura = class extends CG.Material
 {

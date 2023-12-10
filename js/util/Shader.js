@@ -1,5 +1,5 @@
 var CG =  CG || {};
-
+// Funciones para crear los programas de shaders
 CG.Shader = class
 {
     static createTexture(gl, file)

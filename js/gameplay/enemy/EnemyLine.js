@@ -1,5 +1,7 @@
 var CG =  CG || {};
-
+/**
+ * Invoca enemigos en formacion
+ */
 CG.EnemyLine = class
 {
     /**
@@ -36,7 +38,7 @@ CG.EnemyLine = class
                 let x = this.xmin + this.squareOffset + (this.squareSize * j);
                 let pos = new CG.Vector3(x,-20,-200 + (-10 * i));
                 let rot = new CG.Vector3(90,0,0);
-                let enemigo = new CG.BasicEnemy(xsquares,j,1,j,this.xsquares - (nenemigos- j), moveSpeed,pauseTime,pos,rot, scene);
+                let enemigo = new CG.BasicEnemy(xsquares,j,dir,j,this.xsquares - (nenemigos- j), moveSpeed,pauseTime,pos,rot, scene);
                 pos.x += this.squareSize;
                 document.dispatchEvent(new CustomEvent("elementSpawn",{detail: 
                     {objeto : "SpawnParticle",

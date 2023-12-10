@@ -252,7 +252,7 @@ CG.Mesh = class{
 
         this.updateTransformMatrix();
       }
-
+      //Actualiza la matriz de transformacion
       updateTransformMatrix()
       {
         this.transformMatrix = CG.Matrix4.scale(this.scaleV);

@@ -1,5 +1,5 @@
 var CG =  CG || {};
-
+/**Objeto del jugador */
 CG.Player = class extends CG.GameObject{
     constructor(posicion, rotacion, scene)
     {
@@ -8,7 +8,7 @@ CG.Player = class extends CG.GameObject{
         CG.Matrix4.translate(new CG.Vector3(0, 0, 0))
         , "nave_jugador.obj"),
         scene,
-        new CG.Material_Textura(scene.gl));
+        new CG.Material_Textura(scene.gl, "player.png"));
        this.dir = 1;
        this.speed = 100;
        this.velocity = new CG.Vector3(0,0,0);
@@ -17,6 +17,8 @@ CG.Player = class extends CG.GameObject{
        this.lastProjectile = 0;
 
        this.shotsound = new Audio("/resources/audio/gun-shot.wav");
+
+       this.vidas = 3;
     }
 
     update(delta)
@@ -27,6 +29,7 @@ CG.Player = class extends CG.GameObject{
         this.move();
 
     }
+    /**Mover */
     move()
     {
         this.posicion.x += this.velocity.x;
@@ -37,17 +40,19 @@ CG.Player = class extends CG.GameObject{
         if(this.posicion.z < -20) { this.posicion.z = -20;}
         if(this.posicion.z > 20) { this.posicion.z = 20;}
     }
-
+    /**Disparar */
     spawnProjectile()
     {
         document.dispatchEvent(new CustomEvent("elementSpawn",{detail: 
             {objeto : "Projectile",
                 pos : this.posicion,
                 rot : new CG.Vector3(0,0,0),
+                name : "player_projectile",
             },
         }));
     }
 
+    /**Input */
     passInput(input)
     {
         let x = 0;
@@ -69,7 +74,7 @@ CG.Player = class extends CG.GameObject{
             y -= 1
         }
 
-        if(input[" "])
+        if(input[" "] && !this.destroyed)
         {
             let time = new Date().getTime();
             if(time - this.lastProjectile > 1000 * this.fireRate)
@@ -86,5 +91,27 @@ CG.Player = class extends CG.GameObject{
         this.inputVector[0] = x;
         this.inputVector[1] = y;
         //CG.Math.normalize(this.inputVector);
+    }
+
+    hit()
+    {
+        this.vidas -= 1;
+        if(this.vidas < 0)
+        {
+            this.vidas = 0;
+        }
+        let audio = new Audio("resources/audio/enemy-defeat.wav");
+            audio.volume = 0.25;
+            audio.play();
+            document.dispatchEvent(new CustomEvent("updateVidas",{detail: 
+                {   
+                    cantidad: this.vidas,
+                },
+            }));
+        if(this.vidas <= 0 && !this.destroyed)
+        {
+            this.destroyed = true;
+            document.dispatchEvent(new CustomEvent("gameover"),{});
+        }
     }
 }

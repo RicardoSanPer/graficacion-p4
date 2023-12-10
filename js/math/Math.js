@@ -1,5 +1,5 @@
 var CG =  CG || {};
-
+//Funciones matematicas
 CG.Math = class
 {
     static lerp(a,b,delta)

@@ -1,8 +1,7 @@
     var CG =  CG || {};
 
 /**
- * Cono es igual a cilindro, excepto que se "elimina" el segmento superior para
- * que el vértice central cumpla el rol de punta.
+ * Crea un mesh a partir de un archivo obj
  */
 CG.CustomMesh = class extends CG.Mesh{
 

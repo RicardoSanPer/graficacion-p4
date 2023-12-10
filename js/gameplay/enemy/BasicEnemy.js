@@ -18,7 +18,11 @@ CG.BasicEnemy = class extends CG.EnemyEmpty
      */
     constructor(xsquares, current, dir, lowerlimit, higherlimit, movementSpeed, pauseTime, posicion, rotacion, scene)
     {
-       super(posicion, rotacion, scene);
+       super(posicion, rotacion, new CG.CustomMesh(
+        scene.gl,
+        CG.Matrix4.translate(new CG.Vector3(0, 0, 0))
+        , "enemigo1.obj"), scene,
+        new CG.Material_Textura(scene.gl, "enemigo.png"));
         //Movimiento
         this.movementSpeed = (movementSpeed || 1);
         this.pauseTime = (pauseTime || 1);
@@ -30,6 +34,10 @@ CG.BasicEnemy = class extends CG.EnemyEmpty
         this.squareSize = this.width / this.xsquares;
         this.squareOffset = this.squareSize / 2;
         this.currentSquare = current;
+        if(dir < 0)
+        {
+            this.currentSquare = higherlimit - current;
+        }
         this.lowerlimit = lowerlimit;
         this.higherlimit = higherlimit;
 
@@ -67,6 +75,13 @@ CG.BasicEnemy = class extends CG.EnemyEmpty
                     this.moveToFront = true;
                     this.destino.z = this.posicion.z + 20;
                     this.moveToFront = true;
+                    document.dispatchEvent(new CustomEvent("elementSpawn",{detail: 
+                        {objeto : "EnemyProjectile",
+                            pos : this.posicion,
+                            rot : new CG.Vector3(0,0,0),
+                            name : "enemy_projectile",
+                        },
+                    }));
                 }
                 else
                 {
@@ -79,6 +94,12 @@ CG.BasicEnemy = class extends CG.EnemyEmpty
 
         if(this.posicion.z  > 25)
         {
+            //Si el enemigo escapa, quitar puntos
+            document.dispatchEvent(new CustomEvent("awardPoints",{detail: 
+                {   
+                    cantidad: -15,
+                },
+            }));
             this.destroy();
         }
     }

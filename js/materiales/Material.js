@@ -1,6 +1,6 @@
 var CG =  CG || {};
 /**
- * Clase Material
+ * Clase Material. Establece parametros básicos de las texturas como color, posicion, matrices, etc.
  */
 CG.Material = class{
 
@@ -71,6 +71,7 @@ CG.Material = class{
         }
     }
 
+    //Dibujar geometria suave
     drawSmooth(gl, mesh)
     {
         // el buffer de posiciones
@@ -92,7 +93,7 @@ CG.Material = class{
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.indexBuffer);
         gl.drawElements(gl.TRIANGLES, mesh.numfaces, gl.UNSIGNED_SHORT, 0);
     }
-
+    //Dibujar geometria plana
     drawFlat(gl, mesh)
     {
         // el buffer de posiciones

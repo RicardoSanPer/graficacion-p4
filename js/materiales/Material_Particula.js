@@ -1,6 +1,6 @@
 var CG =  CG || {};
 /**
- * Clase Material
+ * Material de las particulas. Descarta pixeles para simular transparencia
  */
 CG.Material_Particula = class extends CG.Material
 {
