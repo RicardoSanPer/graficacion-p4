@@ -10,7 +10,7 @@ CG.Projectile = class extends CG.GameObject{
                     1, 4, 4, 
                     CG.Matrix4.translate(new CG.Vector3(0, 0, 0)),
                     ),
-            scene, new CG.Material(scene.gl, "fragment-projectile", [0,0,1,1]));
+            scene, new CG.Material(scene.gl, "fragment-projectile", [138/255,183/255,1,1]));
 
         this.counter = 0;
     }

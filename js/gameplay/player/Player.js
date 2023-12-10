@@ -80,6 +80,7 @@ CG.Player = class extends CG.GameObject{
                 this.spawnProjectile();
                 
                 let sound = this.shotsound.cloneNode();
+                sound.volume = 0.25;
                 sound.play();
             }
         }

@@ -13,4 +13,8 @@ Super Monkey Ball 2 Monkey Shot Expert. Super Monkey Ball 2. Compuesto por Ryuji
 
 Efecto de sonido de pistola laser:
 MATRIXXX a.k.a. Lil Mati
-Obtenido de FreeSounf.org: https://freesound.org/people/MATRIXXX_/sounds/523205/
+Obtenido de FreeSound.org: https://freesound.org/people/MATRIXXX_/sounds/523205/
+
+Efecto de sonido de enemigo derrotado:
+MATRIXXX a.k.a. Lil Mati
+Obtenido de FreeSound.ord: https://freesound.org/people/MATRIXXX_/sounds/521105/
