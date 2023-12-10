@@ -28,11 +28,11 @@ CG.Scene = class{
         this.time = 2;
         
         this.camara = new CG.CamaraCOI(this.canvas,50, new CG.Vector3(0,0,0));
-        this.lightDir = new CG.LuzDireccional(180, 45);
+        this.lightDir = new CG.LuzDireccional(90, 90);
         this.player = new CG.Player(new CG.Vector3(0,-20,0), new CG.Vector3(-45,0,0), this);
         
         this.skybox = new CG.Skybox(this.gl, CG.Matrix4.scale(new CG.Vector3(500, 500, 500) ), "bg2.png");
-
+        this.ambiente = new CG.MovingCube(new CG.Vector3(0,0,-300), new CG.Vector3(0,0,0), this);
         let jump1 = new CG.JumpingEnemy(20, 25, 3, 3, new CG.Vector3(0, -20, -200), new CG.Vector3(0,0,0), this);
                 let jump2 = new CG.JumpingEnemy(20, 25, 3, 3, new CG.Vector3(20, -20, -200), new CG.Vector3(0,0,0), this);
                 let jump3 = new CG.JumpingEnemy(20, 25, 3, 3, new CG.Vector3(-20, -20, -200), new CG.Vector3(0,0,0), this);

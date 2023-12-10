@@ -2,15 +2,10 @@ var CG =  CG || {};
 
 CG.EnemyEmpty = class extends CG.GameObject
 {
-    constructor(posicion, rotacion, scene)
+    constructor(posicion, rotacion, mesh, scene, material)
     {
-        super("enemy",posicion, rotacion, new CG.Cono(
-            scene.gl, 
-            [0, 1, 0, 1], 
-            2, 2, 6, 2, 
-            CG.Matrix4.translate(new CG.Vector3(0, 0, 0)),
-            ),
-            scene);
+        super("enemy",posicion, rotacion, mesh,
+            scene, material);
         this.destroyed = false;
         
         this.velocidad = 0;

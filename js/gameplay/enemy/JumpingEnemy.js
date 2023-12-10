@@ -14,7 +14,12 @@ CG.JumpingEnemy = class extends CG.EnemyEmpty
      */
     constructor(jumpHeight, jumpDistance, movementSpeed, pauseTime, posicion, rotacion, scene)
     {
-        super(posicion, rotacion,scene);
+        super(posicion, rotacion,
+            new CG.CustomMesh(
+                scene.gl,
+                CG.Matrix4.translate(new CG.Vector3(0, 0, 0))
+                , "enemigo1.obj"),
+            scene, new CG.Material_Textura(scene.gl, "enemigo.png"));
         this.jumpDistance = jumpDistance;
         this.jumpHeight = jumpHeight;
         this.pauseTime = pauseTime;

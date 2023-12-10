@@ -13,6 +13,10 @@ CG.GameObject = class{
     constructor(tag, posicion, rotacion, mesh, scene, material)
     {
         this.material = (material || new CG.Material(scene.gl, "sample-shader"))
+        this.mesh = (mesh || new CG.Esfera(scene.gl, 
+            [0, 1, 1, 1], 
+            1, 4, 4, 
+            CG.Matrix4.translate(new CG.Vector3(0, 0, 0))));
         this.tag = (tag || "");
         let time = new Date().getTime();
         
