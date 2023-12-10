@@ -14,7 +14,7 @@ CG.Cilindro = class extends CG.Mesh{
      */
     constructor(gl, color, diameter, height, nfaces, nsegments, initial_transform, texture, normal, specular)
     {
-        super(gl, color, initial_transform, texture, normal, specular);
+        super(initial_transform);
 
         this.g_radius  = (diameter || 1);
         this.g_height = (height || 1);
@@ -235,11 +235,5 @@ CG.Cilindro = class extends CG.Mesh{
         }
 
         return uv;
-    }
-
-    drawGeometry(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation)
-    {
-        this.drawSmooth(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation);
-        this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation);
     }
 }

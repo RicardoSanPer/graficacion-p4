@@ -10,8 +10,9 @@ CG.GameObject = class{
    * @param {*} mesh 
    * @param {*} renderer 
    */
-    constructor(tag, posicion, rotacion, mesh, scene)
+    constructor(tag, posicion, rotacion, mesh, scene, material)
     {
+        this.material = (material || new CG.Material(scene.gl, "sample-shader"))
         this.tag = (tag || "");
         let time = new Date().getTime();
         
@@ -23,17 +24,12 @@ CG.GameObject = class{
         this.scale = new CG.Vector3(1,1,1);
 
         this.mesh = mesh;
-                
-        if(scene.renderer != null)
+          
+        while(scene.gameobjects[time.toString()])
         {
-          //Si el id ya existe, asignar nuevo para evitar errores de renderizado
-          while(scene.renderer.geometry[time.toString()])
-          {
             time += 1;
-          }
-          this.id = time.toString();
-          scene.renderer.geometry[this.id] = this.mesh;
         }
+        this.id = time.toString();
         scene.gameobjects[this.id] = this;
     }
     /**Actualiza la geometria */
@@ -54,6 +50,11 @@ CG.GameObject = class{
     {
       document.dispatchEvent(new CustomEvent("elementDeleted",{detail: {id: this.id,},}));
     }
+
+    draw(gl, camara, luzPos)
+    {
+        this.material.draw(gl, camara, luzPos, this.mesh);
+    }    
 
     hit()
     {

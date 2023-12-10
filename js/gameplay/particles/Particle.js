@@ -12,9 +12,10 @@ CG.Particle = class extends CG.GameObject
      * @param {*} rotacion 
      * @param {*} renderer 
      */
-    constructor(duracion, mesh, posicion, rotacion, scene)
+    constructor(duracion, mesh, posicion, rotacion, scene, name)
     {
-        super("particula", posicion, rotacion, mesh, scene);
+        super("particula", posicion, rotacion, mesh, scene,
+            new CG.Material_Particula(scene.gl, name));
         this.duracion = duracion;
         this.counter = 0;
         this.lifePercentage = 0;

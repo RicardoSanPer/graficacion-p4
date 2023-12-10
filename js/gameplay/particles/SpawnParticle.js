@@ -5,12 +5,12 @@ CG.SpawnParticle = class extends CG.Particle
     constructor(name, size, time, posicion, rotacion, scene)
     {
         super(time, new CG.Plane(
-            scene.renderer.gl, 
+            scene.gl, 
             [1, 1, 1, 1], 
             5, 5, 
-            CG.Matrix4.translate(posicion),name,
+            CG.Matrix4.translate(posicion)
             ),new CG.Vector3(0,0,0), rotacion, 
-            scene);
+            scene, name);
         this.size = size;
         this.animationScale = 0;
     }

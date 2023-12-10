@@ -11,7 +11,7 @@ CG.Tetraedro = class extends CG.Mesh{
      */
     constructor(gl, color, length ,initial_transform, texture, normal, specular)
     {
-        super(gl, color, initial_transform, texture, normal, specular);
+        super(initial_transform);
         this.g_length  = (length || 1);
 
         this.setFlatBuffer(gl);
@@ -80,8 +80,5 @@ CG.Tetraedro = class extends CG.Mesh{
             0.5,0, 0,1, 1,1];
         return uv;
       }
-      drawGeometry(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation)
-      {
-          this.drawFlat(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation);
-      }
+
 }

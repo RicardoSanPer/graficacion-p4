@@ -2,9 +2,9 @@ var CG =  CG || {};
 
 CG.Mesh = class{
 
-    constructor(gl, color, initial_transform, texture, normal, specular) {
+    constructor(initial_transform) {
         
-        this.color = color;
+        this.color = [1,1,1,1];
         this.initial_transform = initial_transform || new CG.Matrix4();
 
         this.translation = new CG.Vector3(0,0,0);
@@ -13,15 +13,8 @@ CG.Mesh = class{
 
         this.transformMatrix = new CG.Matrix4();
 
-        let path = "resources/textures/";
-
-        texture = (texture || "uvgrid.png");
-        normal = (normal || "uvgrid.png");
-        specular = (specular || "uvgrid.png");
-
-        this.texture = this.loadTexture(path + texture, gl);
-        this.normalTexture = this.loadTexture(path + normal, gl);
-        this.specularTexture = this.loadTexture(path + specular, gl);
+        this.hasSmooth = false;
+        this.hasFlat = false;
   
       }
       /**
@@ -51,6 +44,7 @@ CG.Mesh = class{
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uv), gl.STATIC_DRAW);
         
         this.numfaces = this.getFaces().length;
+        this.hasSmooth = true;
       }
 
       /**
@@ -77,6 +71,8 @@ CG.Mesh = class{
 
         this.num_elements = vertices.length / 3;
 
+        this.hasFlat = true;
+
       }
       /**
        * Carga una imagen
@@ -96,117 +92,6 @@ CG.Mesh = class{
         return texture;
     }
       
-      /**
-       * Dibuja la geometría con normales de vértice
-       * @param {*} gl 
-       * @param {*} positionAttributeLocation 
-       * @param {*} normalAttributeLocation 
-       */
-      drawSmooth(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation)
-      {
-        // el buffer de posiciones
-        gl.enableVertexAttribArray(positionAttributeLocation);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-        gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0)
-
-  
-        // el buffer de normales
-        gl.enableVertexAttribArray(normalAttributeLocation);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
-        gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
-
-        //coordenadas de textura
-        gl.enableVertexAttribArray(uvUniformLocation);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.uvSmoothBuffer);
-        gl.vertexAttribPointer(uvUniformLocation, 2, gl.FLOAT, false, 0,0);
-
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-        gl.drawElements(gl.TRIANGLES, this.numfaces, gl.UNSIGNED_SHORT, 0);
-        
-      }
-
-      /**
-       * Dibuja la geometria con normales de cara
-       * @param {*} gl 
-       * @param {*} positionAttributeLocation 
-       * @param {*} normalAttributeLocation 
-       */
-      drawFlat(gl, positionAttributeLocation, normalAttributeLocation, uvUniformLocation)
-      {
-        // el buffer de posiciones
-        gl.enableVertexAttribArray(positionAttributeLocation);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionFlatBuffer);
-        gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0)
-
-  
-        // el buffer de normales
-        gl.enableVertexAttribArray(normalAttributeLocation);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.normalFlatBuffer);
-        gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
-
-        //coordenadas de textura
-        gl.enableVertexAttribArray(uvUniformLocation);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.uvFlatBuffer);
-        gl.vertexAttribPointer(uvUniformLocation, 2, gl.FLOAT, false, 0,0);
-
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, this.texture);
-
-        gl.drawArrays(gl.TRIANGLES, 0, this.num_elements);
-      }
-
-      /**
-       * Dibuja la geometria
-       * @param {*} gl 
-       * @param {*} positionAttributeLocation 
-       * @param {*} normalAttributeLocation 
-       * @param {*} colorUniformLocation 
-       * @param {*} PVM_matrixLocation 
-       * @param {*} VM_matrixLocation 
-       * @param {*} projectionMatrix 
-       * @param {*} viewMatrix 
-       * @param {*} uvUniformLocation 
-       */
-      draw(gl, positionAttributeLocation, normalAttributeLocation, colorUniformLocation, PVM_matrixLocation, VM_matrixLocation, projectionMatrix, viewMatrix, uvUniformLocation) 
-      {
-        // el color
-        gl.uniform4fv(colorUniformLocation, this.color);
-
-        
-        let transform = CG.Matrix4.multiply(this.initial_transform, this.transformMatrix);
-        // VM_matrixLocation
-        let viewModelMatrix = CG.Matrix4.multiply(viewMatrix, transform);
-        gl.uniformMatrix4fv(VM_matrixLocation, false, viewModelMatrix.toArray());
-  
-        // PVM_matrixLocation
-        let projectionViewModelMatrix = CG.Matrix4.multiply(projectionMatrix, viewModelMatrix);
-        gl.uniformMatrix4fv(PVM_matrixLocation, false, projectionViewModelMatrix.toArray());
-
-        //texturas
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, this.texture);
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, this.normalTexture);
-        gl.activeTexture(gl.TEXTURE2);
-        gl.bindTexture(gl.TEXTURE_2D, this.specularTexture);
-
-        
-        this.drawGeometry(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation);
-        
-        // dibujado
-      }
-
-      /**
-       * Dibuja la geometria
-       * @param {*} gl 
-       * @param {*} positionAttributeLocation 
-       * @param {*} normalAttributeLocation 
-       */
-      drawGeometry(gl, positionAttributeLocation, normalAttributeLocation,uvUniformLocation)
-      {
-
-      }
-
       /**
        * Obtiene la lista de vértices para la geometria con drawElements (geometria con shading plano)
        * @returns 
