@@ -3,12 +3,10 @@ var CG =  CG || {};
 CG.Player = class extends CG.GameObject{
     constructor(posicion, rotacion, scene)
     {
-       super("player",posicion, rotacion, new CG.Cono(
-        scene.gl, 
-        [0, 1, 0, 1], 
-        2, 2, 6, 2, 
+       super("player",posicion, rotacion, new CG.CustomMesh(
+        scene.gl,
         CG.Matrix4.translate(new CG.Vector3(0, 0, 0))
-        ),
+        , "nave_jugador.obj"),
         scene,
         new CG.Material_Textura(scene.gl));
        this.dir = 1;

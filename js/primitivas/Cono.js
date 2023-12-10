@@ -16,7 +16,7 @@ CG.Cono = class extends CG.Mesh{
      * @param {Number} nsegments Numero de subdivisiones a lo largo de la altura
      * @param {Matrix4} initial_transform Transformacion inicial
      */
-    constructor(gl, color, diameter, height, nfaces, nsegments, initial_transform, texture, normal, specular)
+    constructor(gl, color, diameter, height, nfaces, nsegments, initial_transform)
     {
         super(initial_transform);
 

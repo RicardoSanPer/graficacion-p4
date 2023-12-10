@@ -5,7 +5,7 @@ CG.EnemyEmpty = class extends CG.GameObject
     constructor(posicion, rotacion, scene)
     {
         super("enemy",posicion, rotacion, new CG.Cono(
-            scene.renderer.gl, 
+            scene.gl, 
             [0, 1, 0, 1], 
             2, 2, 6, 2, 
             CG.Matrix4.translate(new CG.Vector3(0, 0, 0)),
@@ -21,6 +21,9 @@ CG.EnemyEmpty = class extends CG.GameObject
         if(!this.destroyed)
         {
             this.destroyed = true;
+            let audio = new Audio("resources/audio/enemy-defeat.wav");
+            audio.volume = 0.25;
+            audio.play();
         }
     }
 

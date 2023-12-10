@@ -56,6 +56,7 @@ CG.Material = class{
         gl.uniform3f(this.CamPosition, camara.position.x, camara.position.y, camara.position.z);
         
         
+        gl.uniform4f(this.u_color, this.color[0], this.color[1], this.color[2], this.color[3]);
 
         this.setDrawParams(gl, camara);
         
@@ -87,7 +88,6 @@ CG.Material = class{
         gl.bindBuffer(gl.ARRAY_BUFFER, mesh.normalBuffer);
         gl.vertexAttribPointer(this.normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
     
-        gl.uniform4f(this.u_color, this.color[0], this.color[1], this.color[2], this.color[3]);
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.indexBuffer);
         gl.drawElements(gl.TRIANGLES, mesh.numfaces, gl.UNSIGNED_SHORT, 0);

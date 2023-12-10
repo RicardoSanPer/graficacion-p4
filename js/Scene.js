@@ -32,6 +32,13 @@ CG.Scene = class{
         this.player = new CG.Player(new CG.Vector3(0,-20,0), new CG.Vector3(-45,0,0), this);
         
         this.skybox = new CG.Skybox(this.gl, CG.Matrix4.scale(new CG.Vector3(500, 500, 500) ), "bg2.png");
+
+        let jump1 = new CG.JumpingEnemy(20, 25, 3, 3, new CG.Vector3(0, -20, -200), new CG.Vector3(0,0,0), this);
+                let jump2 = new CG.JumpingEnemy(20, 25, 3, 3, new CG.Vector3(20, -20, -200), new CG.Vector3(0,0,0), this);
+                let jump3 = new CG.JumpingEnemy(20, 25, 3, 3, new CG.Vector3(-20, -20, -200), new CG.Vector3(0,0,0), this);
+                let s1 = new CG.SpawnParticle("flare.png", 5,1, new CG.Vector3(-20, -20, -195), new CG.Vector3(0,0,0), this);
+                let s2 = new CG.SpawnParticle("flare.png", 5,1, new CG.Vector3(0, -20, -195), new CG.Vector3(0,0,0), this);
+                let s3 = new CG.SpawnParticle("flare.png", 5,1, new CG.Vector3(20, -20, -195), new CG.Vector3(0,0,0), this);
     }
 
     update(delta)
