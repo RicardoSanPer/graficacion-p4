@@ -1,8 +1,7 @@
 var CG =  CG || {};
 
 /**
- * Cono es igual a cilindro, excepto que se "elimina" el segmento superior para
- * que el vértice central cumpla el rol de punta.
+ * Objeto de muesta para comprobar funcionamiento de materiales
  */
 CG.Sample = class {
 

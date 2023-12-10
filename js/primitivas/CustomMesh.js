@@ -19,6 +19,8 @@ CG.CustomMesh = class extends CG.Mesh{
       let initial_normals = [];
       let faces = [];
       let data;
+      //Carga de obj. Obtenido del material de clases de Graficacion por Computadora.
+      //Por el Prof. Joel Espinosa Longi.
       for (let i=0, l=content_line.length; i<l; i++) {
         // vertices
         if (content_line[i].startsWith("v ")) {

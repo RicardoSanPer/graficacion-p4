@@ -1,5 +1,5 @@
 var CG = CG || {};
-
+/**Clase renderer (obsoleto) */
 CG.Renderer = class
 {
     constructor()

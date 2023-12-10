@@ -35,8 +35,8 @@ CG.Player = class extends CG.GameObject{
         this.posicion.x += this.velocity.x;
         this.posicion.z -= this.velocity.y;
 
-        if(this.posicion.x < -40) {this.posicion.x = -40;}
-        if(this.posicion.x > 40) { this.posicion.x = 40;}
+        if(this.posicion.x < -35) {this.posicion.x = -35;}
+        if(this.posicion.x > 35) { this.posicion.x = 35;}
         if(this.posicion.z < -20) { this.posicion.z = -20;}
         if(this.posicion.z > 20) { this.posicion.z = 20;}
     }

@@ -13,12 +13,18 @@ Se creo un juego inspirado por Space Invaders. Para el desarrollo, se implemento
 
 El juego en si contiene diez "olas" de enemigos que aparecen en tiempos especificos, y la velocidad con la que aparecen incrementa tras el primer ciclo de olas, pero solo una vez. Los ciclos se reinician, por lo que el juego acabará solo cuando el jugador se quede sin vidas.
 
+## Errores
+Ocasionalmente la nave no registra bien la entrada, causando que repentinamente se mueva mucho hacia un extremo.
+El juego se congela por unos cuantos fotogramas al invocar muchos enemigos a la ves.
+Cambiar de pestaña puede ocasionar que los objetos en el juego reaparezcan en posiciones incorrectas.
+
 ## Creditos
 Skybox por u/SCP106 
-Obtenido de https://www.reddit.com/r/Ultrakill/comments/xysymo/milky_way_skybox_i_made_put_it_in_your/
+Obtenido de Reddit: https://www.reddit.com/r/Ultrakill/comments/xysymo/milky_way_skybox_i_made_put_it_in_your/
 
 Musica de fondo:
 Super Monkey Ball 2 Monkey Shot Expert. Super Monkey Ball 2. Compuesto por Ryuji Iuchi.
+Recuperado de Youtube: https://www.youtube.com/watch?v=Ey7YKwdFsHI
 
 Efecto de sonido de pistola laser:
 MATRIXXX a.k.a. Lil Mati
