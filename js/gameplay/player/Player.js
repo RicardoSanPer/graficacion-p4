@@ -17,6 +17,8 @@ CG.Player = class extends CG.GameObject{
        this.inputVector = [0,0];
         this.fireRate = 0.3;
        this.lastProjectile = 0;
+
+       this.shotsound = new Audio("/resources/audio/gun-shot.wav");
     }
 
     update(delta)
@@ -76,6 +78,9 @@ CG.Player = class extends CG.GameObject{
             {
                 this.lastProjectile = time;
                 this.spawnProjectile();
+                
+                let sound = this.shotsound.cloneNode();
+                sound.play();
             }
         }
 

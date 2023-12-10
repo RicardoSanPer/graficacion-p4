@@ -7,3 +7,10 @@ Por Ricardo Sánchez Pérez.
 
 Skybox por u/SCP106 
 Obtenido de https://www.reddit.com/r/Ultrakill/comments/xysymo/milky_way_skybox_i_made_put_it_in_your/
+
+Musica de fondo:
+Super Monkey Ball 2 Monkey Shot Expert. Super Monkey Ball 2. Compuesto por Ryuji Iuchi.
+
+Efecto de sonido de pistola laser:
+MATRIXXX a.k.a. Lil Mati
+Obtenido de FreeSounf.org: https://freesound.org/people/MATRIXXX_/sounds/523205/
