@@ -28,7 +28,7 @@ CG.Scene = class{
         this.time = 2;
         
         this.camara = new CG.CamaraCOI(this.canvas,50, new CG.Vector3(0,0,0));
-        this.lightDir = new CG.LuzDireccional();
+        this.lightDir = new CG.LuzDireccional(180, 45);
         this.player = new CG.Player(new CG.Vector3(0,-20,0), new CG.Vector3(-45,0,0), this);
         
         this.skybox = new CG.Skybox(this.gl, CG.Matrix4.scale(new CG.Vector3(500, 500, 500) ), "bg2.png");
@@ -46,15 +46,14 @@ CG.Scene = class{
         this.counter += delta;
 
         this.camara.updateMatrix();
-        let cameraPos = this.camara.position;
-
+        this.lightDir.Update(delta);
         let lightpos = this.camara.viewMatrix.multiplyVector(this.lightDir.position);
 
         for (const [key, value] of Object.entries(this.gameobjects))
         {
             value.update(delta);
             value.updateGeometry();
-            value.draw(this.gl, this.camara, this.lightDir.position);
+            value.draw(this.gl, this.camara, lightpos);
         }
 
         this.skybox.draw(this.gl, this.camara.viewProjectionMatrix);
