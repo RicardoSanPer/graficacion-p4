@@ -108,6 +108,7 @@ CG.Scene = class{
         }
     }
 
+    //Checar colisiones
     checkCollision(entity1, entity2)
     {
         if(CG.Vector3.distance(entity1.posicion, entity2.posicion) < 2)
@@ -176,6 +177,7 @@ CG.Scene = class{
             }
           }
         this.player.destroy();
+        alert("Juego terminado. Refresca la pagina para jugar de nuevo.");
     }
 
     //Eventos de spawn
