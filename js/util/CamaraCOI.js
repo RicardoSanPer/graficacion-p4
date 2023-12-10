@@ -23,9 +23,9 @@ CG.CamaraCOI = class{
     Update(delta)
     {
         //Suavizado del movimiento
-        this.displacementX = this.lerp(this.displacementX, 0, delta * 20);
-        this.displacementY = this.lerp(this.displacementY, 0, delta * 20);
-        this.displacementZ = this.lerp(this.displacementZ, 0, delta * 20);
+        this.displacementX = CG.Math.lerp(this.displacementX, 0, delta * 20);
+        this.displacementY = CG.Math.lerp(this.displacementY, 0, delta * 20);
+        this.displacementZ = CG.Math.lerp(this.displacementZ, 0, delta * 20);
 
         this.angleX += this.displacementX;
         this.angleY += this.displacementY;
@@ -63,10 +63,5 @@ CG.CamaraCOI = class{
         this.displacementX = x;
         this.displacementY = y;
         this.displacementZ += z;
-    }
-
-    lerp(a,b,delta)
-    {
-        return a + (delta * (b - a));
     }
 }
