@@ -9,35 +9,33 @@
 </head>
 
 <body>
-  <div class="overlay" id="overlay"></div>
-
-  <div class="canvas_container">
-    <button class="clickable_canvas" onclick="setCanvasFocus()">
-      <canvas id="the_canvas" width="800" height="600" style="border: 1px dotted gray;"></canvas>
-    </button>
-  </div>
-  <div class="controles">
-    <div class="lista">
-      <h3>Controles</h3>
-      Hacer click en el canvas para para manipular la vista. <br>
-      Mover el ratón para girar la camara. <br>
-      Presionar Q para acercar la camara. <br>
-      Presionar E para alejar la camara. <br>
-      Presionar ESCAPE para salir del canvas.
-      </div>
-      <div class="lista">
-        <h3>Luz</h3>
-        <input type="range" min="0" max="360" value="90" step="0.1" name="rangeX" id="rangeX" oninput="changeLightPosX(value)">
-        <label for="rangeX">X</label>
-        <br>
-        <input type="range" min="-90" max="90" value="45" step="0.1" name="rangeY" id="rangeY" oninput="changeLightPosY(value)">
-        <label for="rangeY">Y</label>
-      </div>
+      <canvas id="the_canvas" width="720" height="480" style="border: 1px dotted gray;"></canvas>
+      <label><h1 id="score">Puntaje: 0</h1></label>
+      <label><h1 id="vidas">Vidas: 3</h1></label>
+      <label id="cred">Proyecto de Graficacion por Ricardo SP.</label>
   </div>
   
 </body>
 <footer>
-
+  <script id="skybox-vertex-shader" type="vertex-shader">
+    attribute vec4 a_position;
+    attribute vec2 a_texcoord;
+    uniform mat4 u_PVM_matrix;
+    varying vec2 v_texcoord;
+    void main() {
+      gl_Position = u_PVM_matrix * a_position;
+      v_texcoord = a_texcoord;
+    }
+  </script>
+   
+  <script id="skybox-fragment-shader" type="fragment-shader">
+    precision mediump float;
+    varying vec2 v_texcoord;
+    uniform sampler2D u_texture;
+    void main() {
+      gl_FragColor = texture2D(u_texture, v_texcoord);
+    }
+  </script>
   <script id="2d-vertex-shader" type="vertex-shader">
     attribute vec4 a_position;
     attribute vec3 a_normal;
@@ -57,6 +55,55 @@
       v_position = vec3( u_VM_matrix * a_position );
       v_texcoord = a_texcoord;
       gl_Position = u_PVM_matrix * a_position;
+    }
+  </script>
+
+  <script id="sample-shader" type="fragment-shader">
+    precision mediump float;
+    varying vec2 v_texcoord;
+    uniform vec4 u_color;
+    void main() {
+      gl_FragColor = u_color;
+    }
+  </script>
+
+  <script id="particle" type="fragment-shader">
+    precision mediump float;
+    varying vec2 v_texcoord;
+    varying vec3 v_position;
+    
+    uniform sampler2D u_texture;
+    uniform vec4 u_color;
+    void main() {
+      //Descartar
+      gl_FragColor = texture2D(u_texture, v_texcoord);
+        if (gl_FragColor.a <= 0.0) discard;
+    }
+  </script>
+
+  <script id="fragment-projectile" type="fragment-shader">
+    precision mediump float;
+    varying vec2 v_texcoord;
+    uniform vec4 u_color;
+
+    uniform vec3 cameraPos;
+
+    //Posicion del fragmento en screenspace
+    varying vec3 v_position;
+    //normal del fragmento en screenspace
+    varying vec3 v_normal;
+
+    void main() {
+      vec3 norm = normalize(v_normal);
+      float fres = 1.0 - dot(norm, vec3(0,0,1)) ;
+      vec3 a = vec3(u_color);
+      vec3 b = vec3(1,1,1);
+      vec3 result = vec3(1,1,1);
+      result.r = a.r + (b.r - a.r) * fres;
+      result.g = a.g + (b.g - a.g) * fres;
+      result.b = a.b + (b.b - a.b) * fres;
+
+      gl_FragColor = vec4(result, 1);
     }
   </script>
    
@@ -83,10 +130,11 @@
     uniform sampler2D u_normalmap;
     uniform sampler2D u_specularmap;
     void main() {
-      
+
       //Ambiente
-      float ambientStrength = 0.3;
-      vec3 ambient = ambientStrength * ambientColor;
+      float ambientStrength = 1.0;
+      vec3 amb = vec3(25/255, 80/255, 168/255);
+      vec3 ambient = ambientStrength * amb;
 
       //Difusa
       vec3 texNormal = normalize(vec3(texture2D(u_normalmap, v_texcoord)));
@@ -109,38 +157,65 @@
 
       //fresnel
       float fres = 1.0 - dot(norm, vec3(0,0,1));
-      vec3 fresnel = fres * ambientColor;
+      vec3 fresnel = fres * amb;
 
       vec3 result = (ambient + diffuse + fresnel + specular)*vec3(texture2D(u_texture, v_texcoord));
 
+      //gl_FragColor = vec4(vec3(texture2D(u_texture, v_texcoord)), u_color.a);
       gl_FragColor = vec4(result, u_color.a);
       //gl_FragColor = texture2D(u_specularmap, v_texcoord);
       //gl_FragColor = vec4(v_texcoord, 0, 1);
     }
   </script>
+  <script src="./js/math/Vector3.js"></script>
+  <script src="./js/math/Vector4.js"></script>
+  <script src="./js/math/Matrix3.js"></script>
+  <script src="./js/math/Matrix4.js"></script>
+  <script src="./js/math/Math.js"></script>
 
-  <script src="./js/Mesh.js"></script>
-  <script src="./js/Vector3.js"></script>
-  <script src="./js/Vector4.js"></script>
-  <script src="./js/Matrix3.js"></script>
-  <script src="./js/Matrix4.js"></script>
+  <script src="./js/util/Shader.js"></script>
   
-  <script src="./js/PrismaRectangular.js"></script>
+  <script src="./js/materiales/Material.js"></script>
+  <script src="./js/materiales/Material_Textura.js"></script>
+  <script src="./js/materiales/Material_Particula.js"></script>
+
+  <script src="./js/util/Mesh.js"></script>
+  <script src="./js/primitivas/PrismaRectangular.js"></script>
+  <script src="./js/primitivas/Cilindro.js"></script>
+  <script src="./js/primitivas/Cono.js"></script>
+  <script src="./js/primitivas/Esfera.js"></script>
+  <script src="./js/primitivas/Octaedro.js"></script>
+  <script src="./js/primitivas/Icosaedro.js"></script>
+  <script src="./js/primitivas/Tetraedro.js"></script>
+  <script src="./js/primitivas/Dodecaedro.js"></script>
+  <script src="./js/primitivas/Toro.js"></script>
+  <script src="./js/primitivas/Plane.js"></script>
+  <script src="./js/primitivas/CustomMesh.js"></script>
   
-  <script src="./js/Cilindro.js"></script>
-  <script src="./js/Cono.js"></script>
-  <script src="./js/Esfera.js"></script>
+
+  <script src="./js/util/CamaraCOI.js"></script>
+  <script src="./js/util/LuzDireccional.js"></script>
+  <script src="./js/util/Renderer.js"></script>
+  <script src="./js/util/Skybox.js"></script>
+
+  <script src="./js/gameplay/GameObject.js"></script>
   
-  <script src="./js/Octaedro.js"></script>
-  <script src="./js/Icosaedro.js"></script>
-  <script src="./js/Tetraedro.js"></script>
+  <script src="./js/gameplay/particles/Particle.js"></script>
+  <script src="./js/gameplay/particles/SpawnParticle.js"></script>
+
+  <script src="./js/gameplay/player/Player.js"></script>
+  <script src="./js/gameplay/enemy/EnemyEmpty.js"></script>
+  <script src="./js/gameplay/enemy/BasicEnemy.js"></script>
+  <script src="./js/gameplay/enemy/SimpleEnemy.js"></script>
+
+  <script src="./js/gameplay/ambiente/MovingCube.js"></script>
+
+  <script src="./js/util/Sample.js"></script>
   
-  <script src="./js/Dodecaedro.js"></script>
-  
-  <script src="./js/Toro.js"></script>
-  <script src="./js/CamaraCOI.js"></script>
-  <script src="./js/LuzDireccional.js"></script>
-  <script src="./js/Renderer.js"></script>
+  <script src="./js/gameplay/enemy/JumpingEnemy.js"></script>
+  <script src="./js/gameplay/enemy/EnemyLine.js"></script>
+  <script src="./js/gameplay/projectiles/Projectile.js"></script>
+  <script src="./js/Scene.js"></script>
   <script src="./js/Main.js"></script>
 
   
