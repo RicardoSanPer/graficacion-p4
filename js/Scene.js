@@ -30,7 +30,7 @@ CG.Scene = class{
         this.camara = new CG.CamaraCOI(this.canvas,50, new CG.Vector3(0,0,0));
         this.lightDir = new CG.LuzDireccional();
         this.player = new CG.Player(new CG.Vector3(0,-20,0), new CG.Vector3(-45,0,0), this);
-
+        
         this.skybox = new CG.Skybox(this.gl, CG.Matrix4.scale(new CG.Vector3(500, 500, 500) ), "bg2.png");
     }
 

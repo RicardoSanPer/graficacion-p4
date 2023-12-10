@@ -4,8 +4,9 @@ var CG =  CG || {};
  */
 CG.Material = class{
 
-    constructor(gl, fragmentShaderfile)
+    constructor(gl, fragmentShaderfile, color)
     {
+        this.color = (color || [1,0,0,1]);
         let vertexShaderSource = document.getElementById("2d-vertex-shader").text;
         let vertexShader = CG.Shader.createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
 
@@ -25,9 +26,10 @@ CG.Material = class{
 
         
         this.lightUniformLocation = gl.getUniformLocation(this.program, "u_light_position");
-        
 
-        this.color = [1,0,0,1];
+        
+        this.CamPosition = gl.getUniformLocation(this.program, "cameraPos");
+    
     }
 
     setDrawParams(gl, camara)
@@ -51,6 +53,10 @@ CG.Material = class{
         gl.uniformMatrix4fv(this.u_PVM_matrix, false, projectionViewModelMatrix.toArray());
     
         
+        gl.uniform3f(this.CamPosition, camara.position.x, camara.position.y, camara.position.z);
+        
+        
+
         this.setDrawParams(gl, camara);
         
         if(mesh.hasFlat)

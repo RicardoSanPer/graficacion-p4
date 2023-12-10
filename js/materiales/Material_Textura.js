@@ -16,13 +16,10 @@ CG.Material_Textura = class extends CG.Material
         this.texturaNormal = CG.Shader.createTexture(gl, normal);
         this.texturaSpecular = CG.Shader.createTexture(gl, specular);
         
-        this.CamPosition = gl.getUniformLocation(this.program, "cameraPos");
     }
 
     setDrawParams(gl, camara)
     {
-        
-        gl.uniform3f(this.CamPosition, camara.position.x, camara.position.y, camara.position.z);
         
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.texturaAlbedo);

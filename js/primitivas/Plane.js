@@ -2,7 +2,7 @@ var CG =  CG || {};
 
 CG.Plane = class extends CG.Mesh
 {
-    constructor(gl, color, width, height ,initial_transform, texture, normal, specular)
+    constructor(gl, color, width, height ,initial_transform)
     {
         super(initial_transform);
         this.g_length  = (length || 1);

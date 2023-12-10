@@ -64,6 +64,20 @@
     }
   </script>
 
+  <script id="particle" type="fragment-shader">
+    precision mediump float;
+    varying vec2 v_texcoord;
+    varying vec3 v_position;
+    
+    uniform sampler2D u_texture;
+    uniform vec4 u_color;
+    void main() {
+      //Descartar
+      gl_FragColor = texture2D(u_texture, v_texcoord);
+        if (gl_FragColor.a <= 0.0) discard;
+    }
+  </script>
+
   <script id="fragment-projectile" type="fragment-shader">
     precision mediump float;
     varying vec2 v_texcoord;
@@ -113,10 +127,6 @@
     uniform sampler2D u_normalmap;
     uniform sampler2D u_specularmap;
     void main() {
-      
-      //Descartar
-      gl_FragColor = texture2D(u_texture, v_texcoord) * u_color;
-      if (gl_FragColor.a <= 0.0) discard;
 
       //Ambiente
       float ambientStrength = 0.3;
@@ -162,8 +172,8 @@
   <script src="./js/util/Shader.js"></script>
   
   <script src="./js/materiales/Material.js"></script>
-  <script src="./js/materiales/Material_Proyectil.js"></script>
   <script src="./js/materiales/Material_Textura.js"></script>
+  <script src="./js/materiales/Material_Particula.js"></script>
 
   <script src="./js/util/Mesh.js"></script>
   <script src="./js/primitivas/PrismaRectangular.js"></script>
@@ -187,7 +197,6 @@
   
   <script src="./js/gameplay/particles/Particle.js"></script>
   <script src="./js/gameplay/particles/SpawnParticle.js"></script>
-  <script src="./js/gameplay/particles/ExplosionParticle.js"></script>
 
   <script src="./js/gameplay/player/Player.js"></script>
   <script src="./js/gameplay/enemy/EnemyEmpty.js"></script>
