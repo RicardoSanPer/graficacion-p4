@@ -9,10 +9,15 @@ let map = {}
 onkeydown = onkeyup = function(e){
   e = e || event; // to deal with IE
   map[e.key] = e.type == 'keydown';
-  /* insert conditional here */
   scene.passInput(map)
 }
 
+document.addEventListener('keydown', function(event) {
+  // Check if the key pressed is the number 1
+  if (event.key === '1' || event.keyCode === 49) {
+    scene.camara.perspective = !scene.camara.perspective;
+  }
+});
 
 //Bucle de dibujado
 function loop(timestamp)

@@ -55,7 +55,7 @@ CG.Scene = class{
         //REnder
         this.gl.enable(this.gl.DEPTH_TEST);
         this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
-        this.gl.clearColor(1,1,1, 1);
+        this.gl.clearColor(0,0,0, 1);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
         this.handleCollisions();
@@ -149,12 +149,14 @@ CG.Scene = class{
         }  
     }
 
+    //Evento para agregar o quitar puntos
     award(e)
     {
         var eventData = e.detail;
         this.puntaje += eventData.cantidad;
         this.scoreboard.textContent = "Puntaje: " + this.puntaje.toString();
     }
+    //Evento para actualizar el display de vidas
     vidas(e)
     {
         var eventData = e.detail;
@@ -176,6 +178,7 @@ CG.Scene = class{
         this.player.destroy();
     }
 
+    //Eventos de spawn
     timeline()
     {
         if(this.counter*this.speed > 5 && !this.eventsDone[0])

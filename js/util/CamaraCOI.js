@@ -16,6 +16,10 @@ CG.CamaraCOI = class{
         this.displacementY = 0;
         this.displacementZ = 0;
 
+        this.perspectivePos = new CG.Vector3(0,10,-120);
+        this.perspectiveCOI = new CG.Vector3(0,-120,-100);
+
+        this.perspective = true;
         this.updatePosition();
     }
 
@@ -49,8 +53,16 @@ CG.CamaraCOI = class{
     //Actualizar matrices de proyeccion
     updateMatrix()
     {      
-        this.viewMatrix = CG.Matrix4.lookAt(this.position, this.coi, new CG.Vector3(0, 1, 0));
-        this.projectionMatrix = CG.Matrix4.perspective(75*Math.PI/180, this.canvas.width/this.canvas.height, 1, 2000);;
+        
+        if(this.perspective)
+        {
+            this.viewMatrix = CG.Matrix4.lookAt(this.position, this.coi, new CG.Vector3(0, 1, 0));
+            this.projectionMatrix = CG.Matrix4.perspective(75*Math.PI/180, this.canvas.width/this.canvas.height, 1, 2000);;
+        }
+        else{
+            this.viewMatrix = CG.Matrix4.lookAt(this.perspectivePos, this.perspectiveCOI , new CG.Vector3(0, 1, 0));
+            this.projectionMatrix = CG.Matrix4.orthographic(200, -200, 200, -200, 500, -100);;
+        }
         this.viewProjectionMatrix = CG.Matrix4.multiply(this.projectionMatrix, this.viewMatrix);
     }
 
