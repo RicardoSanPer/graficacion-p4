@@ -15,7 +15,7 @@ El juego en si contiene diez "olas" de enemigos que aparecen en tiempos especifi
 
 ## Errores
 Ocasionalmente la nave no registra bien la entrada, causando que repentinamente se mueva mucho hacia un extremo.
-El juego se congela por unos cuantos fotogramas al invocar muchos enemigos a la ves.
+El juego se congela por unos cuantos fotogramas al invocar muchos enemigos a la vez.
 Cambiar de pestaña puede ocasionar que los objetos en el juego reaparezcan en posiciones incorrectas.
 
 ## Creditos
